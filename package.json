@@ -1,0 +1,23 @@
+{
+  "name": "coletor",
+  "version": "0.0.1",
+  "description": "Servidor de WS (coletor)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Brenno Hayden Freire Dantas",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.6",
+    "mongoq": "^0.2.5",
+    "strict-mode": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
