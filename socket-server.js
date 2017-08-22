@@ -7,6 +7,7 @@ var server = net.createServer()
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://dbuser:123mudar#@ds139428.mlab.com:39428/driveondb', { useMongoClient: true })
+
 mongoose.connection.on('connected', () => {
   return console.log('Mongoose conectado')
 })
@@ -46,24 +47,25 @@ server.on("connection", function(socket) {
           msg = msg + lines[i]
             console.log(lines[i]);
         }
-    } else {vim
+    } else {
         console.log('>>data:', data);
     }
     console.log("message: %s", msg)
 
     var message = new Message()
-    parser = parser('teste')
+
+    var result = parser(hex)
 
     console.log('-----------------')
     
-    console.log(parser)
+    console.log(result)
 
-    message.msg2json = hex
+    message.msg2json = result
 
-    var promise = message.save(function (err) {
-      if (err) console.log(err)
-       else console.log('salvo no banco')
-    })
+    // var promise = message.save(function (err) {
+    //   if (err) console.log(err)
+    //    else console.log('salvo no banco')
+    // })
   })
 
   socket.once("close", function() {

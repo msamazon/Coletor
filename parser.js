@@ -3,12 +3,15 @@ module.exports = function() {
 
       var result = '';
 
-      var head        = text.substring(0, 4)
-      var headLen     = text.substring(4, 8)
-      var dongleCode  = text.substring(8, 32)
-      var eventCode   = text.substring(32, 36)
+      var dateReceived = new Date()      
+      var head         = text.substring(0, 4)
+      var headLen      = text.substring(4, 8)
+      var dongleCode   = text.substring(8, 32)
+      var eventCode    = text.substring(32, 36)
+
+      console.log(dateReceived)
       console.log(dongleCode)
-      console.log(eventCode)
+      console.log("Evento %s ", eventCode)
 
       switch(eventCode) {
 
@@ -16,20 +19,20 @@ module.exports = function() {
 
           console.log("login")
 
-          var gpsData            = text.substring(36, 79)
+          var gpsData              = text.substring(36, 79)
           const obdModule          = text.substring(79, 87)
           const firmwareVersion    = text.substring(87, 95)
           const hardwareVersion    = text.substring(95, 103)
-          const qtparam              = parseInt(text.substring(103, 105), 16)
+          const qtparam            = parseInt(text.substring(103, 105), 16)
           //calcute end param
           const paramEnd           = 105 + (qtparam * 2)
           const param              = text.substring(105, paramEnd)
           //calcute end dongle
-          const dongleEnd           = paramEnd + (2*6)
-          const dongleDateHex       = text.substring(paramEnd, dongleEnd)
+          const dongleEnd          = paramEnd + (2*6)
+          const dongleDateHex      = text.substring(paramEnd, dongleEnd)
           //calcute end crc code
-          const crcEnd              = dongleEnd + (5)
-          const crcCode       = text.substring(dongleEnd, crcEnd)
+          const crcEnd             = dongleEnd + (5)
+          const crcCode            = text.substring(dongleEnd, crcEnd)
 
           console.log(gpsData)
           console.log(obdModule)
@@ -40,16 +43,12 @@ module.exports = function() {
           console.log(dongleDateHex)
           console.log(crcCode)
 
-          result = JSON.stringify({ full: text, parser: {
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
             packageHead: head, packageLength: headLen, dongleCode: dongleCode,
             eventcode: eventCode, gpsData: gpsData, obdModule: obdModule,
             firmwareVersion: firmwareVersion, hardwareVersion: hardwareVersion,
             customParam: param, dongleDateHex: dongleDateHex, crcCode: crcCode
            } }, null, 4)
-
-          console.log(result)
-
-          return result
 
         break;
 
@@ -59,13 +58,11 @@ module.exports = function() {
 
           const data = text.substring(36, 48)
 
-          result = JSON.stringify({ full: text, parser: {
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
             packageHead: head, packageLength: headLen, dongleCode: dongleCode,
             eventcode: eventCode, data: data
            } }, null, 4)
           console.log(result)
-
-          return result;
 
         break;
 
@@ -79,10 +76,10 @@ module.exports = function() {
           console.log(time)
           console.log(gpsData1)
 
-          console.log(JSON.stringify({ full: text, parser: {
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
             packageHead: head, packageLength: headLen, dongleCode: dongleCode,
             eventcode: eventCode, time: time, gpsData: gpsData
-           } }, null, 4))
+           } }, null, 4)
 
           break;
         case "0120": //Comprehensive data (0x2001/0x2002)
@@ -115,7 +112,7 @@ module.exports = function() {
           console.log(GSENSOR_Data)
           console.log(customField)
 
-          result = JSON.stringify({ full: text, parser: {
+          return JSON.stringify({ full: text, parser: {
             packageHead: head, packageLength: headLen, dongleCode: dongleCode,
             eventcode: eventCode, time: time, dataSitch: dataSitch,
             gpsData: gpsData, obdModule: odbData,
@@ -123,8 +120,6 @@ module.exports = function() {
             Mileage: currentTripMileage, Duration: currentTripDuration },
             GSENSOR_Data: GSENSOR_Data, customField: customField
            } }, null, 4)
-
-          console.log(result)
 
           break;
         default:
