@@ -95,8 +95,8 @@ module.exports = function() {
           const gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
           const gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
 
-          const result = gsen_calc_2.toString() + gsen_calc_1.toString()
-          const resuldEnd                 = 235 + (result * 2)
+          const result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
+          const resuldEnd                 = 235 + (result_gsen * 2)
           var GSENSOR_Data                = text.substring(235, resuldEnd)
 
           var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
