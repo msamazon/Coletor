@@ -62,10 +62,10 @@ server.on("connection", function(socket) {
 
     message.msg2json = result
 
-    // var promise = message.save(function (err) {
-    //   if (err) console.log(err)
-    //    else console.log('salvo no banco')
-    // })
+    var promise = message.save(function (err) {
+      if (err) console.log(err)
+       else console.log('salvo no banco')
+    })
   })
 
   socket.once("close", function() {
