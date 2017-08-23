@@ -74,7 +74,7 @@ module.exports = function() {
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
           console.log(time)
-          console.log(gpsData1)
+          console.log(gpsData)
 
           return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
             packageHead: head, packageLength: headLen, dongleCode: dongleCode,
