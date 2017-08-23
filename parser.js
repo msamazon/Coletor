@@ -128,6 +128,7 @@ module.exports = function() {
 
         break;
         
+        case "03a3":
         case "0320": // Alarm (2003/A003) 
           console.log("Alarm")
 
@@ -154,6 +155,225 @@ module.exports = function() {
             alarmCurrent, rtcTime: rtcTime, gpsData: gpsData
            } }, null, 4)
         break;
+
+        case "01b0":
+        case "0130": //Setting (3001/B001) 
+          console.log("Setting")
+        
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var paramNumbers    = text.substring(40, 36 + (2 * 1))
+
+          console.log(randomNo)
+          console.log(paramNumbers)
+
+        break;
+
+        case "02b0":
+        case "0230": //Inquiry (3002/B002) 
+          console.log("Inquiry")
+          
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var paramNumbers    = text.substring(40, 36 + (2 * 1))
+
+          console.log(randomNo)
+          console.log(paramNumbers)
+
+        break;
+
+        case "01c0":
+        case "0140": // Get LOG (4001/C001) 
+           console.log("Get LOG")
+
+           var randomNo        = text.substring(36, 36 + (2 * 2))
+           var logType         = text.substring(40, 40 + (2 * 1))
+
+           console.log(randomNo)
+           console.log(logType)
+
+           return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo, logType: logType
+          } }, null, 4)
+           
+        break;
+
+        case "02c0":
+        case "0240": // UNIT Self-test(4002/C002) 
+           console.log("UNIT Self-test")
+
+           var randomNo        = text.substring(36, 36 + (2 * 2))
+
+           console.log(randomNo)
+
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break;
+
+        case "03c0":
+        case "0340": //Reset Device (4003/C003)
+          console.log("Reset Device")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+
+          console.log(randomNo)
+
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break;
+
+        case "0440":
+        case "04c0": //Restore Factory Settings (4004/C004)
+          console.log("Restore Factory Settings")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          
+          console.log(randomNo)
+          
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break;
+
+        case "0540":
+        case "05c0": //Clear Comprehensive Data Storage Area(4005/C005) 
+          console.log("Clear Comprehensive Data Storage Area")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          
+          console.log(randomNo)
+          
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break;
+
+        case "0740":
+        case "07c0": //Read vehicle supported PID number (4007/C007)
+          console.log("Read vehicle supported PID number")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          
+          console.log(randomNo)
+          
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)          
+
+        break;
+
+        case "0840":
+        case "08c0": //Read Specified PID Data Value (4008/C008) 
+          console.log("Read Specified PID Data Value")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var pidNumbers      = text.substring(36, 36 + (2 * 1))
+          
+          console.log(randomNo)
+          console.log(pidNumbers)
+          //TODO pid list
+
+        break;
+
+
+        case "09c0":
+        case "0940": //Read Vehicle DTCs(4009/C009)
+          console.log("Read Specified PID Data Value")
+        
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var dtcType         = text.substring(36, 36 + (2 * 1))
+
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo, dtcType: dtcType
+          } }, null, 4)
+
+        break
+
+        case "0a40":
+        case "0ac0": //Clear DTC (400A/C00A) 
+          console.log("Clear DTC")
+        
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break
+
+        case "0b40":
+        case "0bc0": //Read VIN (400B/C00B)
+          console.log("Read VIN")
+        
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break
+
+        case "0c40":
+        case "0cc0": //Reading Freeze Frame (400C/C00C) 
+          console.log("Reading Freeze Frame ")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, randomNo: randomNo
+          } }, null, 4)
+
+        break
+
+        case "0150":
+        case "01d0": //Send Upgrading/Reply (5001/D001) 
+          console.log("Send Upgrading/Reply")
+
+        break
+
+        case "0250":
+        case "02d0": //Issue Upgrade Package /Reply (5002/D002)         
+          console.log("Issue Upgrade Package /Reply")
+
+          var upgradeID             = text.substring(36, 36 + (2 * 4))
+          var packetSign            = text.substring(44, 44 + (2 * 1))
+          var packetNumber          = text.substring(46, 46 + (2 * 2))
+          var packetLength          = text.substring(50, 50 + (2 * 2))
+
+          const pck_1               =  parseInt(packetLength.substring(0, 2), 16)
+          const pck_2               =  parseInt(packetLength.substring(2, 4), 16)
+
+          const result_packetLength = pck_2.toString() + pck_1.toString()
+
+          var packetContents        = text.substring(54, 54 + (2 * result_packetLength))
+
+          console.log(upgradeID)
+          console.log(packetSign)
+          console.log(packetNumber)
+          console.log(packetLength)
+          console.log(packetContents)
+          
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
+            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+            eventcode: eventCode, upgradeID: upgradeID, packetSign: packetSign,
+            packetNumber: packetNumber, packetContents: packetContents
+          } }, null, 4)
+
+        break
 
         default:
             console.log("Desculpe, estamos sem nenhuma " + eventCode + ".");
