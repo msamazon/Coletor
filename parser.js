@@ -16,8 +16,9 @@ module.exports = function() {
       console.log("Evento %s ", eventCode)
 
       switch(eventCode) {
-
-        case "0110": //login
+        
+        case "0190":
+        case "0110": //Login Packet (1001/9001) 
 
           console.log("login")
 
@@ -54,7 +55,8 @@ module.exports = function() {
 
         break;
 
-        case "0310"://Maintenance 0x1003
+        case "0390":
+        case "0310"://Maintenance(1003/9003) 
 
           console.log("Maintenance")
 
@@ -68,7 +70,7 @@ module.exports = function() {
 
         break;
 
-        case "0420": //Sleep Mode
+        case "0420": // Sleep Mode Fixed Upload (2004) 
 
           console.log("Sleep Mode Fixed Upload")
 
