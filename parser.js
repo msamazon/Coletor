@@ -1,6 +1,8 @@
 module.exports = function() {
     this.parser = function(text) {
 
+      //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" alarm
+
       var result = '';
 
       var dateReceived = new Date()      
@@ -67,6 +69,7 @@ module.exports = function() {
         break;
 
         case "0420": //Sleep Mode
+
           console.log("Sleep Mode Fixed Upload")
 
           var time      = text.substring(36, 36 + (2 *6))
@@ -81,48 +84,77 @@ module.exports = function() {
             eventcode: eventCode, time: time, gpsData: gpsData
            } }, null, 4)
 
-          break;
+        break;
+        
         case "0120": //Comprehensive data (0x2001/0x2002)
-          console.log("Comprehensive data")
-          var time                        = text.substring(36, 36 + (2 * 6))
-          var dataSitch                   = text.substring(48, 48 + (2 * 3))
-          var gpsData                     = text.substring(54, 54 + (2 * 21))
-          var odbData                     = text.substring(97, 97 + (55 * 2))
-          var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
-          var currentTripMileage          = text.substring(215, 215 + (4 * 2))
-          var currentTripDuration         = text.substring(223, 223 + (4 * 2))
-          var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
-          const gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
-          const gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
+            console.log("Comprehensive data")
+            var time                        = text.substring(36, 36 + (2 * 6))
+            var dataSitch                   = text.substring(48, 48 + (2 * 3))
+            var gpsData                     = text.substring(54, 54 + (2 * 21))
+            var odbData                     = text.substring(97, 97 + (55 * 2))
+            var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
+            var currentTripMileage          = text.substring(215, 215 + (4 * 2))
+            var currentTripDuration         = text.substring(223, 223 + (4 * 2))
+            var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
+            const gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
+            const gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
 
-          const result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
-          const resuldEnd                 = 235 + (result_gsen * 2)
-          var GSENSOR_Data                = text.substring(235, resuldEnd)
+            const result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
+            const resuldEnd                 = 235 + (result_gsen * 2)
+            var GSENSOR_Data                = text.substring(235, resuldEnd)
 
-          var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
+            var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
-          console.log(time)
-          console.log(dataSitch)
+            console.log(time)
+            console.log(dataSitch)
+            console.log(gpsData)
+            console.log(odbData)
+            console.log(currentTripFuelConsumption)
+            console.log(currentTripMileage)
+            console.log(currentTripDuration)
+            console.log(GSEN_Data_Len)
+            console.log(GSENSOR_Data)
+            console.log(customField)
+
+            return JSON.stringify({ full: text, parser: {
+              packageHead: head, packageLength: headLen, dongleCode: dongleCode,
+              eventcode: eventCode, time: time, dataSitch: dataSitch,
+              gpsData: gpsData, obdModule: odbData,
+              currentTrip: { fuelConsumption: currentTripFuelConsumption,
+              Mileage: currentTripMileage, Duration: currentTripDuration },
+              GSENSOR_Data: GSENSOR_Data, customField: customField
+            } }, null, 4)
+
+        break;
+        
+        case "0320": // Alarm (2003/A003) 
+          console.log("Alarm")
+
+          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var alarmTag        = text.substring(40, 40 + (2 * 1))
+          var alarmNo         = text.substring(42, 42 + (2 * 1))
+          var alarmThreshold  = text.substring(44, 44 + (2 * 2))
+          var alarmCurrent    = text.substring(48, 48 + (2 * 2))
+          var rtcTime         = text.substring(52, 52 + (2 * 6))
+          var gpsData         = text.substring(64, 64 +(2 * 21))
+
+          console.log(randomNo)
+          console.log(alarmTag)
+          console.log(alarmNo)
+          console.log(alarmThreshold)
+          console.log(alarmCurrent)
+          console.log(rtcTime)
           console.log(gpsData)
-          console.log(odbData)
-          console.log(currentTripFuelConsumption)
-          console.log(currentTripMileage)
-          console.log(currentTripDuration)
-          console.log(GSEN_Data_Len)
-          console.log(GSENSOR_Data)
-          console.log(customField)
-
-          return JSON.stringify({ full: text, parser: {
+          //tem o resto nao mapeado
+          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
             packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, time: time, dataSitch: dataSitch,
-            gpsData: gpsData, obdModule: odbData,
-            currentTrip: { fuelConsumption: currentTripFuelConsumption,
-            Mileage: currentTripMileage, Duration: currentTripDuration },
-            GSENSOR_Data: GSENSOR_Data, customField: customField
+            eventcode: eventCode, randomNo: randomNo, alarmTag: alarmTag, 
+            alarmNo: alarmNo, alarmThreshold: alarmThreshold, alarmCurrent:
+            alarmCurrent, rtcTime: rtcTime, gpsData: gpsData
            } }, null, 4)
+        break;
 
-          break;
-        default:
+         default:
             console.log("Desculpe, estamos sem nenhuma " + eventCode + ".");
         }
       return 0
