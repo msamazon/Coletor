@@ -86,6 +86,7 @@ module.exports = function() {
 
         break;
         
+        case "0220":
         case "0120": //Comprehensive data (0x2001/0x2002)
             console.log("Comprehensive data")
             var time                        = text.substring(36, 36 + (2 * 6))
@@ -154,7 +155,7 @@ module.exports = function() {
            } }, null, 4)
         break;
 
-         default:
+        default:
             console.log("Desculpe, estamos sem nenhuma " + eventCode + ".");
         }
       return 0
