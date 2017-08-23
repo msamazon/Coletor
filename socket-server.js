@@ -58,9 +58,7 @@ server.on("connection", function(socket) {
 
     console.log('-----------------')
     
-    console.log(result)
-
-    message.msg2json = result
+    message = result
 
     var promise = message.save(function (err) {
       if (err) console.log(err)

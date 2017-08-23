@@ -1,8 +1,15 @@
 module.exports = function() {
     this.parser = function(text) {
 
-      //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" alarm
+      console.log("=========== parser ===========")
 
+      var Message = require('./Model/Message')
+      
+      var message = new Message()
+      
+      text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
+      //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao
       var result = '';
 
       var dateReceived = new Date()      
@@ -11,8 +18,18 @@ module.exports = function() {
       var dongleCode   = text.substring(8, 32)
       var eventCode    = text.substring(32, 36)
 
-      console.log(dateReceived)
-      console.log(dongleCode)
+      message.fullMessage   = text
+      message.packageHead   = head
+      message.packageLength = headLen
+      message.dongleCode    = dongleCode
+      message.eventcode     = eventCode
+      message.dateReceived  = new Date()
+
+      console.log("message.packageHead %s" , message.packageHead)
+      console.log("message.headLen %s" , message.packageLength)
+      console.log("message.dongleCode %s" , message.dongleCode)
+      console.log("message.eventCode %s" , message.eventcode)
+      console.log("message.dateReceived %s" , message.dateReceived)
       console.log("Evento %s ", eventCode)
 
       switch(eventCode) {
@@ -20,7 +37,7 @@ module.exports = function() {
         case "0190":
         case "0110": //Login Packet (1001/9001) 
 
-          console.log("login")
+          console.log("<<login>>")
 
           var gpsData              = text.substring(36, 79)
           const obdModule          = text.substring(79, 87)
@@ -37,36 +54,53 @@ module.exports = function() {
           const crcEnd             = dongleEnd + (5)
           const crcCode            = text.substring(dongleEnd, crcEnd)
 
-          console.log(gpsData)
-          console.log(obdModule)
-          console.log(firmwareVersion)
-          console.log(hardwareVersion)
-          console.log(qtparam)
-          console.log(param)
-          console.log(dongleDateHex)
-          console.log(crcCode)
+          message.gpsData = gpsData
+          message.obdModule = obdModule
+          message.firmwareVersion = firmwareVersion
+          message.hardwareVersion = hardwareVersion
+          message.qtparam = qtparam
+          message.param = param
+          message.dongleDateHex = dongleDateHex
+          message.crcCode = crcCode
+          console.log("message.gpsData %s ", gpsData)
+          console.log("message.obdModule %s ", obdModule)
+          console.log("message.firmwareVersion %s ", firmwareVersion)
+          console.log("message.hardwareVersion %s ", hardwareVersion)
+          console.log("message.qtparam %s ", qtparam)
+          console.log("message.param %s ", param)
+          console.log("message.dongleDateHex %s ", dongleDateHex)
+          console.log("message.crcCode %s ", crcCode)
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, gpsData: gpsData, obdModule: obdModule,
-            firmwareVersion: firmwareVersion, hardwareVersion: hardwareVersion,
-            customParam: param, dongleDateHex: dongleDateHex, crcCode: crcCode
-           } }, null, 4)
+          var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
+          ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
+          ", dongleCode: " + message.dongleCode + ", eventcode: " + message.eventcode +
+          ", gpsData: " + message.gpsData + ", obdModule: "  + message.obdModule +
+          ", firmwareVersion: " + message.firmwareVersion + ", hardwareVersion: " + message.hardwareVersion +
+          ", qtparam: " + message.qtparam + ", param: " + message.param + 
+          ", dongleDateHex: " + message.dongleDateHex + ", crcCode: " + message.crcCode + "}"
 
+          console.log(_json)
+          return message        
         break;
 
         case "0390":
         case "0310"://Maintenance(1003/9003) 
 
-          console.log("Maintenance")
+          console.log("<<Maintenance>>")
 
           const data = text.substring(36, 48)
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, data: data
-           } }, null, 4)
-          console.log(result)
+          message.data = data
+
+          console.log("message.data %s", message.data)
+
+          var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
+          ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
+          ", dongleCode: " + message.dongleCode + ", eventcode: " + message.eventcode +
+          ", data: " + message.data +  "}"
+          //tem o resto nao mapeado
+          
+          return message
 
         break;
 
@@ -132,7 +166,8 @@ module.exports = function() {
         
         case "03a3":
         case "0320": // Alarm (2003/A003) 
-          console.log("Alarm")
+          console.log("<<Alarm>>")
+
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var alarmTag        = text.substring(40, 40 + (2 * 1))
@@ -142,20 +177,33 @@ module.exports = function() {
           var rtcTime         = text.substring(52, 52 + (2 * 6))
           var gpsData         = text.substring(64, 64 +(2 * 21))
 
-          console.log(randomNo)
-          console.log(alarmTag)
-          console.log(alarmNo)
-          console.log(alarmThreshold)
-          console.log(alarmCurrent)
-          console.log(rtcTime)
-          console.log(gpsData)
+
+          message.randomNo = randomNo
+          message.alarmTag = alarmTag
+          message.alarmNo = alarmNo
+          message.alarmThreshold = alarmThreshold
+          message.alarmCurrent = alarmCurrent
+          message.rtcTime = rtcTime
+          message.gpsData = gpsData
+
+          console.log("message.randomNo %s", message.randomNo)
+          console.log("message.alarmTag %s",message.alarmTag)
+          console.log("message.alarmNo %s",message.alarmNo)
+          console.log("message.alarmThreshold %s",message.alarmThreshold)
+          console.log("message.alarmCurrent %s",message.alarmCurrent)
+          console.log("message.rtcTime %s",message.rtcTime)
+          console.log("message.gpsData %s",message.gpsData)
+          
+          var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
+          ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
+          ", dongleCode: " + message.dongleCode + ", eventcode: " + message.eventcode +
+          ", randomNo: " + message.randomNo + ", alarmTag: "  + message.alarmTag +
+          ", alarmThreshold: " + message.alarmThreshold + ", alarmCurrent: " + alarmCurrent +
+          ", rtcTime: " + message.rtcTime + ", gpsData: " + message.gpsData +  "}"
           //tem o resto nao mapeado
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo, alarmTag: alarmTag, 
-            alarmNo: alarmNo, alarmThreshold: alarmThreshold, alarmCurrent:
-            alarmCurrent, rtcTime: rtcTime, gpsData: gpsData
-           } }, null, 4)
+          
+          return message
+           
         break;
 
         case "01b0":
@@ -378,7 +426,7 @@ module.exports = function() {
         break
 
         default:
-            console.log("Desculpe, estamos sem nenhuma " + eventCode + ".");
+            console.log("Desculpe, estamos sem nenhum evento (" + eventCode + ").");
         }
       return 0
     }
