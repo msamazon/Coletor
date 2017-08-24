@@ -7,9 +7,11 @@ module.exports = function() {
       
       var message = new Message()
       
-      text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      //string para text local
+      //text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao
+      //text = "4040310033574e2d3136303130303535042018081101361418081101361403787da60034b7e30c08000000ad024c3c0d0a" //sleep mode
       var result = '';
 
       var dateReceived = new Date()      
@@ -71,16 +73,7 @@ module.exports = function() {
           console.log("message.dongleDateHex %s ", dongleDateHex)
           console.log("message.crcCode %s ", crcCode)
 
-          var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
-          ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
-          ", dongleCode: " + message.dongleCode + ", eventcode: " + message.eventcode +
-          ", gpsData: " + message.gpsData + ", obdModule: "  + message.obdModule +
-          ", firmwareVersion: " + message.firmwareVersion + ", hardwareVersion: " + message.hardwareVersion +
-          ", qtparam: " + message.qtparam + ", param: " + message.param + 
-          ", dongleDateHex: " + message.dongleDateHex + ", crcCode: " + message.crcCode + "}"
-
-          console.log(_json)
-          return message        
+          return message
         break;
 
         case "0390":
@@ -93,12 +86,6 @@ module.exports = function() {
           message.data = data
 
           console.log("message.data %s", message.data)
-
-          var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
-          ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
-          ", dongleCode: " + message.dongleCode + ", eventcode: " + message.eventcode +
-          ", data: " + message.data +  "}"
-          //tem o resto nao mapeado
           
           return message
 
@@ -106,25 +93,25 @@ module.exports = function() {
 
         case "0420": // Sleep Mode Fixed Upload (2004) 
 
-          console.log("Sleep Mode Fixed Upload")
+          console.log("<<Sleep Mode Fixed Upload>>")
 
           var time      = text.substring(36, 36 + (2 *6))
           const timeEnd   = 36 + (2 *6)
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
-          console.log(time)
-          console.log(gpsData)
+          message.time = time
+          message.gpsData = gpsData
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, time: time, gpsData: gpsData
-           } }, null, 4)
+          console.log("message.time %s", message.time)
+          console.log("message.gpsData %s", message.gpsData)
+
+          return message
 
         break;
         
         case "0220":
         case "0120": //Comprehensive data (0x2001/0x2002)
-            console.log("Comprehensive data")
+            console.log("<<Comprehensive data>>")
             var time                        = text.substring(36, 36 + (2 * 6))
             var dataSitch                   = text.substring(48, 48 + (2 * 3))
             var gpsData                     = text.substring(54, 54 + (2 * 21))
@@ -142,6 +129,17 @@ module.exports = function() {
 
             var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
+            message.time = time
+            message.dataSitch = dataSitch
+            message.gpsData = gpsData
+            message.odbData = odbData
+            message.currentTripFuelConsumption = currentTripFuelConsumption
+            message.currentTripMileage = currentTripMileage
+            message.currentTripDuration = currentTripDuration
+            message.GSEN_Data_Len = GSEN_Data_Len
+            message.GSENSOR_Data = GSENSOR_Data
+            message.customField = customField
+
             console.log(time)
             console.log(dataSitch)
             console.log(gpsData)
@@ -153,21 +151,13 @@ module.exports = function() {
             console.log(GSENSOR_Data)
             console.log(customField)
 
-            return JSON.stringify({ full: text, parser: {
-              packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-              eventcode: eventCode, time: time, dataSitch: dataSitch,
-              gpsData: gpsData, obdModule: odbData,
-              currentTrip: { fuelConsumption: currentTripFuelConsumption,
-              Mileage: currentTripMileage, Duration: currentTripDuration },
-              GSENSOR_Data: GSENSOR_Data, customField: customField
-            } }, null, 4)
+            return message
 
         break;
         
         case "03a3":
         case "0320": // Alarm (2003/A003) 
           console.log("<<Alarm>>")
-
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var alarmTag        = text.substring(40, 40 + (2 * 1))
@@ -208,72 +198,77 @@ module.exports = function() {
 
         case "01b0":
         case "0130": //Setting (3001/B001) 
-          console.log("Setting")
+          console.log("<<Setting>>")
         
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var paramNumbers    = text.substring(40, 36 + (2 * 1))
 
-          console.log(randomNo)
-          console.log(paramNumbers)
+          message.randomNo = randomNo
+          message.paramNumbers = paramNumbers
+
+          console.log("message.randomNo %s", message.randomNo)
+          console.log("message.paramNumbers %s", message.paramNumbers)
+
+          return message
 
         break;
 
         case "02b0":
         case "0230": //Inquiry (3002/B002) 
-          console.log("Inquiry")
+          console.log("<<Inquiry>>")
           
-          var randomNo        = text.substring(36, 36 + (2 * 2))
-          var paramNumbers    = text.substring(40, 36 + (2 * 1))
+          message.randomNo = randomNo
+          message.paramNumbers = paramNumbers
 
-          console.log(randomNo)
-          console.log(paramNumbers)
+          console.log("message.randomNo %s", message.randomNo)
+          console.log("message.paramNumbers %s", message.paramNumbers)
+
+          return message
 
         break;
 
         case "01c0":
         case "0140": // Get LOG (4001/C001) 
-           console.log("Get LOG")
+           console.log("<<Get LOG>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
            var logType         = text.substring(40, 40 + (2 * 1))
 
-           console.log(randomNo)
-           console.log(logType)
+           message.randomNo    = randomNo
+           message.logType     = logType
 
-           return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo, logType: logType
-          } }, null, 4)
+           console.log("message.randomNo %s", message.randomNo)
+           console.log("message.logType %s", message.logType)
+
+           return message
            
         break;
 
         case "02c0":
         case "0240": // UNIT Self-test(4002/C002) 
-           console.log("UNIT Self-test")
+           console.log("<<UNIT Self-test>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
 
-           console.log(randomNo)
+           message.randomNo    = randomNo
+           
+           console.log("message.randomNo %s", message.randomNo)
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+           return message
 
         break;
 
         case "03c0":
         case "0340": //Reset Device (4003/C003)
-          console.log("Reset Device")
+          console.log("<<Reset Device>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
 
-          console.log(randomNo)
+          message.randomNo    = randomNo
+          
+          console.log("message.randomNo %s", message.randomNo)
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+          return message
 
         break;
 
@@ -283,55 +278,59 @@ module.exports = function() {
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
-          console.log(randomNo)
+          message.randomNo = randomNo
           
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+          console.log("message.randomNo %s", message.randomNo)
+          
+          return message
 
         break;
 
         case "0540":
         case "05c0": //Clear Comprehensive Data Storage Area(4005/C005) 
-          console.log("Clear Comprehensive Data Storage Area")
+          console.log("<<Clear Comprehensive Data Storage Area>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
           console.log(randomNo)
           
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+          message.randomNo = randomNo
+          
+          console.log("message.randomNo %s", message.randomNo)
+
+          return message
 
         break;
 
         case "0740":
         case "07c0": //Read vehicle supported PID number (4007/C007)
-          console.log("Read vehicle supported PID number")
+          console.log("<<Read vehicle supported PID number>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
-          console.log(randomNo)
+          message.randomNo = randomNo
           
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)          
+          console.log("message.randomNo %s", message.randomNo)
+          
+          return message
 
         break;
 
         case "0840":
         case "08c0": //Read Specified PID Data Value (4008/C008) 
-          console.log("Read Specified PID Data Value")
+          console.log("<<Read Specified PID Data Value>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var pidNumbers      = text.substring(36, 36 + (2 * 1))
           
-          console.log(randomNo)
+          message.randomNo    = randomNo
+          
+          console.log("message.randomNo %s", message.randomNo)
+
           console.log(pidNumbers)
           //TODO pid list
+
+          return message
 
         break;
 
@@ -343,10 +342,13 @@ module.exports = function() {
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var dtcType         = text.substring(36, 36 + (2 * 1))
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo, dtcType: dtcType
-          } }, null, 4)
+          message.randomNo    = randomNo
+          message.dtcType     = dtcType
+          
+          console.log("message.randomNo %s", message.randomNo)
+          console.log("message.dtcType %s", message.dtcType)
+          
+          return message
 
         break
 
@@ -354,12 +356,13 @@ module.exports = function() {
         case "0ac0": //Clear DTC (400A/C00A) 
           console.log("Clear DTC")
         
-          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var randomNo     = text.substring(36, 36 + (2 * 2))
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+          message.randomNo = randomNo
+          
+          console.log("message.randomNo %s", message.randomNo)
+
+          return message
 
         break
 
@@ -367,12 +370,13 @@ module.exports = function() {
         case "0bc0": //Read VIN (400B/C00B)
           console.log("Read VIN")
         
-          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var randomNo     = text.substring(36, 36 + (2 * 2))
 
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+          message.randomNo = randomNo
+          
+          console.log("message.randomNo %s", message.randomNo)
+
+          return message
 
         break
 
@@ -380,18 +384,21 @@ module.exports = function() {
         case "0cc0": //Reading Freeze Frame (400C/C00C) 
           console.log("Reading Freeze Frame ")
 
-          var randomNo        = text.substring(36, 36 + (2 * 2))
+          var randomNo     = text.substring(36, 36 + (2 * 2))
+
+          message.randomNo = randomNo
           
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, randomNo: randomNo
-          } }, null, 4)
+          console.log("message.randomNo %s", message.randomNo)
+          
+          return message
 
         break
 
         case "0150":
         case "01d0": //Send Upgrading/Reply (5001/D001) 
           console.log("Send Upgrading/Reply")
+
+          return message
 
         break
 
@@ -411,17 +418,20 @@ module.exports = function() {
 
           var packetContents        = text.substring(54, 54 + (2 * result_packetLength))
 
-          console.log(upgradeID)
-          console.log(packetSign)
-          console.log(packetNumber)
-          console.log(packetLength)
-          console.log(packetContents)
+
+          message.upgradeID = upgradeID
+          message.packetSign = packetSign
+          message.packetNumber = packetNumber
+          message.packetLength = packetLength
+          message.packetContents = packetContents
+
+          console.log("message.upgradeID %s", message.upgradeID)
+          console.log("message.packetSign %s", message.packetSign)
+          console.log("message.packetNumber %s", message.packetNumber)
+          console.log("message.packetLength %s", message.packetLength)
+          console.log("message.packetContents %s", message.packetContents)
           
-          return JSON.stringify({ full: text, dateReceived: dateReceived, parser: {
-            packageHead: head, packageLength: headLen, dongleCode: dongleCode,
-            eventcode: eventCode, upgradeID: upgradeID, packetSign: packetSign,
-            packetNumber: packetNumber, packetContents: packetContents
-          } }, null, 4)
+          return message
 
         break
 
