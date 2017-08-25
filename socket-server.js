@@ -2,6 +2,7 @@ const net = require('net')
 const mongoose = require('mongoose')
 var Message = require('./Model/Message')
 require('./parser.js')();
+require('./replyMessage.js')();
 
 var server = net.createServer()
 
@@ -21,18 +22,23 @@ mongoose.connection.on('error', error => {
 })
 
 server.on("connection", function(socket) {
+
+  socket.setKeepAlive(true, 1000) 
+
   var remoteAddress = socket.remoteAddress
+  console.log("=====================================")
   console.log('>new client connection is made %s', remoteAddress)
+
+  console.log("socket.address() %s",socket.address())
+  console.log("remoteAddress %s", remoteAddress)
 
   var msg = ''
 
   socket.on("data", function(buffer) {
-    console.log('> Connection data from %s : %s', remoteAddress, buffer)
-    console.log('> Received ${buffer.length} bytes of data.')
+    console.log('> Connection data from %s ', remoteAddress)
+    console.log('> Received %s bytes of data.', buffer.length)
 
     var buff = new Buffer(buffer, 'utf8')
-
-    console.log(buff)
 
     var hex = buffer.toString ("hex")
 
@@ -50,24 +56,27 @@ server.on("connection", function(socket) {
     } else {
         console.log('>>data:', data);
     }
-    console.log("message: %s", msg)
 
     var message = new Message()
-
-    var result = parser(hex)
-
-    console.log('-----------------')
     
+    var result = parser(hex)
+   
     message = result
 
-    var promise = message.save(function (err) {
-      if (err) console.log(err)
-       else console.log('salvo no banco')
-    })
+    var reply = replyMessage(message)
+
+    console.log("reply %s", reply)
+
+    // var promise = message.save(function (err) {
+    //   if (err) console.log(err)
+    //    else console.log('salvo no banco')
+    // })
+
+    socket.write("pong!")
   })
 
   socket.once("close", function() {
-    console.log("Conne:ction from %s closed", remoteAddress)
+    console.log("Connection from %s closed", remoteAddress)
   })
 
   socket.on("error", function() {
