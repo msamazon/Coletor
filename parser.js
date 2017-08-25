@@ -1,13 +1,14 @@
 module.exports = function() {
     this.parser = function(text) {
-
+      var messageType = require("./Util/MessageType");
+      
       console.log("=========== parser ===========")
 
       var Message = require('./Model/Message')
       
       var message = new Message()
       
-      text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      //text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
       //string para text local
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
@@ -37,7 +38,7 @@ module.exports = function() {
       switch(eventCode) {
         
         case "0190":
-        case "0110": //Login Packet (1001/9001) 
+        case messageType.LOGIN://Login Packet (1001/9001) 
 
           console.log("<<login>>")
 
@@ -77,7 +78,7 @@ module.exports = function() {
         break;
 
         case "0390":
-        case "0310"://Maintenance(1003/9003) 
+        case messageType.MAINTENANCE://Maintenance(1003/9003) 
 
           console.log("<<Maintenance>>")
 
@@ -91,7 +92,7 @@ module.exports = function() {
 
         break;
 
-        case "0420": // Sleep Mode Fixed Upload (2004) 
+        case messageType.SLEEPMODE: // Sleep Mode Fixed Upload (2004) 
 
           console.log("<<Sleep Mode Fixed Upload>>")
 
