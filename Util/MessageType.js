@@ -1,12 +1,7 @@
 // 'use strict';
 
-function define(name, value) {
-    Object.defineProperty(exports, name, {
-        value:      value,
-        enumerable: true
-    });
-}
-
-define("LOGIN", "0110");
-define("MAINTENANCE", "0310");
-define("SLEEPMODE", "0420");
+module.exports = Object.freeze({
+    LOGIN: '0110',
+    MAINTENANCE: '0310',
+    SLEEPMODE: '0420'
+})

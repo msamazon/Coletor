@@ -2,7 +2,8 @@
 module.exports = function() {
 
     this.replyMessage = function(message) {
-        
+        var messageType = require("./Util/MessageType");
+
         var crcCalc = require("./Util/crcCalc");
         
         console.log("----------- reply -----------")
@@ -11,7 +12,7 @@ module.exports = function() {
         console.log("reply.eventcode: %s", message.eventcode)
 
         switch(message.eventcode) {
-            case "0110": 
+            case messageType.LOGIN: 
                 var pkgHeader = message.packageHead.substring(0,2) +
                     message.packageHead.substring(2,4)
                 
@@ -50,7 +51,7 @@ module.exports = function() {
                 const min       = _date.substring(14,16)// + " "
                 const sec       = _date.substring(17,19)// + " "
               
-                var utcTime     = day + month + year +  hour + min + sec
+                var utcTime     = day + month + year + hour + min + sec
 
                 console.log("reply.packetHeader: %s", pkgHeader)
 
@@ -71,8 +72,48 @@ module.exports = function() {
 
                 var msgCRCTail  =  msgSemCRC + crc + tail
 
-                return msgCRCTail
+                var buffer = new Buffer([
+                    "0x" + message.packageHead.substring(0,2), "0x" + message.packageHead.substring(2,4),
+                    "0x22", "0x00",
+                    "0x" + message.dongleCode.substring(0,2),
+                    "0x" + message.dongleCode.substring(2,4),
+                    "0x" + message.dongleCode.substring(4,6),
+                    "0x" + message.dongleCode.substring(6,8),
+                    "0x" + message.dongleCode.substring(8,10),
+                    "0x" + message.dongleCode.substring(10,12),
+                    "0x" + message.dongleCode.substring(12,14),
+                    "0x" + message.dongleCode.substring(14,16),
+                    "0x" + message.dongleCode.substring(16,18),
+                    "0x" + message.dongleCode.substring(18,20),
+                    "0x" + message.dongleCode.substring(20,22),
+                    "0x" + message.dongleCode.substring(22,24),
+                    "0x90",
+                    "0x01",
+                    "0xFF",
+                    "0xFF",
+                    "0xFF",
+                    "0xFF",
+                    "0x00",
+                    "0x00",
+                    "0x" + day,
+                    "0x" + month,
+                    "0x" + year,
+                    "0x" + hour,
+                    "0x" + min,
+                    "0x" + sec,
+                    "0x" + crc.substr(0, 2),
+                    "0x" + crc.substr(2, 4),
+                    "0x0d",
+                    "0x0a"
+                ]);
+                return buffer
 
+            break
+
+            case messageType.MAINTENANCE:
+            break;
+
+            case messageType.SLEEPMODE:
             break
         }
     }

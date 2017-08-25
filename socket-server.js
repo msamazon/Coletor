@@ -67,12 +67,14 @@ server.on("connection", function(socket) {
 
     console.log("reply %s", reply)
 
-    var promise = message.save(function (err) {
-      if (err) console.log(err)
-       else console.log('salvo no banco')
-    })
+    // var promise = message.save(function (err) {
+    //   if (err) console.log(err)
+    //    else console.log('salvo no banco')
+    // })
 
-    socket.write("pong!")
+    console.log("Mensagem Enviada")
+
+    socket.write(reply)
   })
 
   socket.once("close", function() {
