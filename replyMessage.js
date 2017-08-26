@@ -44,12 +44,12 @@ module.exports = function() {
 
                 console.log("reply.date: %s", _date)
 
-                const day       = _date.substring(8,10)// + " "
-                const month     = _date.substring(5,7)// + " "
-                const year      = _date.substring(0,2) /* + " " */+ _date.substring(2,4)// + " "
-                const hour      = _date.substring(11,13)// + " "
-                const min       = _date.substring(14,16)// + " "
-                const sec       = _date.substring(17,19)// + " "
+                var day       = _date.substring(8,10)// + " "
+                var month     = _date.substring(5,7)// + " "
+                var year      = _date.substring(0,2) /* + " " */+ _date.substring(2,4)// + " "
+                var hour      = _date.substring(11,13)// + " "
+                var min       = _date.substring(14,16)// + " "
+                var sec       = _date.substring(17,19)// + " "
               
                 var utcTime     = day + month + year + hour + min + sec
 
@@ -143,12 +143,12 @@ module.exports = function() {
 
             console.log("reply.date: %s", _date)
 
-            const day       = _date.substring(8,10)// + " "
-            const month     = _date.substring(5,7)// + " "
-            const year      = _date.substring(0,2) /* + " " */+ _date.substring(2,4)// + " "
-            const hour      = _date.substring(11,13)// + " "
-            const min       = _date.substring(14,16)// + " "
-            const sec       = _date.substring(17,19)// + " "
+            var day       = _date.substring(8,10)// + " "
+            var month     = _date.substring(5,7)// + " "
+            var year      = _date.substring(0,2) /* + " " */+ _date.substring(2,4)// + " "
+            var hour      = _date.substring(11,13)// + " "
+            var min       = _date.substring(14,16)// + " "
+            var sec       = _date.substring(17,19)// + " "
       
             var utcTime     = day + month + year + hour + min + sec
 
