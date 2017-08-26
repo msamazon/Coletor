@@ -196,8 +196,12 @@ module.exports = function() {
             return buffer
             break;
 
-            case messageType.SLEEPMODE:
-            break
+            //case messageType.SLEEPMODE:
+
+            default:
+                return buffer =  new Buffer([ 0x00, 0x00])
+
+            //break
         }
     }
 }
