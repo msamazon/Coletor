@@ -63,21 +63,21 @@ server.on("connection", function(socket) {
    
     message = result
 
-    var [isReply, reply] = replyMessage(message)
+    var reply = replyMessage(message)
 
 
-    console.log("reply %s", reply)
+    console.log("reply %s", reply[1])
 
     var promise = message.save(function (err) {
       if (err) console.log(err)
        else console.log('salvo no banco')
     })
 
-    if (isReply == 1) {
+    if (reply[0] == 1) {
 
       console.log("Mensagem Enviada")
 
-      socket.write(reply)
+      socket.write(reply[1])
     }
     
   })
