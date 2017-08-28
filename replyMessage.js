@@ -8,7 +8,7 @@ module.exports = function() {
         
         console.log("----------- reply -----------")
 
-        console.log("reply.message: %s", message)
+        // console.log("reply.message: %s", message)
         console.log("reply.eventcode: %s", message.eventcode)
 
         switch(message.eventcode) {
@@ -42,7 +42,7 @@ module.exports = function() {
                     replace(/\..+/, '')     // delete the dot and everything after
                     //> '2012-11-04 14:55:45'
 
-                console.log("reply.date: %s", _date)
+                // console.log("reply.date: %s", _date)
 
                 var day       = _date.substring(8,10)// + " "
                 var month     = _date.substring(5,7)// + " "
@@ -53,18 +53,18 @@ module.exports = function() {
               
                 var utcTime     = day + month + year + hour + min + sec
 
-                console.log("reply.packetHeader: %s", pkgHeader)
+                // console.log("reply.packetHeader: %s", pkgHeader)
 
-                console.log("reply.packetLen: %s", pkgLen)
+                // console.log("reply.packetLen: %s", pkgLen)
 
-                console.log("reply.unitCode: %s", unitCode)
+                // console.log("reply.unitCode: %s", unitCode)
 
-                console.log("reply.utcTime: %s", utcTime)
+                // console.log("reply.utcTime: %s", utcTime)
 
                 var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode +  
                     reconnectedIp + reconnectedPort + utcTime
                 
-                console.log("reply.messageSemCRC %s",  msgSemCRC)
+                // console.log("reply.messageSemCRC %s",  msgSemCRC)
                 
                 var crc         = crcCalc.calcule(msgSemCRC)
 

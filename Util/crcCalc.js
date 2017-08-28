@@ -1,8 +1,6 @@
 // crcCalc.js
 
 exports.calcule = function(hexaLine) {
-
-    console.log(">>>>>>>>>>>>> crc Calc >>>>>>>>>>>>>")
         
     const convert = {
         bin2dec : s => parseInt(s, 2).toString(10),
@@ -70,16 +68,10 @@ exports.calcule = function(hexaLine) {
         crc = crcTab16[index] ^ (crc >> 8);
             
     }
-    
-    console.log("calcule %s", crc)
-    
+        
     var res  = convert.dec2hex(crc)
-            
-    console.log("calcule dec2hex: %s", res)
     
     var resfinal = res.substr(2, 2) + res.substr(0, 2)
-            
-    console.log("calcule result: %s", resfinal)
     
     return resfinal
 }

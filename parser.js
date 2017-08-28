@@ -163,14 +163,6 @@ module.exports = function() {
           message.alarmCurrent = alarmCurrent
           message.rtcTime = rtcTime
           message.gpsData = gpsData
-
-          console.log("message.randomNo %s", message.randomNo)
-          console.log("message.alarmTag %s",message.alarmTag)
-          console.log("message.alarmNo %s",message.alarmNo)
-          console.log("message.alarmThreshold %s",message.alarmThreshold)
-          console.log("message.alarmCurrent %s",message.alarmCurrent)
-          console.log("message.rtcTime %s",message.rtcTime)
-          console.log("message.gpsData %s",message.gpsData)
           
           var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
           ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
@@ -194,8 +186,8 @@ module.exports = function() {
           message.randomNo = randomNo
           message.paramNumbers = paramNumbers
 
-          console.log("message.randomNo %s", message.randomNo)
-          console.log("message.paramNumbers %s", message.paramNumbers)
+          // console.log("message.randomNo %s", message.randomNo)
+          // console.log("message.paramNumbers %s", message.paramNumbers)
 
           return message
 
@@ -208,8 +200,8 @@ module.exports = function() {
           message.randomNo = randomNo
           message.paramNumbers = paramNumbers
 
-          console.log("message.randomNo %s", message.randomNo)
-          console.log("message.paramNumbers %s", message.paramNumbers)
+          // console.log("message.randomNo %s", message.randomNo)
+          // console.log("message.paramNumbers %s", message.paramNumbers)
 
           return message
 
@@ -225,8 +217,8 @@ module.exports = function() {
            message.randomNo    = randomNo
            message.logType     = logType
 
-           console.log("message.randomNo %s", message.randomNo)
-           console.log("message.logType %s", message.logType)
+          //  console.log("message.randomNo %s", message.randomNo)
+          //  console.log("message.logType %s", message.logType)
 
            return message
            
@@ -240,7 +232,7 @@ module.exports = function() {
 
            message.randomNo    = randomNo
            
-           console.log("message.randomNo %s", message.randomNo)
+          //  console.log("message.randomNo %s", message.randomNo)
 
            return message
 
@@ -254,7 +246,7 @@ module.exports = function() {
 
           message.randomNo    = randomNo
           
-          console.log("message.randomNo %s", message.randomNo)
+          // console.log("message.randomNo %s", message.randomNo)
 
           return message
 

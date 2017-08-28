@@ -65,10 +65,10 @@ server.on("connection", function(socket) {
 
     var reply = replyMessage(message)
 
-
     console.log("reply %s", reply[1])
 
     var promise = message.save(function (err) {
+
       if (err) console.log(err)
        else console.log('salvo no banco')
     })
