@@ -37,7 +37,7 @@ module.exports = function() {
 
       switch(eventCode) {
         
-        case "0190":
+        //case "0190":
         case messageType.LOGIN://Login Packet (1001/9001) 
 
           console.log("<<login>>")
@@ -65,19 +65,19 @@ module.exports = function() {
           message.param = param
           message.dongleDateHex = dongleDateHex
           message.crcCode = crcCode
-          console.log("message.gpsData %s ", gpsData)
-          console.log("message.obdModule %s ", obdModule)
-          console.log("message.firmwareVersion %s ", firmwareVersion)
-          console.log("message.hardwareVersion %s ", hardwareVersion)
-          console.log("message.qtparam %s ", qtparam)
-          console.log("message.param %s ", param)
-          console.log("message.dongleDateHex %s ", dongleDateHex)
-          console.log("message.crcCode %s ", crcCode)
+          //console.log("message.gpsData %s ", gpsData)
+          //console.log("message.obdModule %s ", obdModule)
+          //console.log("message.firmwareVersion %s ", firmwareVersion)
+          //console.log("message.hardwareVersion %s ", hardwareVersion)
+          //console.log("message.qtparam %s ", qtparam)
+          //console.log("message.param %s ", param)
+          //console.log("message.dongleDateHex %s ", dongleDateHex)
+          //console.log("message.crcCode %s ", crcCode)
 
           return message
         break;
 
-        case "0390":
+        //case "0390":
         case messageType.MAINTENANCE://Maintenance(1003/9003) 
 
           console.log("<<Maintenance>>")
@@ -96,22 +96,22 @@ module.exports = function() {
 
           console.log("<<Sleep Mode Fixed Upload>>")
 
-          var time      = text.substring(36, 36 + (2 *6))
+          var time      = text.substring(36, 36 + (2  *6))
           const timeEnd   = 36 + (2 *6)
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
           message.time = time
           message.gpsData = gpsData
 
-          console.log("message.time %s", message.time)
-          console.log("message.gpsData %s", message.gpsData)
+          //console.log("message.time %s", message.time)
+          //console.log("message.gpsData %s", message.gpsData)
 
           return message
 
         break;
         
-        case "0220":
-        case "0120": //Comprehensive data (0x2001/0x2002)
+        //case "0220":
+        case messageType.COMPREHENSIVE_DATA: //Comprehensive data (0x2001/0x2002)
             console.log("<<Comprehensive data>>")
             var time                        = text.substring(36, 36 + (2 * 6))
             var dataSitch                   = text.substring(48, 48 + (2 * 3))
@@ -141,23 +141,11 @@ module.exports = function() {
             message.GSENSOR_Data = GSENSOR_Data
             message.customField = customField
 
-            console.log(time)
-            console.log(dataSitch)
-            console.log(gpsData)
-            console.log(odbData)
-            console.log(currentTripFuelConsumption)
-            console.log(currentTripMileage)
-            console.log(currentTripDuration)
-            console.log(GSEN_Data_Len)
-            console.log(GSENSOR_Data)
-            console.log(customField)
-
             return message
 
         break;
         
-        case "03a3":
-        case "0320": // Alarm (2003/A003) 
+        case messageType.ALARM: // Alarm (2003/A003) 
           console.log("<<Alarm>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -167,7 +155,6 @@ module.exports = function() {
           var alarmCurrent    = text.substring(48, 48 + (2 * 2))
           var rtcTime         = text.substring(52, 52 + (2 * 6))
           var gpsData         = text.substring(64, 64 +(2 * 21))
-
 
           message.randomNo = randomNo
           message.alarmTag = alarmTag
