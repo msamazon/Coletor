@@ -106,7 +106,7 @@ module.exports = function() {
                     "0x0d",
                     "0x0a"
                 ]);
-                return buffer
+                return [1, buffer]
 
             break
 
@@ -193,13 +193,13 @@ module.exports = function() {
                 "0x0d",//tail
                 "0x0a" //tail
             ]);
-            return buffer
+            return [1 , buffer]
             break;
 
             //case messageType.SLEEPMODE:
 
             default:
-                return buffer =  new Buffer([ 0x00, 0x00])
+                return [0 , buffer =  new Buffer([ 0x00, 0x00])]
 
             //break
         }

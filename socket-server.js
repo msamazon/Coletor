@@ -63,7 +63,8 @@ server.on("connection", function(socket) {
    
     message = result
 
-    var reply = replyMessage(message)
+    var [isReply, reply] = replyMessage(message)
+
 
     console.log("reply %s", reply)
 
@@ -72,9 +73,13 @@ server.on("connection", function(socket) {
        else console.log('salvo no banco')
     })
 
-    console.log("Mensagem Enviada")
+    if (isReply == 1) {
 
-    socket.write(reply)
+      console.log("Mensagem Enviada")
+
+      socket.write(reply)
+    }
+    
   })
 
   socket.once("close", function() {
