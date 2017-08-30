@@ -51,7 +51,7 @@ server.on("connection", function(socket) {
         var i = lines.length;
         while (i--) {
           msg = msg + lines[i]
-            //console.log(lines[i]);
+            
         }
     } else {
        // console.log('>>data:', data);
@@ -90,10 +90,8 @@ server.on("connection", function(socket) {
   socket.on("error", function() {
     console.log("Connection %s error", remoteAddress)
   })
-
 })
 
-//server.listen(52275, function () {
 server.listen(4884, function () {
   console.log('server listening to %j ', server.address())
 })

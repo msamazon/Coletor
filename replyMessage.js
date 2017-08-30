@@ -5,6 +5,16 @@ module.exports = function() {
         var messageType = require("./Util/MessageType");
 
         var crcCalc = require("./Util/crcCalc");
+
+
+        const convert = {
+            bin2dec : s => parseInt(s, 2).toString(10),
+            bin2hex : s => parseInt(s, 2).toString(16),
+            dec2bin : s => parseInt(s, 10).toString(2),
+            dec2hex : s => parseInt(s, 10).toString(16),
+            hex2bin : s => parseInt(s, 16).toString(2),
+            hex2dec : s => parseInt(s, 16).toString(10)
+        }
         
         console.log("----------- reply Message -----------")
 
@@ -46,7 +56,7 @@ module.exports = function() {
 
                 var day       = _date.substring(8,10)// + " "
                 var month     = _date.substring(5,7)// + " "
-                var year      = _date.substring(0,2) /* + " " */+ _date.substring(2,4)// + " "
+                var year      = _date.substring(2,4)// + " "
                 var hour      = _date.substring(11,13)// + " "
                 var min       = _date.substring(14,16)// + " "
                 var sec       = _date.substring(17,19)// + " "
@@ -56,12 +66,14 @@ module.exports = function() {
                 var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode +  
                     reconnectedIp + reconnectedPort + utcTime
                                 
-                var crc         = crcCalc.calcule(msgSemCRC)
+                var crc       = crcCalc.calcule(msgSemCRC)
 
                 var buffer = new Buffer([
-                    "0x" + message.packageHead.substring(0,2), "0x" + message.packageHead.substring(2,4),
-                    "0x22", "0x00",//4
-                    "0x" + message.dongleCode.substring(0,2),
+                    "0x" + message.packageHead.substring(0,2),
+                    "0x" + message.packageHead.substring(2,4),
+                    "0x22", 
+                    "0x00",//4
+                    "0x" + message.dongleCode.substring(0,2), //dongle
                     "0x" + message.dongleCode.substring(2,4),
                     "0x" + message.dongleCode.substring(4,6),
                     "0x" + message.dongleCode.substring(6,8),
@@ -73,20 +85,20 @@ module.exports = function() {
                     "0x" + message.dongleCode.substring(18,20),
                     "0x" + message.dongleCode.substring(20,22),
                     "0x" + message.dongleCode.substring(22,24),//16
-                    "0x90",
-                    "0x01",
+                    "0x" + messageType.ALARM_REPLAY.substr(0, 2),
+                    "0x" + messageType.ALARM_REPLAY.substr(2, 4),
+                    "0xFF", //Re‐connected IP
                     "0xFF",
                     "0xFF",
                     "0xFF",
-                    "0xFF",
-                    "0x00",
+                    "0x00", //port
                     "0x00",//24
-                    "0x" + day,
-                    "0x" + month,
-                    "0x" + year,
-                    "0x" + hour,
-                    "0x" + min,
-                    "0x" + sec,
+                    "0x" + convert.dec2hex(day), //utc time
+                    "0x" + convert.dec2hex(month),
+                    "0x" + convert.dec2hex(year.substring(2, 4)),
+                    "0x" + convert.dec2hex(hour),
+                    "0x" + convert.dec2hex(min),
+                    "0x" + convert.dec2hex(sec),
                     "0x" + crc.substr(0, 2),
                     "0x" + crc.substr(2, 4),
                     "0x0d",
