@@ -6,10 +6,10 @@ module.exports = function() {
 
         var crcCalc = require("./Util/crcCalc");
         
-        console.log("----------- reply -----------")
+        console.log("----------- reply Message -----------")
 
         // console.log("reply.message: %s", message)
-        console.log("reply.eventcode: %s", message.eventcode)
+        //console.log("reply.eventcode: %s", message.eventcode)
 
         switch(message.eventcode) {
             case messageType.LOGIN: 

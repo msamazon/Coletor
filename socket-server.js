@@ -42,7 +42,7 @@ server.on("connection", function(socket) {
 
     var hex = buffer.toString ("hex")
 
-    console.log('|%s|', hex)
+//    console.log('|%s|', hex)
 
     var data = buffer.toString();
 
@@ -65,8 +65,6 @@ server.on("connection", function(socket) {
 
     var reply = replyMessage(message)
 
-    console.log("reply %s", reply[1])
-
     var promise = message.save(function (err) {
 
       if (err) console.log(err)
@@ -75,11 +73,12 @@ server.on("connection", function(socket) {
 
     if (reply[0] == 1) {
 
+      console.log("reply %s", reply[1])
+      
       console.log("Mensagem Enviada")
 
       socket.write(reply[1])
     }
-    
   })
 
   socket.once("close", function() {

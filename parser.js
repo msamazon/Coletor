@@ -13,7 +13,7 @@ module.exports = function() {
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
       //text = "4040310033574e2d3136303130303535042018081101361418081101361403787da60034b7e30c08000000ad024c3c0d0a" //sleep mode
-      var result = '';
+      var result = ''
       
       var dateReceived = new Date()      
       var head         = text.substring(0, 4)
@@ -28,19 +28,18 @@ module.exports = function() {
       message.eventcode     = eventCode
       message.dateReceived  = new Date()
 
-      console.log("message.packageHead %s" , message.packageHead)
-      console.log("message.headLen %s" , message.packageLength)
-      console.log("message.dongleCode %s" , message.dongleCode)
-      console.log("message.eventCode %s" , message.eventcode)
-      console.log("message.dateReceived %s" , message.dateReceived)
-      console.log("Evento %s ", eventCode)
+      //console.log("message.packageHead %s" , message.packageHead)
+      //console.log("message.headLen %s" , message.packageLength)
+      //console.log("message.dongleCode %s" , message.dongleCode)
+      //console.log("message.eventCode %s" , message.eventcode)
+      //console.log("message.dateReceived %s" , message.dateReceived)
+      //console.log("Evento %s ", eventCode)
 
       switch(eventCode) {
         
-        //case "0190":
         case messageType.LOGIN://Login Packet (1001/9001) 
 
-          console.log("<<login>>")
+          console.log("<<login>> %s: ", message.dongleCode)
 
           var gpsData              = text.substring(36, 79)
           const obdModule          = text.substring(79, 87)
@@ -77,16 +76,15 @@ module.exports = function() {
           return message
         break;
 
-        //case "0390":
         case messageType.MAINTENANCE://Maintenance(1003/9003) 
 
-          console.log("<<Maintenance>>")
+          console.log("<<Maintenance>> %s: ", message.dongleCode)
 
           const data = text.substring(36, 48)
 
           message.data = data
 
-          console.log("message.data %s", message.data)
+          //console.log("message.data %s", message.data)
           
           return message
 
@@ -94,7 +92,7 @@ module.exports = function() {
 
         case messageType.SLEEPMODE: // Sleep Mode Fixed Upload (2004) 
 
-          console.log("<<Sleep Mode Fixed Upload>>")
+          console.log("<<Sleep Mode Fixed Upload>> %s: ", message.dongleCode)
 
           var time      = text.substring(36, 36 + (2  *6))
           const timeEnd   = 36 + (2 *6)
@@ -110,43 +108,46 @@ module.exports = function() {
 
         break;
         
-        //case "0220":
+
         case messageType.COMPREHENSIVE_DATA: //Comprehensive data (0x2001/0x2002)
-            console.log("<<Comprehensive data>>")
-            var time                        = text.substring(36, 36 + (2 * 6))
-            var dataSitch                   = text.substring(48, 48 + (2 * 3))
-            var gpsData                     = text.substring(54, 54 + (2 * 21))
-            var odbData                     = text.substring(97, 97 + (55 * 2))
-            var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
-            var currentTripMileage          = text.substring(215, 215 + (4 * 2))
-            var currentTripDuration         = text.substring(223, 223 + (4 * 2))
-            var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
-            const gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
-            const gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
+          
+        console.log("<<Comprehensive data>>")
+          
+          var time                        = text.substring(36, 36 + (2 * 6))
+          var dataSitch                   = text.substring(48, 48 + (2 * 3))
+          var gpsData                     = text.substring(54, 54 + (2 * 21))
+          var odbData                     = text.substring(97, 97 + (55 * 2))
+          var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
+          var currentTripMileage          = text.substring(215, 215 + (4 * 2))
+          var currentTripDuration         = text.substring(223, 223 + (4 * 2))
+          var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
+          const gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
+          const gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
 
-            const result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
-            const resuldEnd                 = 235 + (result_gsen * 2)
-            var GSENSOR_Data                = text.substring(235, resuldEnd)
+          const result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
+          const resuldEnd                 = 235 + (result_gsen * 2)
+          var GSENSOR_Data                = text.substring(235, resuldEnd)
 
-            var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
+          var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
-            message.time = time
-            message.dataSitch = dataSitch
-            message.gpsData = gpsData
-            message.odbData = odbData
-            message.currentTripFuelConsumption = currentTripFuelConsumption
-            message.currentTripMileage = currentTripMileage
-            message.currentTripDuration = currentTripDuration
-            message.GSEN_Data_Len = GSEN_Data_Len
-            message.GSENSOR_Data = GSENSOR_Data
-            message.customField = customField
+          message.time = time
+          message.dataSitch = dataSitch
+          message.gpsData = gpsData
+          message.odbData = odbData
+          message.currentTripFuelConsumption = currentTripFuelConsumption
+          message.currentTripMileage = currentTripMileage
+          message.currentTripDuration = currentTripDuration
+          message.GSEN_Data_Len = GSEN_Data_Len
+          message.GSENSOR_Data = GSENSOR_Data
+          message.customField = customField
 
-            return message
+          return message
 
         break;
         
         case messageType.ALARM: // Alarm (2003/A003) 
-          console.log("<<Alarm>>")
+          
+        console.log("<<Alarm>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var alarmTag        = text.substring(40, 40 + (2 * 1))
@@ -163,21 +164,12 @@ module.exports = function() {
           message.alarmCurrent = alarmCurrent
           message.rtcTime = rtcTime
           message.gpsData = gpsData
-          
-          var _json = "{ full: " + message.full + ", dateReceived: " + message.dateReceived +
-          ", packageHead: " + message.packageHead + ", packageLength: " + message.packageLength +
-          ", dongleCode: " + message.dongleCode + ", eventcode: " + message.eventcode +
-          ", randomNo: " + message.randomNo + ", alarmTag: "  + message.alarmTag +
-          ", alarmThreshold: " + message.alarmThreshold + ", alarmCurrent: " + alarmCurrent +
-          ", rtcTime: " + message.rtcTime + ", gpsData: " + message.gpsData +  "}"
-          //tem o resto nao mapeado
-          
+                  
           return message
            
         break;
 
-        case "01b0":
-        case "0130": //Setting (3001/B001) 
+        case messageType.SETTING: //Setting (3001/B001) 
           console.log("<<Setting>>")
         
           var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -193,8 +185,7 @@ module.exports = function() {
 
         break;
 
-        case "02b0":
-        case "0230": //Inquiry (3002/B002) 
+        case messageType.INQUIRY: //Inquiry (3002/B002) 
           console.log("<<Inquiry>>")
           
           message.randomNo = randomNo
@@ -207,8 +198,7 @@ module.exports = function() {
 
         break;
 
-        case "01c0":
-        case "0140": // Get LOG (4001/C001) 
+        case messageType.GETLOG: // Get LOG (4001/C001) 
            console.log("<<Get LOG>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -224,8 +214,7 @@ module.exports = function() {
            
         break;
 
-        case "02c0":
-        case "0240": // UNIT Self-test(4002/C002) 
+        case messageType.UNIT_SELF_TEST: // UNIT Self-test(4002/C002) 
            console.log("<<UNIT Self-test>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -238,8 +227,8 @@ module.exports = function() {
 
         break;
 
-        case "03c0":
-        case "0340": //Reset Device (4003/C003)
+
+        case messageType.RESET_DEVICE: //Reset Device (4003/C003)
           console.log("<<Reset Device>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -252,8 +241,7 @@ module.exports = function() {
 
         break;
 
-        case "0440":
-        case "04c0": //Restore Factory Settings (4004/C004)
+        case messageType.RESTORE_FACTORY_SETTINGS: //Restore Factory Settings (4004/C004)
           console.log("Restore Factory Settings")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -266,17 +254,16 @@ module.exports = function() {
 
         break;
 
-        case "0540":
-        case "05c0": //Clear Comprehensive Data Storage Area(4005/C005) 
+        case messageType.CLEAR_COMPREHENSIVE_DATA: //Clear Comprehensive Data Storage Area(4005/C005) 
           console.log("<<Clear Comprehensive Data Storage Area>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
-          console.log(randomNo)
+          //console.log(randomNo)
           
           message.randomNo = randomNo
           
-          console.log("message.randomNo %s", message.randomNo)
+          //console.log("message.randomNo %s", message.randomNo)
 
           return message
 
