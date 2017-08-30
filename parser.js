@@ -108,7 +108,7 @@ module.exports = function() {
 
         break;
         
-
+        case messageType.COMPREHENSIVE_DATA_REPLAY:
         case messageType.COMPREHENSIVE_DATA: //Comprehensive data (0x2001/0x2002)
           
         console.log("<<Comprehensive data>>")
