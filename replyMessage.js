@@ -51,30 +51,16 @@ module.exports = function() {
                 var min       = _date.substring(14,16)// + " "
                 var sec       = _date.substring(17,19)// + " "
               
-                var utcTime     = day + month + year + hour + min + sec
-
-                // console.log("reply.packetHeader: %s", pkgHeader)
-
-                // console.log("reply.packetLen: %s", pkgLen)
-
-                // console.log("reply.unitCode: %s", unitCode)
-
-                // console.log("reply.utcTime: %s", utcTime)
+                var utcTime   = day + month + year + hour + min + sec
 
                 var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode +  
                     reconnectedIp + reconnectedPort + utcTime
-                
-                // console.log("reply.messageSemCRC %s",  msgSemCRC)
-                
+                                
                 var crc         = crcCalc.calcule(msgSemCRC)
-
-                var tail        = "0d0a"
-
-                var msgCRCTail  =  msgSemCRC + crc + tail
 
                 var buffer = new Buffer([
                     "0x" + message.packageHead.substring(0,2), "0x" + message.packageHead.substring(2,4),
-                    "0x22", "0x00",
+                    "0x22", "0x00",//4
                     "0x" + message.dongleCode.substring(0,2),
                     "0x" + message.dongleCode.substring(2,4),
                     "0x" + message.dongleCode.substring(4,6),
@@ -86,7 +72,7 @@ module.exports = function() {
                     "0x" + message.dongleCode.substring(16,18),
                     "0x" + message.dongleCode.substring(18,20),
                     "0x" + message.dongleCode.substring(20,22),
-                    "0x" + message.dongleCode.substring(22,24),
+                    "0x" + message.dongleCode.substring(22,24),//16
                     "0x90",
                     "0x01",
                     "0xFF",
@@ -94,7 +80,7 @@ module.exports = function() {
                     "0xFF",
                     "0xFF",
                     "0x00",
-                    "0x00",
+                    "0x00",//24
                     "0x" + day,
                     "0x" + month,
                     "0x" + year,
@@ -104,7 +90,7 @@ module.exports = function() {
                     "0x" + crc.substr(0, 2),
                     "0x" + crc.substr(2, 4),
                     "0x0d",
-                    "0x0a"
+                    "0x0a"//34
                 ]);
                 return [1, buffer]
 

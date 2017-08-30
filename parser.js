@@ -29,7 +29,7 @@ module.exports = function() {
       message.dateReceived  = new Date()
 
       //console.log("message.packageHead %s" , message.packageHead)
-      //console.log("message.headLen %s" , message.packageLength)
+      console.log("message.headLen %s" , message.packageLength)
       //console.log("message.dongleCode %s" , message.dongleCode)
       //console.log("message.eventCode %s" , message.eventcode)
       //console.log("message.dateReceived %s" , message.dateReceived)

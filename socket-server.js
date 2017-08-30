@@ -36,7 +36,7 @@ server.on("connection", function(socket) {
 
   socket.on("data", function(buffer) {
     console.log('> Connection data from %s ', remoteAddress)
-    console.log('> Received %s bytes of data.', buffer.length)
+    //console.log('> Received %s bytes of data.', buffer.length)
 
     var buff = new Buffer(buffer, 'utf8')
 
@@ -51,10 +51,10 @@ server.on("connection", function(socket) {
         var i = lines.length;
         while (i--) {
           msg = msg + lines[i]
-            console.log(lines[i]);
+            //console.log(lines[i]);
         }
     } else {
-        console.log('>>data:', data);
+       // console.log('>>data:', data);
     }
 
     var message = new Message()
@@ -70,6 +70,8 @@ server.on("connection", function(socket) {
       if (err) console.log(err)
        else console.log('salvo no banco')
     })
+
+    console.log("reply? %s", reply[0])
 
     if (reply[0] == 1) {
 
