@@ -2,6 +2,7 @@
 
 module.exports = Object.freeze({
     LOGIN: '0110',
+    LOGIN_REPLY: '0190',
     MAINTENANCE: '0310',
     MAINTENANCE_REPLAY: '0390',
     SLEEPMODE: '0420',

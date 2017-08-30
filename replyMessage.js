@@ -2,10 +2,9 @@
 module.exports = function() {
 
     this.replyMessage = function(message) {
-        var messageType = require("./Util/MessageType");
+        var messageType = require("./Util/MessageType")
 
-        var crcCalc = require("./Util/crcCalc");
-
+        var crcCalc = require("./Util/crcCalc")
 
         const convert = {
             bin2dec : s => parseInt(s, 2).toString(10),
@@ -17,9 +16,6 @@ module.exports = function() {
         }
         
         console.log("----------- reply Message -----------")
-
-        // console.log("reply.message: %s", message)
-        //console.log("reply.eventcode: %s", message.eventcode)
 
         switch(message.eventcode) {
             case messageType.LOGIN: 
@@ -41,18 +37,17 @@ module.exports = function() {
                         message.dongleCode.substring(20,22) +
                         message.dongleCode.substring(22,24)
                 
-                var eventCode               = "9001"
+                
+                        var eventCode               = "9001"
 
-                var reconnectedIp           = "ffffffff"
+                
+                        var reconnectedIp           = "ffffffff"
 
                 var reconnectedPort         = "0000"
 
                 var _date = new Date().toISOString().
                     replace(/T/, ' ').      // replace T with a space
                     replace(/\..+/, '')     // delete the dot and everything after
-                    //> '2012-11-04 14:55:45'
-
-                // console.log("reply.date: %s", _date)
 
                 var day       = _date.substring(8,10)// + " "
                 var month     = _date.substring(5,7)// + " "
@@ -111,9 +106,9 @@ module.exports = function() {
             case messageType.MAINTENANCE:
             
                 var pkgHeader = message.packageHead.substring(0,2) +
-                message.packageHead.substring(2,4)
+                    message.packageHead.substring(2,4)
         
-                var pkgLen = "2200"
+                var pkgLen = "1600"
 
                 var unitCode = message.dongleCode.substring(0,2) +
                     message.dongleCode.substring(2,4) +
@@ -130,21 +125,17 @@ module.exports = function() {
         
                 var eventCode = messageType.MAINTENANCE_REPLAY
 
-                console.log("reply.packetHeader: %s", pkgHeader)
-
-                console.log("reply.packetLen: %s", pkgLen)
-
-                console.log("reply.unitCode: %s", unitCode)
-
-                var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode/* +  reconnectedIp + reconnectedPort + utcTime*/
+                var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode
                 
                 console.log("reply.messageSemCRC %s",  msgSemCRC)
         
                 var crc = crcCalc.calcule(msgSemCRC)
 
                 var buffer = new Buffer([
-                    "0x" + message.packageHead.substring(0,2), "0x" + message.packageHead.substring(2,4),
-                    "0x22", "0x00",
+                    "0x" + message.packageHead.substring(0,2),
+                    "0x" + message.packageHead.substring(2,4),
+                    "0x16",
+                    "0x00",//4
                     "0x" + message.dongleCode.substring(0,2),
                     "0x" + message.dongleCode.substring(2,4),
                     "0x" + message.dongleCode.substring(4,6),
@@ -156,13 +147,13 @@ module.exports = function() {
                     "0x" + message.dongleCode.substring(16,18),
                     "0x" + message.dongleCode.substring(18,20),
                     "0x" + message.dongleCode.substring(20,22),
-                    "0x" + message.dongleCode.substring(22,24),
+                    "0x" + message.dongleCode.substring(22,24),//16
                     "0x" + messageType.MAINTENANCE_REPLAY.substring(0,2), //eventcode
                     "0x" + messageType.MAINTENANCE_REPLAY.substring(2,4),
                     "0x" + crc.substr(0, 2),
                     "0x" + crc.substr(2, 4),
                     "0x0d",//tail
-                    "0x0a" //tail
+                    "0x0a" //tail //22
                 ]);
                 return [1 , buffer]
             break
@@ -176,7 +167,7 @@ module.exports = function() {
                 var pkgHeader = message.packageHead.substring(0,2) +
                     message.packageHead.substring(2,4)
     
-                var pkgLen = "2200"
+                var pkgLen = "1800"
 
                 var unitCode = message.dongleCode.substring(0,2) +
                     message.dongleCode.substring(2,4) +
@@ -193,21 +184,15 @@ module.exports = function() {
     
                 var eventCode = messageType.MAINTENANCE_REPLAY
 
-                //console.log("reply.packetHeader: %s", pkgHeader)
-
-                //console.log("reply.packetLen: %s", pkgLen)
-
-                //console.log("reply.unitCode: %s", unitCode)
-
                 var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode
-            
-                //console.log("reply.messageSemCRC %s",  msgSemCRC)
-    
+                
                 var crc = crcCalc.calcule(msgSemCRC)
 
                 var buffer = new Buffer([
-                    "0x" + message.packageHead.substring(0,2), "0x" + message.packageHead.substring(2,4),
-                    "0x22", "0x00",
+                    "0x" + message.packageHead.substring(0,2),
+                    "0x" + message.packageHead.substring(2,4),
+                    "0x18",
+                    "0x00",//4
                     "0x" + message.dongleCode.substring(0,2),
                     "0x" + message.dongleCode.substring(2,4),
                     "0x" + message.dongleCode.substring(4,6),
@@ -219,7 +204,7 @@ module.exports = function() {
                     "0x" + message.dongleCode.substring(16,18),
                     "0x" + message.dongleCode.substring(18,20),
                     "0x" + message.dongleCode.substring(20,22),
-                    "0x" + message.dongleCode.substring(22,24),
+                    "0x" + message.dongleCode.substring(22,24),//16
                     "0x" + messageType.ALARM_REPLAY.substring(0,2), //eventcode
                     "0x" + messageType.ALARM_REPLAY.substring(2,4),
                     "0x" + message.randomNo.substring(0, 2),
@@ -239,7 +224,7 @@ module.exports = function() {
             break
 
             default:
-                return [0 , new Buffer([ 0x00, 0x00])]
+                return [0 , new Buffer([0x00, 0x00])]
 
             //break
         }
