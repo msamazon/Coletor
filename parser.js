@@ -8,7 +8,7 @@ module.exports = function() {
       
       var message = new Message()
       
-      text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      //text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
       //string para text local
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
@@ -29,7 +29,7 @@ module.exports = function() {
       message.dateReceived  = new Date()
 
       //console.log("message.packageHead %s" , message.packageHead)
-      console.log("message.headLen %s" , message.packageLength)
+      //console.log("message.headLen %s" , message.packageLength)
       //console.log("message.dongleCode %s" , message.dongleCode)
       //console.log("message.eventCode %s" , message.eventcode)
       //console.log("message.dateReceived %s" , message.dateReceived)
@@ -37,7 +37,7 @@ module.exports = function() {
 
       switch(eventCode) {
         
-        case messageType.LOGIN://Login Packet (1001/9001) 
+        case messageType.LOGIN://1 Login Packet (1001/9001) 
 
           console.log("<<login>> %s: ", message.dongleCode)
 
@@ -56,64 +56,32 @@ module.exports = function() {
           const crcEnd             = dongleEnd + (5)
           const crcCode            = text.substring(dongleEnd, crcEnd)
 
-          message.gpsData = gpsData
-          message.obdModule = obdModule
-          message.firmwareVersion = firmwareVersion
-          message.hardwareVersion = hardwareVersion
-          message.qtparam = qtparam
-          message.param = param
-          message.dongleDateHex = dongleDateHex
-          message.crcCode = crcCode
-          //console.log("message.gpsData %s ", gpsData)
-          //console.log("message.obdModule %s ", obdModule)
-          //console.log("message.firmwareVersion %s ", firmwareVersion)
-          //console.log("message.hardwareVersion %s ", hardwareVersion)
-          //console.log("message.qtparam %s ", qtparam)
-          //console.log("message.param %s ", param)
-          //console.log("message.dongleDateHex %s ", dongleDateHex)
-          //console.log("message.crcCode %s ", crcCode)
-
+          message.gpsData          = gpsData
+          message.obdModule        = obdModule
+          message.firmwareVersion  = firmwareVersion
+          message.hardwareVersion  = hardwareVersion
+          message.qtparam          = qtparam
+          message.param            = param
+          message.dongleDateHex    = dongleDateHex
+          message.crcCode          = crcCode
+          
           return message
         break;
 
-        case messageType.MAINTENANCE://Maintenance(1003/9003) 
+        case messageType.MAINTENANCE://2 Maintenance(1003/9003) 
 
           console.log("<<Maintenance>> %s: ", message.dongleCode)
 
-          const data = text.substring(36, 48)
-
-          message.data = data
-
-          //console.log("message.data %s", message.data)
+          message.data = text.substring(36, 48)
           
           return message
 
         break;
 
-        case messageType.SLEEPMODE: // Sleep Mode Fixed Upload (2004) 
-
-          console.log("<<Sleep Mode Fixed Upload>> %s: ", message.dongleCode)
-
-          var time      = text.substring(36, 36 + (2  *6))
-          const timeEnd   = 36 + (2 *6)
-          var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
-
-          message.time = time
-          message.gpsData = gpsData
-
-          //console.log("message.time %s", message.time)
-          //console.log("message.gpsData %s", message.gpsData)
-
-          return message
-
-        break;
-        
-        case messageType.COMPREHENSIVE_DATA_REPLAY:
-        case messageType.COMPREHENSIVE_DATA: //Comprehensive data (0x2001/0x2002)
+        case messageType.COMPREHENSIVE_DATA: //3 Comprehensive data (0x2001/0x2002)
+          console.log("<<Comprehensive data>> %s", message.dongleCode)
           
-        console.log("<<Comprehensive data>>")
-          
-          var time                        = text.substring(36, 36 + (2 * 6))
+          var rtcTime                     = text.substring(36, 36 + (2 * 6))
           var dataSitch                   = text.substring(48, 48 + (2 * 3))
           var gpsData                     = text.substring(54, 54 + (2 * 21))
           var odbData                     = text.substring(97, 97 + (55 * 2))
@@ -130,24 +98,24 @@ module.exports = function() {
 
           var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
-          message.time = time
-          message.dataSitch = dataSitch
-          message.gpsData = gpsData
-          message.odbData = odbData
-          message.currentTripFuelConsumption = currentTripFuelConsumption
-          message.currentTripMileage = currentTripMileage
-          message.currentTripDuration = currentTripDuration
-          message.GSEN_Data_Len = GSEN_Data_Len
-          message.GSENSOR_Data = GSENSOR_Data
-          message.customField = customField
+          message.time                        = rtcTime
+          message.dataSitch                   = dataSitch
+          message.gpsData                     = gpsData
+          message.odbData                     = odbData
+          message.currentTripFuelConsumption  = currentTripFuelConsumption
+          message.currentTripMileage          = currentTripMileage
+          message.currentTripDuration         = currentTripDuration
+          message.GSEN_Data_Len               = GSEN_Data_Len
+          message.GSENSOR_Data                = GSENSOR_Data
+          message.customField                 = customField
 
           return message
 
         break;
+
+        case messageType.ALARM: //4 Alarm (2003/A003) 
         
-        case messageType.ALARM: // Alarm (2003/A003) 
-          
-        console.log("<<Alarm>>")
+          console.log("<<Alarm>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var alarmTag        = text.substring(40, 40 + (2 * 1))
@@ -157,48 +125,74 @@ module.exports = function() {
           var rtcTime         = text.substring(52, 52 + (2 * 6))
           var gpsData         = text.substring(64, 64 +(2 * 21))
 
-          message.randomNo = randomNo
-          message.alarmTag = alarmTag
-          message.alarmNo = alarmNo
+          message.randomNo       = randomNo
+          message.alarmTag       = alarmTag
+          message.alarmNo        = alarmNo
           message.alarmThreshold = alarmThreshold
-          message.alarmCurrent = alarmCurrent
-          message.rtcTime = rtcTime
-          message.gpsData = gpsData
-                  
+          message.alarmCurrent   = alarmCurrent
+          message.rtcTime        = rtcTime
+          message.gpsData        = gpsData
+                
           return message
-           
+         
         break;
 
-        case messageType.SETTING: //Setting (3001/B001) 
+        case messageType.SLEEPMODE: //5 Sleep Mode Fixed Upload (2004) 
+
+          console.log("<<Sleep Mode Fixed Upload>> %s: ", message.dongleCode)
+
+          var time      = text.substring(36, 36 + (2  *6))
+          const timeEnd  = 36 + (2 *6)
+          var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
+
+          message.time = time
+          message.gpsData = gpsData
+
+          return message
+
+        break;
+
+        case messageType.SETTING: //6 Setting (3001/B001) 
           console.log("<<Setting>>")
         
-          var randomNo        = text.substring(36, 36 + (2 * 2))
-          var paramNumbers    = text.substring(40, 36 + (2 * 1))
+          var randomNo          = text.substring(36, 36 + (2 * 2))
+          var paramNumbers      = text.substring(40, 36 + (2 * 1))
 
-          message.randomNo = randomNo
-          message.paramNumbers = paramNumbers
+          message.randomNo      = randomNo
+          message.paramNumbers  = paramNumbers
 
-          // console.log("message.randomNo %s", message.randomNo)
-          // console.log("message.paramNumbers %s", message.paramNumbers)
+          var pck_1                 = parseInt(paramNumbers.substring(0, 2), 16)
+          var pck_2                 = parseInt(paramNumbers.substring(2, 4), 16)
+ 
+          var result                = pck_2.toString() + pck_1.toString()
+ 
+          message.parameterSettingData  = text.substring(42, 42 + (result * 2))
 
           return message
 
         break;
 
-        case messageType.INQUIRY: //Inquiry (3002/B002) 
+        case messageType.INQUIRY: //7 Inquiry (3002/B002) 
           console.log("<<Inquiry>>")
           
-          message.randomNo = randomNo
-          message.paramNumbers = paramNumbers
-
-          // console.log("message.randomNo %s", message.randomNo)
-          // console.log("message.paramNumbers %s", message.paramNumbers)
+          var randomNo          = text.substring(36, 36 + (2 * 2))
+          var paramNumbers      = text.substring(40, 36 + (2 * 1))
+          
+          message.randomNo      = randomNo
+          message.paramNumbers  = paramNumbers
+          
+          var pck_1             = parseInt(paramNumbers.substring(0, 2), 16)
+          var pck_2             = parseInt(paramNumbers.substring(2, 4), 16)
+ 
+          var result            = pck_2.toString() + pck_1.toString()
+ 
+          message.inquiryParamList  = text.substring(42, 42 + (result * 2))
 
           return message
 
         break;
 
-        case messageType.GETLOG: // Get LOG (4001/C001) 
+        case messageType.GETLOG: //8  Get LOG (4001/C001) 
            console.log("<<Get LOG>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
@@ -207,104 +201,89 @@ module.exports = function() {
            message.randomNo    = randomNo
            message.logType     = logType
 
-          //  console.log("message.randomNo %s", message.randomNo)
-          //  console.log("message.logType %s", message.logType)
-
            return message
            
         break;
 
-        case messageType.UNIT_SELF_TEST: // UNIT Self-test(4002/C002) 
+        case messageType.UNIT_SELF_TEST: //9 UNIT Self-test(4002/C002) 
            console.log("<<UNIT Self-test>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
 
            message.randomNo    = randomNo
            
-          //  console.log("message.randomNo %s", message.randomNo)
-
            return message
 
         break;
 
-
-        case messageType.RESET_DEVICE: //Reset Device (4003/C003)
+        case messageType.RESET_DEVICE: //10 Reset Device (4003/C003)
           console.log("<<Reset Device>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
 
           message.randomNo    = randomNo
           
-          // console.log("message.randomNo %s", message.randomNo)
-
           return message
 
         break;
 
-        case messageType.RESTORE_FACTORY_SETTINGS: //Restore Factory Settings (4004/C004)
+        case messageType.RESTORE_FACTORY_SETTINGS: //11 Restore Factory Settings (4004/C004)
           console.log("Restore Factory Settings")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
-          message.randomNo = randomNo
-          
-          console.log("message.randomNo %s", message.randomNo)
-          
+          message.randomNo    = randomNo
+                    
           return message
 
         break;
 
-        case messageType.CLEAR_COMPREHENSIVE_DATA: //Clear Comprehensive Data Storage Area(4005/C005) 
+        case messageType.CLEAR_COMPREHENSIVE_DATA: //12 Clear Comprehensive Data Storage Area(4005/C005) 
           console.log("<<Clear Comprehensive Data Storage Area>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
+                    
+          message.randomNo    = randomNo
           
-          //console.log(randomNo)
-          
-          message.randomNo = randomNo
-          
-          //console.log("message.randomNo %s", message.randomNo)
-
           return message
 
         break;
 
-        case "0740":
-        case "07c0": //Read vehicle supported PID number (4007/C007)
-          console.log("<<Read vehicle supported PID number>>")
+        case messageType.READ_DEVICE_SUPORTED_PID: //13 Read vehicle supported PID number (4007/C007)
+          console.log("<<Read vehicle supported PID number>> %", message.dongleCode)
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
-          message.randomNo = randomNo
+          message.randomNo    = randomNo
           
-          console.log("message.randomNo %s", message.randomNo)
           
           return message
 
         break;
 
-        case "0840":
-        case "08c0": //Read Specified PID Data Value (4008/C008) 
+        case messageType.READ_SPECIFIED_PID_DATA_VALUE: //14 Read Specified PID Data Value (4008/C008) 
           console.log("<<Read Specified PID Data Value>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var pidNumbers      = text.substring(36, 36 + (2 * 1))
+
+          var pck_1           = parseInt(pidNumbers.substring(0, 2), 16)
+          var pck_2           = parseInt(pidNumbers.substring(2, 4), 16)
+
+          var result          = pck_2.toString() + pck_1.toString()
+
+          var pidList         = text.substring(38, 38 * (result * 2))
           
           message.randomNo    = randomNo
-          
-          console.log("message.randomNo %s", message.randomNo)
-
-          console.log(pidNumbers)
-          //TODO pid list
+          message.pidNumbers  = pidNumbers
+          message.pidList     = pidList
 
           return message
 
         break;
 
-
-        case "09c0":
-        case "0940": //Read Vehicle DTCs(4009/C009)
-          console.log("Read Specified PID Data Value")
+        case messageType.READ_VEHICLE_DTCS: //15 Read Vehicle DTCs(4009/C009)
+          console.log("<<Read Specified PID Data Value>>")
         
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var dtcType         = text.substring(36, 36 + (2 * 1))
@@ -312,66 +291,67 @@ module.exports = function() {
           message.randomNo    = randomNo
           message.dtcType     = dtcType
           
-          console.log("message.randomNo %s", message.randomNo)
-          console.log("message.dtcType %s", message.dtcType)
-          
           return message
 
         break
 
-        case "0a40":
-        case "0ac0": //Clear DTC (400A/C00A) 
-          console.log("Clear DTC")
+
+        case messageType.CLEAR_DTC: //16 Clear DTC (400A/C00A) 
+          console.log("<<Clear DTC>>")
+        
+          var randomNo     = text.substring(36, 36 + (2 * 2))
+
+          message.randomNo = randomNo
+
+          return message
+
+        break
+
+        case messageType.READ_VIN: //17 Read VIN (400B/C00B)
+          console.log("<<Read VIN>>")
         
           var randomNo     = text.substring(36, 36 + (2 * 2))
 
           message.randomNo = randomNo
           
-          console.log("message.randomNo %s", message.randomNo)
-
           return message
 
         break
 
-        case "0b40":
-        case "0bc0": //Read VIN (400B/C00B)
-          console.log("Read VIN")
-        
-          var randomNo     = text.substring(36, 36 + (2 * 2))
-
-          message.randomNo = randomNo
-          
-          console.log("message.randomNo %s", message.randomNo)
-
-          return message
-
-        break
-
-        case "0c40":
-        case "0cc0": //Reading Freeze Frame (400C/C00C) 
-          console.log("Reading Freeze Frame ")
+        case messageType.READ_FREEZE_FRAME: //18 Reading Freeze Frame (400C/C00C) 
+          console.log("<<Reading Freeze Frame>>")
 
           var randomNo     = text.substring(36, 36 + (2 * 2))
 
           message.randomNo = randomNo
-          
-          console.log("message.randomNo %s", message.randomNo)
-          
+                    
           return message
 
         break
 
-        case "0150":
-        case "01d0": //Send Upgrading/Reply (5001/D001) 
-          console.log("Send Upgrading/Reply")
+
+        case messageType.SEND_UPGRADING: //19 Send Upgrading/Reply (5001/D001) 
+          console.log("<<Send Upgrading/Reply>>")
+
+          var mUpgrade              = text.substring(36, 36 + (1 * 2))
+          var upgradeID             = text.substring(38, 38 + (4 * 2))
+          var firmwareVersion       = text.substring(46, 46 + (4 * 2))
+          var totalpkgNumber        = text.substring(54, 54 + (2 * 2))
+          var crcNumber             = text.substring(58, 58 + (2 * 2))
+         
+          var pck_1                 = parseInt(crcNumber.substring(0, 2), 16)
+          var pck_2                 = parseInt(crcNumber.substring(2, 4), 16)
+
+          var result                = pck_2.toString() + pck_1.toString()
+
+          var crcArray              = text.substring(62, 62 + (result * 2))
 
           return message
 
         break
 
-        case "0250":
-        case "02d0": //Issue Upgrade Package /Reply (5002/D002)         
-          console.log("Issue Upgrade Package /Reply")
+        case messageType.ISSUE_UPGRADE_PACKAGE: //20 Issue Upgrade Package /Reply (5002/D002) 
+          console.log("<<Issue Upgrade Package /Reply>>")
 
           var upgradeID             = text.substring(36, 36 + (2 * 4))
           var packetSign            = text.substring(44, 44 + (2 * 1))
@@ -385,19 +365,12 @@ module.exports = function() {
 
           var packetContents        = text.substring(54, 54 + (2 * result_packetLength))
 
-
           message.upgradeID = upgradeID
           message.packetSign = packetSign
           message.packetNumber = packetNumber
           message.packetLength = packetLength
           message.packetContents = packetContents
 
-          console.log("message.upgradeID %s", message.upgradeID)
-          console.log("message.packetSign %s", message.packetSign)
-          console.log("message.packetNumber %s", message.packetNumber)
-          console.log("message.packetLength %s", message.packetLength)
-          console.log("message.packetContents %s", message.packetContents)
-          
           return message
 
         break

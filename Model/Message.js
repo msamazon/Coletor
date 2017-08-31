@@ -46,7 +46,10 @@ var MessageSchema = new Schema({
 
   //Setting
   paramNumbers: String,
-
+  parameterSettingData: String,
+  
+  //Inquiry
+  inquiryParamList: String,
   //log type
 
   logType: String,
@@ -54,12 +57,20 @@ var MessageSchema = new Schema({
   //Read Specified PID Data Value
 
   pidNumbers: String,
+  pidList: String[],
 
+  //Read Vehicle DTCs
   dtcType: String,
+
+  //Send Upgrading/Reply
+  updrade: String,
+  upgradeID: String,
+  totalPcktNumber: String,
+  crcNumbers: String,
+  crcArray: String,
 
   //Issue Upgrade Package /Reply
 
-  upgradeID: String,
   packetSign: String,
   packetNumber: String,
   packetLength: String,
