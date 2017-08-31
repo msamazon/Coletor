@@ -295,7 +295,6 @@ module.exports = function() {
 
         break
 
-
         case messageType.CLEAR_DTC: //16 Clear DTC (400A/C00A) 
           console.log("<<Clear DTC>>")
         
@@ -328,7 +327,6 @@ module.exports = function() {
           return message
 
         break
-
 
         case messageType.SEND_UPGRADING: //19 Send Upgrading/Reply (5001/D001) 
           console.log("<<Send Upgrading/Reply>>")

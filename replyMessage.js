@@ -18,7 +18,9 @@ module.exports = function() {
         console.log("----------- reply Message -----------")
 
         switch(message.eventcode) {
-            case messageType.LOGIN: 
+
+            case messageType.LOGIN:
+            
                 var pkgHeader       = message.packageHead
                 
                 var pkgLen          = "2200"
@@ -93,19 +95,17 @@ module.exports = function() {
             
                 var pkgHeader = message.packageHead
         
-                var pkgLen = "1600"
+                var pkgLen    = "1600"
 
-                var unitCode = message.dongleCode
+                var unitCode  = message.dongleCode
         
                 var eventCode = messageType.MAINTENANCE_REPLAY
 
                 var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode
-                
-                console.log("reply.messageSemCRC %s",  msgSemCRC)
-        
-                var crc = crcCalc.calcule(msgSemCRC)
+                        
+                var crc       = crcCalc.calcule(msgSemCRC)
 
-                var buffer = new Buffer([
+                var buffer    = new Buffer([
                     "0x" + message.packageHead.substring(0,2),
                     "0x" + message.packageHead.substring(2,4),
                     "0x16",

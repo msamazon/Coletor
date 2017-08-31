@@ -57,7 +57,7 @@ var MessageSchema = new Schema({
   //Read Specified PID Data Value
 
   pidNumbers: String,
-  pidList: String[],
+  pidList: String,
 
   //Read Vehicle DTCs
   dtcType: String,
