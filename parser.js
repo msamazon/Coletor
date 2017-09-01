@@ -201,39 +201,38 @@ module.exports = function() {
             
           }
 
+          //fuel
           var fuel = 98 + (numPid * 8) + 2
 
           var cTripFuelCons  = text.substring(fuel, fuel + (4 * 2))
-
           cTripFuelCons = modulo4.inverter(cTripFuelCons) 
-
           cTripFuelCons = convert.hex2dec(cTripFuelCons) * 0.01
 
           var trip =  fuel + (4 * 2)
 
           var cTripFuelMileage = text.substring(trip, trip + (4 * 2))
-
           cTripFuelMileage = modulo4.inverter(cTripFuelMileage)
-
           cTripFuelMileage = convert.hex2dec(cTripFuelMileage)
 
           var duration = trip + (4 * 2)
 
           var cTripFuelDuration = text.substring(duration, duration + (4 * 2))
-
           cTripFuelDuration = modulo4.inverter(cTripFuelDuration)
-
           cTripFuelDuration = convert.hex2dec(cTripFuelDuration)
 
-          var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
+          var GSEN_Data_Len             = text.substring(231, 231 + (2 * 2))
+
+          console.log("GSEN_Data_Len %s", GSEN_Data_Len)
+          
           var gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
           var gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
 
           var result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
-          var resuldEnd                 = 235 + (result_gsen * 2)
-          var GSENSOR_Data                = text.substring(235, resuldEnd)
 
-          var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
+          var resuldEnd                 = 235 + (result_gsen * 2)
+          var GSENSOR_Data              = text.substring(235, resuldEnd)
+
+          var customField               = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
 
           rtcTime             = utcTime.calcule(rtcTime)
