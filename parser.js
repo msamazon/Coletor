@@ -102,98 +102,128 @@ module.exports = function() {
 
           var numPid                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
 
-          var odbData                     = text.substring(98, 98 + (numPid * 8)) //cada pid tem 8 bytes
+          var odbData                     = text.substring(98, 98 + (numPid * 8) + 2) //cada pid tem 8 bytes
 
           var ini = 0
           var fim = 8
-        
-            var arrPids = []
+          var count = 0
+          var arrPids = []
+          var pidhex = ''
+          console.log(odbData)
 
           for (var i =0; i<numPid; i++) {
 
-            var pidhex = odbData.substring(ini, fim)
+            pidhex = odbData.substring(ini, fim)
+
             var noId  = pidhex.substring(2, 4) + pidhex.substring(0, 2)
             var len = convert.hex2dec(pidhex.substring(4, 6))
-            var dec = convert.hex2dec(pidhex.substring(6, 8))
 
+            if (len == 2) {
+              count = 2
+              pidhex = odbData.substring(ini, fim + count)
+            }else {
+              count = 0
+            }
 
-              //TODO Arrrumar um melhor jeito, fazendo rapido
-              switch(i) {
-                case 0: 
+            var dec = convert.hex2dec(pidhex.substring(6, 6 + (2 * len)))
 
+            ini = fim + count
+            fim = fim + 8 + count
+
+            //TODO Arrrumar um melhor jeito, fazendo rapido
+            switch(i) {
+              case 0:
                 message.pid1.noId = noId
                 message.pid1.len = len
                 message.pid1.dec = dec
 
-                break
+              break
 
-                case 1: 
+              case 1: 
                 
                   message.pid2.noId = noId
-                  message.pid3.len = len
-                  message.pid4.dec = dec
+                  message.pid2.len = len
+                  message.pid2.dec = dec
                                 
-                break
-                case 2: 
+               break
 
-                  message.pid1.noId = noId
-                  message.pid1.len = len
-                  message.pid1.dec = dec
+              case 2: 
+
+                message.pid3.noId = noId
+                message.pid3.len = len
+                message.pid3.dec = dec
                   
-                break
+              break
 
-                case 3:
-                  message.pid4.noId = noId
-                  message.pid4.len = len
-                  message.pid4.dec = dec
-                break
-                case 4:
-                  message.pid5.noId = noId
-                  message.pid5.len = len
-                  message.pid5.dec = dec
-                break
-                case 5:
+              case 3:
+                message.pid4.noId = noId
+                message.pid4.len = len
+                message.pid4.dec = dec
+              break
+
+              case 4:
+                message.pid5.noId = noId
+                message.pid5.len = len
+                message.pid5.dec = dec
+              break
+
+              case 5:
                   message.pid6.noId = noId
                   message.pid6.len = len
                   message.pid6.dec = dec
-                break
-                case 6:
+              break
+                
+              case 6:
                   message.pid7.noId = noId
                   message.pid7.len = len
                   message.pid7.dec = dec
-                break
-                case 7:
+              break
+                
+              case 7:
                   message.pid8.noId = noId
                   message.pid8.len = len
                   message.pid8.dec = dec
-                break
-                case 8:
+              break
+                
+              case 8:
                   message.pid9.noId = noId
                   message.pid9.len = len
                   message.pid9.dec = dec
-                break
-                case 9:
+              break
+                
+              case 9:
                   message.pid10.noId = noId
                   message.pid10.len = len
                   message.pid10.dec = dec
-
+              break
               }
 
-            ini = fim
-            fim = fim + 8
+            
           }
 
-          var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
+          var fuel = 98 + (numPid * 8) + 2
 
-          console.log("currentTripFuelConsumption: %s", currentTripFuelConsumption)
+          var cTripFuelCons  = text.substring(fuel, fuel + (4 * 2))
 
-          var currentTripMileage          = text.substring(215, 215 + (4 * 2))
+          cTripFuelCons = modulo4.inverter(cTripFuelCons) 
 
-          console.log("currentTripMileage: %s", currentTripMileage)
-          
-          var currentTripDuration         = text.substring(223, 223 + (4 * 2))
+          cTripFuelCons = convert.hex2dec(cTripFuelCons) * 0.01
 
-          console.log("currentTripDuration: %s", currentTripDuration)
+          var trip =  fuel + (4 * 2)
+
+          var cTripFuelMileage = text.substring(trip, trip + (4 * 2))
+
+          cTripFuelMileage = modulo4.inverter(cTripFuelMileage)
+
+          cTripFuelMileage = convert.hex2dec(cTripFuelMileage)
+
+          var duration = trip + (4 * 2)
+
+          var cTripFuelDuration = text.substring(duration, duration + (4 * 2))
+
+          cTripFuelDuration = modulo4.inverter(cTripFuelDuration)
+
+          cTripFuelDuration = convert.hex2dec(cTripFuelDuration)
 
           var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
           var gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
@@ -214,14 +244,14 @@ module.exports = function() {
           message.dataSitch                   = dataSitch
           message.gpsData                     = gpsData
           message.odbData                     = odbData
-          message.currentTripFuelConsumption  = currentTripFuelConsumption
-          message.currentTripMileage          = currentTripMileage
-          message.currentTripDuration         = currentTripDuration
+          message.currentTripFuelConsumption  = cTripFuelCons
+          message.currentTripMileage          = cTripFuelMileage
+          message.currentTripDuration         = cTripFuelMileage
           message.GSEN_Data_Len               = GSEN_Data_Len
           message.GSENSOR_Data                = GSENSOR_Data
           message.customField                 = customField
 
-          console.log(message)
+          //onsole.log(message)
           return message
 
         break;
