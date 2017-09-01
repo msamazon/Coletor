@@ -1,6 +1,11 @@
 module.exports = function() {
     this.parser = function(text) {
-      var messageType = require("./Util/MessageType");
+      
+      var convert = require('./Util/Convert')
+
+      require('./Util/gpsConvert')();
+      
+      var messageType = require("./Util/MessageType")
       
       console.log("=========== parser ===========")
 
@@ -8,7 +13,7 @@ module.exports = function() {
       
       var message = new Message()
       
-      //text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
       //string para text local
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
@@ -28,11 +33,6 @@ module.exports = function() {
       message.eventcode     = eventCode
       message.dateReceived  = new Date()
 
-      //console.log("message.packageHead %s" , message.packageHead)
-      //console.log("message.headLen %s" , message.packageLength)
-      //console.log("message.dongleCode %s" , message.dongleCode)
-      //console.log("message.eventCode %s" , message.eventcode)
-      //console.log("message.dateReceived %s" , message.dateReceived)
       console.log("Evento %s ", eventCode)
 
       switch(eventCode) {
@@ -41,20 +41,39 @@ module.exports = function() {
 
           console.log("<<login>> %s: ", message.dongleCode)
 
-          var gpsData              = text.substring(36, 79)
-          var obdModule          = text.substring(79, 87)
-          var firmwareVersion    = text.substring(87, 95)
-          var hardwareVersion    = text.substring(95, 103)
-          var qtparam            = parseInt(text.substring(103, 105), 16)
+          var gps            = text.substring(36, 36 + (2 * 21))
+          var obdModule          = text.substring(78, 78 + (2 * 4))
+          var firmwareVersion    = text.substring(86, 86 + (2 * 4))
+          var hardwareVersion    = text.substring(94, 94 + (2 * 4))
+          var qtparam            = parseInt(text.substring(102, 104), 16)
           //calcute end param
-          var paramEnd           = 105 + (qtparam * 2)
-          var param              = text.substring(105, paramEnd)
+          var paramEnd           = 104 + (qtparam * 2)
+          var param              = text.substring(104, paramEnd)
           //calcute end dongle
-          var dongleEnd          = paramEnd + (2*6)
+          var dongleEnd          = paramEnd + (2 * 6)
           var dongleDateHex      = text.substring(paramEnd, dongleEnd)
           //calcute end crc code
           var crcEnd             = dongleEnd + (5)
           var crcCode            = text.substring(dongleEnd, crcEnd)
+
+          obdModule = convert.hex2dec(obdModule.substring(0, 2)) + '.' +
+                      convert.hex2dec(obdModule.substring(2, 4)) + '.' +
+                      convert.hex2dec(obdModule.substring(4, 6)) + '.' +
+                      convert.hex2dec(obdModule.substring(6, 8))
+
+          firmwareVersion = convert.hex2dec(firmwareVersion.substring(0, 2)) + '.' +
+                      convert.hex2dec(firmwareVersion.substring(2, 4)) + '.' +
+                      convert.hex2dec(firmwareVersion.substring(4, 6)) + '.' +
+                      convert.hex2dec(firmwareVersion.substring(6, 8))
+          
+          hardwareVersion = convert.hex2dec(hardwareVersion.substring(0, 2)) + '.' +
+                      convert.hex2dec(hardwareVersion.substring(2, 4)) + '.' +
+                      convert.hex2dec(hardwareVersion.substring(4, 6)) + '.' +
+                      convert.hex2dec(hardwareVersion.substring(6, 8))            
+
+          console.log("GPS %s", gps)
+
+          var resultGps = new gpsConvert(gps) //TODO
 
           message.gpsData          = gpsData
           message.obdModule        = obdModule

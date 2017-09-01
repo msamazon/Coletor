@@ -2,14 +2,7 @@
 
 exports.calcule = function(hexaLine) {
         
-    const convert = {
-        bin2dec : s => parseInt(s, 2).toString(10),
-        bin2hex : s => parseInt(s, 2).toString(16),
-        dec2bin : s => parseInt(s, 10).toString(2),
-        dec2hex : s => parseInt(s, 10).toString(16),
-        hex2bin : s => parseInt(s, 16).toString(2),
-        hex2dec : s => parseInt(s, 16).toString(10)
-    }
+    var convert = require('./Convert')
     
     var crcTab16 = [
         0x0000,0x9705,0x2E01,0xB904,0x5C02,0xCB07,0x7203,0xE506,0xB804,0x2F01,
