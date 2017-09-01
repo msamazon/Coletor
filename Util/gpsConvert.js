@@ -17,7 +17,7 @@ module.exports = function() {
 
         utcTimeGps = utcTime.calcule(utcTimeGps)
         
-        console.log("utcTimeGps %s", utcTimeGps)                   
+        //console.log("utcTimeGps %s", utcTimeGps)                   
 
         var statusGps     = gpshex.substring(12, 12 + (2*1))
                   
@@ -37,7 +37,7 @@ module.exports = function() {
         var latInvert  =  latitude.substring(6, 8) + latitude.substring(4, 6) + latitude.substring(2, 4) + latitude.substring(0, 2)
         var longInvert =  longitude.substring(6, 8) + longitude.substring(4, 6) + longitude.substring(2, 4) + longitude.substring(0, 2)
 
-        console.log("latInvert %s", latInvert)
+        //console.log("latInvert %s", latInvert)
 
         var latDeci  = convert.hex2dec(latInvert) / 3600000
         var longDeci = convert.hex2dec(longInvert) / 3600000

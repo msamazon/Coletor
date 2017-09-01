@@ -220,25 +220,73 @@ module.exports = function() {
           cTripFuelDuration = modulo4.inverter(cTripFuelDuration)
           cTripFuelDuration = convert.hex2dec(cTripFuelDuration)
 
-          var GSEN_Data_Len             = text.substring(231, 231 + (2 * 2))
+          var glen = duration + (4 * 2)
 
-          console.log("GSEN_Data_Len %s", GSEN_Data_Len)
-          
-          var gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
-          var gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
+          var GSEN_Data_Len             = text.substring(glen, glen + (2 * 2))
+          GSEN_Data_Len                 = convert.hex2dec(GSEN_Data_Len.substring(4,2) +
+                                          GSEN_Data_Len.substring(0, 2))
+          var endIni                    = glen + (2 * 2)                                          
+          var resuldEnd                 = endIni + (GSEN_Data_Len * 2)
+          var GSENSOR_Data              = text.substring(endIni, resuldEnd)
 
-          var result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
+          console.log("GSENSOR_Data: %s", GSENSOR_Data)
 
-          var resuldEnd                 = 235 + (result_gsen * 2)
-          var GSENSOR_Data              = text.substring(235, resuldEnd)
+          //tratar num negativo
+          var group1 = GSENSOR_Data.substring(0, 6 * 2)
+          console.log("group1: ", group1)
+          console.log("X: %s", group1.substring(2, 4) + group1.substring(0, 2))
+          console.log("y: %s", group1.substring(6, 8) + group1.substring(4, 6))
+          console.log("z: %s", group1.substring(10, 12) + group1.substring(8, 10))
+
+          var group2 = GSENSOR_Data.substring(12, 12 + (6 *2))
+          console.log("group2: ", group2)
+          console.log("X: %s", group2.substring(2, 4) + group2.substring(0, 2))
+          console.log("y: %s", group2.substring(6, 8) + group2.substring(4, 6))
+          console.log("z: %s", group2.substring(10, 12) + group2.substring(8, 10))
+
+          var group3 = GSENSOR_Data.substring(24, 24 + (6 *2))
+          console.log("group3: ", group3)
+          console.log("X: %s", group3.substring(2, 4) + group3.substring(0, 2))
+          console.log("y: %s", group3.substring(6, 8) + group3.substring(4, 6))
+          console.log("z: %s", group3.substring(10, 12) + group3.substring(8, 10))
+
+          var group4 = GSENSOR_Data.substring(36, 36 + (6 *2))
+          console.log("group4: ", group4)
+          console.log("X: %s", group4.substring(2, 4) + group4.substring(0, 2))
+          console.log("y: %s", group4.substring(6, 8) + group4.substring(4, 6))
+          console.log("z: %s", group4.substring(10, 12) + group4.substring(8, 10))
+
+          var group5 = GSENSOR_Data.substring(48, 48 + (6 *2))
+          console.log("group5: ", group5)
+          console.log("X: %s", group5.substring(2, 4) + group5.substring(0, 2))
+          console.log("y: %s", group5.substring(6, 8) + group5.substring(4, 6))
+          console.log("z: %s", group5.substring(10, 12) + group5.substring(8, 10))
 
           var customField               = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
+          console.log("customField: %s", customField)
+
+          //TODO
+          var voltage = customField.substring(0, 4)
+          voltage = convert.hex2dec(voltage.substring(2, 4) + voltage.substring(0, 2)) * 0.1
+          console.log("voltage %sV", voltage)
+
+          var vehicle = customField.substring(4, 8)
+          console.log("vehicle %s", vehicle)
+
+          var accOn = customField.substring(8, 10)
+          console.log("accOn %s", accOn)
+
+          var mmxc = customField.substring(10, 12)
+          console.log("mmxc %s", mmxc)
+
+          var reserved = customField.substring(12, 16)
+          console.log("reserved %s", reserved)
 
           rtcTime             = utcTime.calcule(rtcTime)
           var resultGps       = new gpsConvert(gpsData) //TODO
 
-          
+      
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
           message.gpsData                     = gpsData
@@ -250,7 +298,6 @@ module.exports = function() {
           message.GSENSOR_Data                = GSENSOR_Data
           message.customField                 = customField
 
-          //onsole.log(message)
           return message
 
         break;
@@ -272,8 +319,8 @@ module.exports = function() {
           message.alarmNo        = alarmNo
           message.alarmThreshold = alarmThreshold
           message.alarmCurrent   = alarmCurrent
-          message.rtcTime        = rtcTime
-          message.gpsData        = gpsData
+          message.rtcTime        = utcTime.calcule(rtcTime)
+          message.gpsData        = gpsData //mudar para funcao
                 
           return message
          
@@ -287,8 +334,8 @@ module.exports = function() {
           var timeEnd  = 36 + (2 *6)
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
-          message.time = time
-          message.gpsData = gpsData
+          message.time = utcTime.calcule(time)
+          message.gpsData = gpsData //mudar para modulo
 
           return message
 

@@ -4,6 +4,7 @@ var Schema    = mongoose.Schema
 var MessageSchema = new Schema({
 
   fullMessage: String,
+  ip: String,
   dateReceived: String,
 
   packageHead: String,
@@ -128,7 +129,6 @@ var MessageSchema = new Schema({
   packetContents: String
 
 })
-
 
 //Register schema to Mongoose
 var Message = mongoose.model('Message', MessageSchema);
