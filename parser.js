@@ -42,19 +42,19 @@ module.exports = function() {
           console.log("<<login>> %s: ", message.dongleCode)
 
           var gpsData              = text.substring(36, 79)
-          const obdModule          = text.substring(79, 87)
-          const firmwareVersion    = text.substring(87, 95)
-          const hardwareVersion    = text.substring(95, 103)
-          const qtparam            = parseInt(text.substring(103, 105), 16)
+          var obdModule          = text.substring(79, 87)
+          var firmwareVersion    = text.substring(87, 95)
+          var hardwareVersion    = text.substring(95, 103)
+          var qtparam            = parseInt(text.substring(103, 105), 16)
           //calcute end param
-          const paramEnd           = 105 + (qtparam * 2)
-          const param              = text.substring(105, paramEnd)
+          var paramEnd           = 105 + (qtparam * 2)
+          var param              = text.substring(105, paramEnd)
           //calcute end dongle
-          const dongleEnd          = paramEnd + (2*6)
-          const dongleDateHex      = text.substring(paramEnd, dongleEnd)
+          var dongleEnd          = paramEnd + (2*6)
+          var dongleDateHex      = text.substring(paramEnd, dongleEnd)
           //calcute end crc code
-          const crcEnd             = dongleEnd + (5)
-          const crcCode            = text.substring(dongleEnd, crcEnd)
+          var crcEnd             = dongleEnd + (5)
+          var crcCode            = text.substring(dongleEnd, crcEnd)
 
           message.gpsData          = gpsData
           message.obdModule        = obdModule
