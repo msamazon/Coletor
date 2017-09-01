@@ -27,6 +27,57 @@ var MessageSchema = new Schema({
 
   dataSitch: String,
 
+  pid1: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid2: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid3: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid4: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid5: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid6: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid7: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid8: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid9: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  pid10: {
+    noId: String,
+    len: String,
+    dec: String
+  },
+  
   currentTripFuelConsumption: String,
   currentTripMileage: String, 
   currentTripDuration: String ,
@@ -77,6 +128,7 @@ var MessageSchema = new Schema({
   packetContents: String
 
 })
+
 
 //Register schema to Mongoose
 var Message = mongoose.model('Message', MessageSchema);

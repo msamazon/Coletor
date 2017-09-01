@@ -2,6 +2,8 @@ module.exports = function() {
     this.parser = function(text) {
       
       var convert = require('./Util/Convert')
+      var utcTime = require('./Util/utcTime')
+      var modulo4 = require('./Util/modulo4')
 
       require('./Util/gpsConvert')();
       
@@ -13,11 +15,13 @@ module.exports = function() {
       
       var message = new Message()
       
-      text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      //text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
       //string para text local
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
       //text = "4040310033574e2d3136303130303535042018081101361418081101361403787da60034b7e30c08000000ad024c3c0d0a" //sleep mode
+      text = "404082003247512d313630313030313901201e0b1006041e8080801e0b1006041f0f42c737071088ac0f1d0000006e1306052001740b2001200c2002d30b0d2001000f20014a112001170100000000000000caa800001e006aff120044ff65ff15003dff6aff130042ff65ff140042ff5fff14003dff8c00ffff0100000073eb0d0a"
+
       var result = ''
       
       var dateReceived = new Date()      
@@ -56,20 +60,9 @@ module.exports = function() {
           var crcEnd             = dongleEnd + (5)
           var crcCode            = text.substring(dongleEnd, crcEnd)
 
-          obdModule = convert.hex2dec(obdModule.substring(0, 2)) + '.' +
-                      convert.hex2dec(obdModule.substring(2, 4)) + '.' +
-                      convert.hex2dec(obdModule.substring(4, 6)) + '.' +
-                      convert.hex2dec(obdModule.substring(6, 8))
-
-          firmwareVersion = convert.hex2dec(firmwareVersion.substring(0, 2)) + '.' +
-                      convert.hex2dec(firmwareVersion.substring(2, 4)) + '.' +
-                      convert.hex2dec(firmwareVersion.substring(4, 6)) + '.' +
-                      convert.hex2dec(firmwareVersion.substring(6, 8))
-          
-          hardwareVersion = convert.hex2dec(hardwareVersion.substring(0, 2)) + '.' +
-                      convert.hex2dec(hardwareVersion.substring(2, 4)) + '.' +
-                      convert.hex2dec(hardwareVersion.substring(4, 6)) + '.' +
-                      convert.hex2dec(hardwareVersion.substring(6, 8))            
+          obdModule              = modulo4.calcule(obdModule)
+          firmwareVersion        = modulo4.calcule(firmwareVersion)
+          hardwareVersion        = modulo4.calcule(hardwareVersion)
 
           console.log("GPS %s", gps)
 
@@ -103,8 +96,95 @@ module.exports = function() {
           
           var rtcTime                     = text.substring(36, 36 + (2 * 6))
           var dataSitch                   = text.substring(48, 48 + (2 * 3))
+
           var gpsData                     = text.substring(54, 54 + (2 * 21))
-          var odbData                     = text.substring(97, 97 + (55 * 2))
+
+          var numPid                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
+
+
+          var odbData                     = text.substring(98, 98 + (numPid * 8)) //cada pid tem 8 bytes
+            console.log("odbData: %s", odbData)
+
+            var ini = 0
+            var fim = 8
+          
+            
+            var arrPids = []
+
+           for (var i =0; i<numPid; i++) {
+
+            var pidhex = odbData.substring(ini, fim)
+            var noId  = pidhex.substring(2, 4) + pidhex.substring(0, 2)
+            var len = convert.hex2dec(pidhex.substring(4, 6))
+            var dec = convert.hex2dec(pidhex.substring(6, 8))
+
+
+              //TODO Arrrumar um melhor jeito, fazendo rapido
+              switch(i) {
+                case 0: 
+
+                message.pid1.noId = noId
+                message.pid1.len = len
+                message.pid1.dec = dec
+
+                break
+
+                case 1: 
+                
+                  message.pid2.noId = noId
+                  message.pid3.len = len
+                  message.pid4.dec = dec
+                                
+                break
+                case 2: 
+
+                  message.pid1.noId = noId
+                  message.pid1.len = len
+                  message.pid1.dec = dec
+                  
+                break
+
+                case 3:
+                  message.pid4.noId = noId
+                  message.pid4.len = len
+                  message.pid4.dec = dec
+                break
+                case 4:
+                  message.pid5.noId = noId
+                  message.pid5.len = len
+                  message.pid5.dec = dec
+                break
+                case 5:
+                  message.pid6.noId = noId
+                  message.pid6.len = len
+                  message.pid6.dec = dec
+                break
+                case 6:
+                  message.pid7.noId = noId
+                  message.pid7.len = len
+                  message.pid7.dec = dec
+                break
+                case 7:
+                  message.pid8.noId = noId
+                  message.pid8.len = len
+                  message.pid8.dec = dec
+                break
+                case 8:
+                  message.pid9.noId = noId
+                  message.pid9.len = len
+                  message.pid9.dec = dec
+                break
+                case 9:
+                  message.pid10.noId = noId
+                  message.pid10.len = len
+                  message.pid10.dec = dec
+
+              }
+
+            ini = fim
+            fim = fim + 8
+          }
+
           var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
           var currentTripMileage          = text.substring(215, 215 + (4 * 2))
           var currentTripDuration         = text.substring(223, 223 + (4 * 2))
@@ -118,6 +198,12 @@ module.exports = function() {
 
           var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
+         
+
+          rtcTime             = utcTime.calcule(rtcTime)
+          var resultGps       = new gpsConvert(gpsData) //TODO
+
+          
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
           message.gpsData                     = gpsData
@@ -129,6 +215,7 @@ module.exports = function() {
           message.GSENSOR_Data                = GSENSOR_Data
           message.customField                 = customField
 
+          //console.log(message)
           return message
 
         break;
