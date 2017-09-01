@@ -24,7 +24,8 @@ module.exports = function() {
 
       var result = ''
       
-      var dateReceived = new Date()      
+      var dateReceived = new Date()    
+
       var head         = text.substring(0, 4)
       var headLen      = text.substring(4, 8)
       var dongleCode   = text.substring(8, 32)
@@ -101,17 +102,14 @@ module.exports = function() {
 
           var numPid                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
 
-
           var odbData                     = text.substring(98, 98 + (numPid * 8)) //cada pid tem 8 bytes
-            console.log("odbData: %s", odbData)
 
-            var ini = 0
-            var fim = 8
-          
-            
+          var ini = 0
+          var fim = 8
+        
             var arrPids = []
 
-           for (var i =0; i<numPid; i++) {
+          for (var i =0; i<numPid; i++) {
 
             var pidhex = odbData.substring(ini, fim)
             var noId  = pidhex.substring(2, 4) + pidhex.substring(0, 2)
@@ -186,8 +184,17 @@ module.exports = function() {
           }
 
           var currentTripFuelConsumption  = text.substring(207, 207 + (4 * 2))
+
+          console.log("currentTripFuelConsumption: %s", currentTripFuelConsumption)
+
           var currentTripMileage          = text.substring(215, 215 + (4 * 2))
+
+          console.log("currentTripMileage: %s", currentTripMileage)
+          
           var currentTripDuration         = text.substring(223, 223 + (4 * 2))
+
+          console.log("currentTripDuration: %s", currentTripDuration)
+
           var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
           var gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
           var gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
@@ -198,7 +205,6 @@ module.exports = function() {
 
           var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
-         
 
           rtcTime             = utcTime.calcule(rtcTime)
           var resultGps       = new gpsConvert(gpsData) //TODO
@@ -215,7 +221,7 @@ module.exports = function() {
           message.GSENSOR_Data                = GSENSOR_Data
           message.customField                 = customField
 
-          //console.log(message)
+          console.log(message)
           return message
 
         break;
