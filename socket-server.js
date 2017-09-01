@@ -63,13 +63,15 @@ server.on("connection", function(socket) {
    
     message = result
 
+    message.ip = remoteAddress
+
     var reply = replyMessage(message)
 
-    // var promise = message.save(function (err) {
+    var promise = message.save(function (err) {
 
-    //   if (err) console.log(err)
-    //    else console.log('salvo no banco')
-    // })
+      if (err) console.log(err)
+       else console.log('salvo no banco')
+    })
 
     console.log("reply? %s", reply[0])
 
