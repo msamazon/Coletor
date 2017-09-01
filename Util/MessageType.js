@@ -12,7 +12,7 @@ module.exports = Object.freeze({
     MAINTENANCE:                                    '0310',//2
     MAINTENANCE_REPLAY:                             '0390',//3
     SLEEPMODE:                                      '0420',//4
-    COMPREHENSIVE_DATA:                             '0102',//5
+    COMPREHENSIVE_DATA:                             '0120',//5
     COMPREHENSIVE_DATA_SUPPLEMENT:                  '0220',
     ALARM:                                          '0320',//6
     ALARM_REPLAY:                                   '03a0',

@@ -78,6 +78,7 @@ module.exports = function() {
 
         break;
 
+        case messageType.COMPREHENSIVE_DATA_SUPPLEMENT:
         case messageType.COMPREHENSIVE_DATA: //3 Comprehensive data (0x2001/0x2002)
           console.log("<<Comprehensive data>> %s", message.dongleCode)
           
