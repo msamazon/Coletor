@@ -89,11 +89,11 @@ module.exports = function() {
           var currentTripMileage          = text.substring(215, 215 + (4 * 2))
           var currentTripDuration         = text.substring(223, 223 + (4 * 2))
           var GSEN_Data_Len               = text.substring(231, 231 + (2 * 2))
-          const gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
-          const gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
+          var gsen_calc_1               =  parseInt(GSEN_Data_Len.substring(0, 2), 16)
+          var gsen_calc_2               =  parseInt(GSEN_Data_Len.substring(2, 4), 16)
 
-          const result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
-          const resuldEnd                 = 235 + (result_gsen * 2)
+          var result_gsen = gsen_calc_2.toString() + gsen_calc_1.toString()
+          var resuldEnd                 = 235 + (result_gsen * 2)
           var GSENSOR_Data                = text.substring(235, resuldEnd)
 
           var customField                 = text.substring(resuldEnd, resuldEnd + (8 * 2))
@@ -142,7 +142,7 @@ module.exports = function() {
           console.log("<<Sleep Mode Fixed Upload>> %s: ", message.dongleCode)
 
           var time      = text.substring(36, 36 + (2  *6))
-          const timeEnd  = 36 + (2 *6)
+          var timeEnd  = 36 + (2 *6)
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
           message.time = time
@@ -356,10 +356,10 @@ module.exports = function() {
           var packetNumber          = text.substring(46, 46 + (2 * 2))
           var packetLength          = text.substring(50, 50 + (2 * 2))
 
-          const pck_1               =  parseInt(packetLength.substring(0, 2), 16)
-          const pck_2               =  parseInt(packetLength.substring(2, 4), 16)
+          var pck_1               =  parseInt(packetLength.substring(0, 2), 16)
+          var pck_2               =  parseInt(packetLength.substring(2, 4), 16)
 
-          const result_packetLength = pck_2.toString() + pck_1.toString()
+          var result_packetLength = pck_2.toString() + pck_1.toString()
 
           var packetContents        = text.substring(54, 54 + (2 * result_packetLength))
 
