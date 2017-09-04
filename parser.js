@@ -233,10 +233,12 @@ module.exports = function() {
 
           var GSEN_Data_Len             = text.substring(glen, glen + (2 * 2))
 
+          console.log("GSEN_Data_Len%s", GSEN_Data_Len)
           console.log("GSEN_Data_Len.substring(4,2) %s", GSEN_Data_Len.substring(4,2))
           console.log("GSEN_Data_Len.substring(0, 2) %s", GSEN_Data_Len.substring(0, 2))
-          GSEN_Data_Len                 = convert.hex2dec(GSEN_Data_Len.substring(4,2) +
-                                          GSEN_Data_Len.substring(0, 2))
+          GSEN_Data_Len = GSEN_Data_Len.substring(4,2) + GSEN_Data_Len.substring(0, 2)
+          console.log("GSEN_Data_Len%s", GSEN_Data_Len)
+          GSEN_Data_Len                 = convert.hex2dec(GSEN_Data_Len)
           console.log("GSEN_Data_Len %s", GSEN_Data_Len)                                      
           var endIni                    = glen + (2 * 2)                                          
           var resuldEnd                 = endIni + (GSEN_Data_Len * 2)
