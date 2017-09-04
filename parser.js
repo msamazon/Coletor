@@ -4,7 +4,8 @@ module.exports = function() {
       var convert = require('./Util/Convert')
       var utcTime = require('./Util/utcTime')
       var modulo4 = require('./Util/modulo4')
-
+      var cron    = require('cron')
+      
       require('./Util/gpsConvert')();
       
       var messageType = require("./Util/MessageType")
@@ -80,14 +81,11 @@ module.exports = function() {
           message.dongleDateHex    = dongleDateHex
           message.crcCode          = crcCode
 
-          var rule = new schedule.RecurrenceRule();
-          
-          rule.minute = new schedule.Range(0, 30, 0);
-          
-          schedule.scheduleJob(rule, function(){
-              console.log(rule);
-              console.log('|||Today is recognized by LOGIN---------------------------');
-          });
+          var cronJob = cron.job('*/5 * * * * *' , function(){
+            // perform operation e.g. GET request http.get() etc.
+            console.info('cron job completed login');
+          }); 
+          cronJob.start();
           
           return message
         break;
@@ -348,14 +346,11 @@ module.exports = function() {
           message.time = utcTime.calcule(time)
           message.gpsData = gpsData //mudar para modulo
 
-          var rule = new schedule.RecurrenceRule();
-          
-          rule.minute = new schedule.Range(0, 30, 0);
-          
-          schedule.scheduleJob(rule, function(){
-              console.log(rule);
-              console.log('|||Today is recognized by SLEEP ---------------------------');
-          });
+          var cronJob = cron.job('*/5 * * * * *' , function(){
+            // perform operation e.g. GET request http.get() etc.
+            console.info('cron job completed sleep');
+          }); 
+          cronJob.start();
 
           return message
 
