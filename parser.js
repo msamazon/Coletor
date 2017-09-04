@@ -119,7 +119,6 @@ module.exports = function() {
           var count = 0
           var arrPids = []
           var pidhex = ''
-          console.log(odbData)
 
           for (var i =0; i<numPid; i++) {
 
@@ -239,38 +238,37 @@ module.exports = function() {
           var resuldEnd                 = endIni + (GSEN_Data_Len * 2)
           var GSENSOR_Data              = text.substring(endIni, resuldEnd)
 
-          console.log("GSENSOR_Data: %s", GSENSOR_Data)
 
           //tratar num negativo
           var group1 = GSENSOR_Data.substring(0, 6 * 2)
-          console.log("group1: ", group1)
-          console.log("X: %s", group1.substring(2, 4) + group1.substring(0, 2))
-          console.log("y: %s", group1.substring(6, 8) + group1.substring(4, 6))
-          console.log("z: %s", group1.substring(10, 12) + group1.substring(8, 10))
+          // console.log("group1: ", group1)
+          // console.log("X: %s", group1.substring(2, 4) + group1.substring(0, 2))
+          // console.log("y: %s", group1.substring(6, 8) + group1.substring(4, 6))
+          // console.log("z: %s", group1.substring(10, 12) + group1.substring(8, 10))
 
           var group2 = GSENSOR_Data.substring(12, 12 + (6 *2))
-          console.log("group2: ", group2)
-          console.log("X: %s", group2.substring(2, 4) + group2.substring(0, 2))
-          console.log("y: %s", group2.substring(6, 8) + group2.substring(4, 6))
-          console.log("z: %s", group2.substring(10, 12) + group2.substring(8, 10))
+          // console.log("group2: ", group2)
+          // console.log("X: %s", group2.substring(2, 4) + group2.substring(0, 2))
+          // console.log("y: %s", group2.substring(6, 8) + group2.substring(4, 6))
+          // console.log("z: %s", group2.substring(10, 12) + group2.substring(8, 10))
 
           var group3 = GSENSOR_Data.substring(24, 24 + (6 *2))
-          console.log("group3: ", group3)
-          console.log("X: %s", group3.substring(2, 4) + group3.substring(0, 2))
-          console.log("y: %s", group3.substring(6, 8) + group3.substring(4, 6))
-          console.log("z: %s", group3.substring(10, 12) + group3.substring(8, 10))
+          // console.log("group3: ", group3)
+          // console.log("X: %s", group3.substring(2, 4) + group3.substring(0, 2))
+          // console.log("y: %s", group3.substring(6, 8) + group3.substring(4, 6))
+          // console.log("z: %s", group3.substring(10, 12) + group3.substring(8, 10))
 
           var group4 = GSENSOR_Data.substring(36, 36 + (6 *2))
-          console.log("group4: ", group4)
-          console.log("X: %s", group4.substring(2, 4) + group4.substring(0, 2))
-          console.log("y: %s", group4.substring(6, 8) + group4.substring(4, 6))
-          console.log("z: %s", group4.substring(10, 12) + group4.substring(8, 10))
+          // console.log("group4: ", group4)
+          // console.log("X: %s", group4.substring(2, 4) + group4.substring(0, 2))
+          // console.log("y: %s", group4.substring(6, 8) + group4.substring(4, 6))
+          // console.log("z: %s", group4.substring(10, 12) + group4.substring(8, 10))
 
           var group5 = GSENSOR_Data.substring(48, 48 + (6 *2))
-          console.log("group5: ", group5)
-          console.log("X: %s", group5.substring(2, 4) + group5.substring(0, 2))
-          console.log("y: %s", group5.substring(6, 8) + group5.substring(4, 6))
-          console.log("z: %s", group5.substring(10, 12) + group5.substring(8, 10))
+          // console.log("group5: ", group5)
+          // console.log("X: %s", group5.substring(2, 4) + group5.substring(0, 2))
+          // console.log("y: %s", group5.substring(6, 8) + group5.substring(4, 6))
+          // console.log("z: %s", group5.substring(10, 12) + group5.substring(8, 10))
 
           var customField               = text.substring(resuldEnd, resuldEnd + (8 * 2))
 
@@ -278,6 +276,7 @@ module.exports = function() {
 
           //TODO
           var voltage = customField.substring(0, 4)
+          console.log("voltage %sV", voltage)
           voltage = convert.hex2dec(voltage.substring(2, 4) + voltage.substring(0, 2)) * 0.1
           console.log("voltage %sV", voltage)
 
