@@ -2,7 +2,7 @@ module.exports = function() {
 
     this.replyMessage = function(message) {
         var messageType = require("./Util/MessageType")
-
+ var convert = require('./Util/Convert')
         var crcCalc = require("./Util/crcCalc")
         var UtcTime = require("./Util/utcTime")
 
@@ -437,7 +437,7 @@ module.exports = function() {
                 var randomNo  = message.randomNo
 
                 var msgSemCRC = pkgHeader + pkgLen + unitCode + eventCode
-                        + randomNo + vinCode + utc
+                    + randomNo
     
                 var crc = crcCalc.calcule(msgSemCRC)
 

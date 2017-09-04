@@ -5,6 +5,7 @@ module.exports = function() {
       var utcTime = require('./Util/utcTime')
       var modulo4 = require('./Util/modulo4')
       var cron    = require('cron')
+      var requstDongle = require('./requestDongle')
       
       require('./Util/gpsConvert')();
       
@@ -346,12 +347,6 @@ module.exports = function() {
           message.time = utcTime.calcule(time)
           message.gpsData = gpsData //mudar para modulo
 
-          var cronJob = cron.job('*/5 * * * * *' , function(){
-            // perform operation e.g. GET request http.get() etc.
-            console.info('cron job completed sleep');
-          }); 
-          cronJob.start();
-
           return message
 
         break;
@@ -520,6 +515,7 @@ module.exports = function() {
 
         break
         
+        case messageType.READ://TODO teste
         case messageType.READ_VIN_REPLY: //17 Read VIN (400B/C00B) -ok
           console.log("<<READ_VIN_REPLY>>")
         
