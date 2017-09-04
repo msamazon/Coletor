@@ -38,6 +38,8 @@ module.exports = function() {
       message.eventcode     = eventCode
       message.dateReceived  = new Date()
 
+      console.log("dongleCode: %s",dongleCode)
+
       console.log("Evento %s ", eventCode)
 
       switch(eventCode) {
@@ -78,7 +80,14 @@ module.exports = function() {
           message.dongleDateHex    = dongleDateHex
           message.crcCode          = crcCode
 
-
+          var rule = new schedule.RecurrenceRule();
+          
+          rule.minute = new schedule.Range(0, 30, 0);
+          
+          schedule.scheduleJob(rule, function(){
+              console.log(rule);
+              console.log('|||Today is recognized by LOGIN---------------------------');
+          });
           
           return message
         break;
@@ -345,7 +354,7 @@ module.exports = function() {
           
           schedule.scheduleJob(rule, function(){
               console.log(rule);
-              console.log('|||Today is recognized by Rebecca Black!---------------------------');
+              console.log('|||Today is recognized by SLEEP ---------------------------');
           });
 
           return message
