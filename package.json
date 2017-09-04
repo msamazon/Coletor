@@ -10,9 +10,11 @@
   "author": "Brenno Hayden Freire Dantas",
   "license": "ISC",
   "dependencies": {
+    "@types/cron": "^1.2.1",
     "@types/get-port": "0.0.4",
     "body-parser": "^1.17.2",
     "crc16-ccitt-node": "^1.0.4",
+    "cron": "^1.2.1",
     "express": "^4.15.4",
     "get-port": "^3.2.0",
     "mongodb": "^2.2.31",

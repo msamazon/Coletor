@@ -1,0 +1,55 @@
+exports.handler = function(socket, buffer) {
+    var mongoose = require('mongoose')
+    var Message = require('./Model/Message')
+    require('./parser.js')();
+    require('./replyMessage.js')();
+
+    var remoteAddress = socket.remoteAddress
+
+    console.log("=====================================")
+    console.log('>new client connection is made %s', remoteAddress)
+  
+    console.log("socket.address() %s",socket.address())
+    console.log("remoteAddress %s", remoteAddress)
+
+    var buff = new Buffer(buffer, 'utf8')
+
+    var msg = ''
+    var hex = buffer.toString ("hex")        
+    var data = buffer.toString();
+        
+        if (data.indexOf('\r\n') > -1) {
+            var lines = data.split('\r\n');
+            var i = lines.length;
+            while (i--) {
+                msg = msg + lines[i]
+                    
+            }
+        } else {
+            // console.log('>>data:', data);
+        }
+        
+        var message = new Message()
+        var result = parser(hex)
+        message = result
+        message.ip = remoteAddress
+    
+        var reply = replyMessage(message)
+    
+        var promise = message.save(function (err) {
+    
+          if (err) console.log(err)
+           else console.log('salvo no banco')
+        })
+    
+        console.log("reply? %s", reply[0])
+    
+        if (reply[0] == 1) {
+    
+          console.log("reply %s", reply[1])
+          
+          console.log("Mensagem Enviada")
+    
+          socket.write(reply[1])
+        }
+}
