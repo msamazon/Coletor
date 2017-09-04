@@ -46,7 +46,7 @@ module.exports = function() {
 
           console.log("<<login>> %s: ", message.dongleCode)
 
-          var gps            = text.substring(36, 36 + (2 * 21))
+          var gps                = text.substring(36, 36 + (2 * 21))
           var obdModule          = text.substring(78, 78 + (2 * 4))
           var firmwareVersion    = text.substring(86, 86 + (2 * 4))
           var hardwareVersion    = text.substring(94, 94 + (2 * 4))
@@ -77,6 +77,8 @@ module.exports = function() {
           message.param            = param
           message.dongleDateHex    = dongleDateHex
           message.crcCode          = crcCode
+
+
           
           return message
         break;
@@ -337,6 +339,15 @@ module.exports = function() {
           message.time = utcTime.calcule(time)
           message.gpsData = gpsData //mudar para modulo
 
+          var rule = new schedule.RecurrenceRule();
+          
+          rule.minute = new schedule.Range(0, 30, 0);
+          
+          schedule.scheduleJob(rule, function(){
+              console.log(rule);
+              console.log('|||Today is recognized by Rebecca Black!---------------------------');
+          });
+
           return message
 
         break;
@@ -471,47 +482,63 @@ module.exports = function() {
 
         break;
 
-        case messageType.READ_VEHICLE_DTCS: //15 Read Vehicle DTCs(4009/C009)
+        case messageType.READ_VEHICLE_DTCS_REPLY: //15 Read Vehicle DTCs(4009/C009) - ok
           console.log("<<Read Specified PID Data Value>>")
         
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var dtcType         = text.substring(36, 36 + (2 * 1))
+          var dtcNumbers      = convert.hex2dec(xtext.substring(38, 38 + (2 * 1)))
+          var endArray        = 40 + (2 * dtcNumbers)
+          var dtcArray        = text.substring(40, endArray)
+          var time            = utcTime.calcule(text.substring(endArray, endArray + (2 * 6)))
 
           message.randomNo    = randomNo
           message.dtcType     = dtcType
+          message.dtcArray    = dtcArray
+          message.utcTime     = time
           
           return message
 
         break
 
-        case messageType.CLEAR_DTC: //16 Clear DTC (400A/C00A) 
-          console.log("<<Clear DTC>>")
+        case messageType.CLEAR_DTC_REPLY: //16 Clear DTC (400A/C00A) -ok
+          console.log("<<CLEAR_DTC_REPLY>>")
         
           var randomNo     = text.substring(36, 36 + (2 * 2))
-
+          var result       = text.substring(40, 40 + (2 * 1))
+          var time         = text.substring(42, 42 + (2 * 6))
+          
           message.randomNo = randomNo
+          message.result   = result
+          message.utcTime  = utcTime.calcule(time)
 
           return message
 
         break
-
-        case messageType.READ_VIN: //17 Read VIN (400B/C00B)
-          console.log("<<Read VIN>>")
+        
+        case messageType.READ_VIN_REPLY: //17 Read VIN (400B/C00B) -ok
+          console.log("<<READ_VIN_REPLY>>")
         
           var randomNo     = text.substring(36, 36 + (2 * 2))
+          var vinCode      = text.substring(40, 40 + (2 * 17))
+          var time         = text.substring(57, 57 + (2 * 6))
 
           message.randomNo = randomNo
+          message.vinCode  = vinCode
+          message.utcTime  = utcTime.calcule(time)
           
           return message
 
         break
 
-        case messageType.READ_FREEZE_FRAME: //18 Reading Freeze Frame (400C/C00C) 
+        case messageType.READ_FREEZE_FRAME_REPLY: //18 Reading Freeze Frame (400C/C00C) 
           console.log("<<Reading Freeze Frame>>")
 
           var randomNo     = text.substring(36, 36 + (2 * 2))
 
           message.randomNo = randomNo
+
+          //TODO
                     
           return message
 

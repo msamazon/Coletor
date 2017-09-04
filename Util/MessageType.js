@@ -46,7 +46,7 @@ module.exports = Object.freeze({
     READ_FREEZE_FRAME_REPLY:                        '0cc0',
     SEND_UPGRADING:                                 '0150',//19
     SEND_UPGRADING_REPLY:                           '01d0',
-    ISSUE_UPGRADE_PACKAGE:                          '0250',
-    ISSUE_UPGRADE_PACKAGE_REPLY:                    '02d0',//20
+    ISSUE_UPGRADE_PACKAGE:                          '0250',//20
+    ISSUE_UPGRADE_PACKAGE_REPLY:                    '02d0',
 
 })
