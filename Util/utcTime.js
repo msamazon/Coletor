@@ -8,7 +8,7 @@ exports.calcule = function(timehex) {
     var hour          = convert.hex2dec(timehex.substring(6, 8))
     var minute        = convert.hex2dec(timehex.substring(8, 10))
     var second        = convert.hex2dec(timehex.substring(10, 12))
-          
+
     result  =  day + "/" + month + "/"  + (20 + year) + " " + hour + ":"+ minute + ":" + second
 
     return result

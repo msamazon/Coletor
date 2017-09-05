@@ -126,8 +126,10 @@ var MessageSchema = new Schema({
   packetSign: String,
   packetNumber: String,
   packetLength: String,
-  packetContents: String
+  packetContents: String,
 
+  //read vin 
+  vinCode: String
 })
 
 //Register schema to Mongoose
