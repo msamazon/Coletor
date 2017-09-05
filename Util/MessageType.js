@@ -37,7 +37,7 @@ module.exports = Object.freeze({
     READ_SPECIFIED_PID_DATA_VALUE:                  '0840',
     READ_SPECIFIED_PID_DATA_VALUE_REPLY:            '080c',
     READ_VEHICLE_DTCS:                              '0940',
-    READ_VEHICLE_DTCS_REPLY:                        '0940',
+    READ_VEHICLE_DTCS_REPLY:                        '09c0',
     CLEAR_DTC:                                      '0a40',
     CLEAR_DTC_REPLY:                                '0Ac0',
     READ_VIN:                                       '0b40',
