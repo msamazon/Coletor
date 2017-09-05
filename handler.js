@@ -39,7 +39,7 @@ exports.handler = function(socket, buffer) {
     
     var reply = replyMessage(message)
 
-    if (message.eventcode == messageType.LOGIN) {
+    //if (message.eventcode == messageType.LOGIN) {
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
         console.log("Send Read Vin")
@@ -51,7 +51,7 @@ exports.handler = function(socket, buffer) {
         console.log("Send READ_VEHICLE_DTCS")
 
         socket.write(reMsg1)
-    }
+   // }
     
     var promise = message.save(function (err) {
         if (err) console.log(err)
