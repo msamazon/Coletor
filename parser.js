@@ -6,8 +6,7 @@ module.exports = function() {
       var modulo4 = require('./Util/modulo4')
       var cron    = require('cron')
       var requstDongle = require('./requestDongle')
-      
-      require('./Util/gpsConvert')();
+      var gpsConvert = require('./Util/gpsConvert')
       
       var messageType = require("./Util/MessageType")
       
@@ -17,7 +16,7 @@ module.exports = function() {
       
       var message = new Message()
       
-      //text = "40405f0033574e2d31363031303035350110170811120e1c03c07da60068b6e30c030000009302010104090404030001010000214142434445466162636465666768696a6b6c0102030405060708090a0b0c0d0e0f170811120e1b68760d0a" //login
+      text = "40404b003247512d313630313030313901101e0b100604190c02c83707f887ac0f000000002d130101030304020000010100000d426162636465666768696a6ba51e0b1006041965c30d0a" //login
       //string para text local
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
@@ -70,11 +69,7 @@ module.exports = function() {
           firmwareVersion        = modulo4.calcule(firmwareVersion)
           hardwareVersion        = modulo4.calcule(hardwareVersion)
 
-          console.log("GPS %s", gps)
-
-          var resultGps = new gpsConvert(gps) //TODO
-
-          message.gpsData          = gpsData
+          message.gpsData        = gpsConvert.calcule(gps)
           message.obdModule        = obdModule
           message.firmwareVersion  = firmwareVersion
           message.hardwareVersion  = hardwareVersion
@@ -260,12 +255,10 @@ module.exports = function() {
           console.log("reserved %s", reserved)
 
           rtcTime             = utcTime.calcule(rtcTime)
-          var resultGps       = new gpsConvert(gpsData) //TODO
-
       
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
-          message.gpsData                     = gpsData
+          message.gpsData                     = gpsConvert.calcule(gpsData)
           message.currentTripFuelConsumption  = cTripFuelCons
           message.currentTripMileage          = cTripFuelMileage
           message.currentTripDuration         = cTripFuelMileage
@@ -295,7 +288,7 @@ module.exports = function() {
           message.alarmThreshold = alarmThreshold
           message.alarmCurrent   = alarmCurrent
           message.rtcTime        = utcTime.calcule(rtcTime)
-          message.gpsData        = gpsData //mudar para funcao
+          message.gpsData        = gpsConvert.calcule(gpsData)
                 
           return message
          
@@ -310,7 +303,7 @@ module.exports = function() {
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
           message.time = utcTime.calcule(time)
-          message.gpsData = gpsData //mudar para modulo
+          message.gpsData = gpsConvert.calcule(gpsData)
 
           return message
 
