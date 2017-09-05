@@ -353,7 +353,7 @@ module.exports = function() {
                     "0x0a" //tail //22
                 ]);
             
-                return [1 , buffer]
+                return [0 , buffer]
             break
 
             case messageType.CLEAR_DTC: //16

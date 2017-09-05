@@ -45,6 +45,12 @@ exports.handler = function(socket, buffer) {
         console.log("Send Read Vin")
 
         socket.write(reMsg)
+
+        var reMsg1 = requestDongle.send(messageType.READ_VEHICLE_DTCS, message.dongleCode)
+
+        console.log("Send READ_VEHICLE_DTCS")
+
+        socket.write(reMsg1)
     }
     
     var promise = message.save(function (err) {
