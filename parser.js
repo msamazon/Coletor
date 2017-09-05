@@ -22,8 +22,7 @@ module.exports = function() {
       //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
       //text = "4040310033574e2d3136303130303535042018081101361418081101361403787da60034b7e30c08000000ad024c3c0d0a" //sleep mode
-      //text = "404082003247512d313630313030313901201e0b1006041e8080801e0b1006041f0f42c737071088ac0f1d0000006e1306052001740b2001200c2002d30b0d2001000f20014a112001170100000000000000caa800001e006aff120044ff65ff15003dff6aff130042ff65ff140042ff5fff14003dff8c00ffff0100000073eb0d0a"
-
+      //text = "4040630033574e2d31363031303035350220010911030a2a808000010911030a2a0330a1ac00ce0cdf0c010000006e02060520017b0b2001330c2002840c0d2001000f2001611020020b010d000000000000005e8908008000ffff01010000ee4d0d0a4040630033574e2d31363031303035350220010911030a2b808000010911030a2b0330a1ac00ce0cdf0c010000006f02060520017b0b2001340c2002880c0d2001000f20016110200207010d00000000000000838d08007f00ffff0101000058e20d0a4040630033574e2d31363031303035350220010911030a2c808000010911030a2c0330a1ac00ce0cdf0c010000006f02060520017b0b2001330c2002880c0d2001000f20016110200207010d00000000000000a69108007f00ffff0101000082ed0d0a4040630033574e2d31363031303035350220010911030a2d808000010911030a2d0330a1ac00ce0cdf0c010000007002060520017b0b2001330c2002670c0d2001000f20016110200204010d00000000000000cc9508008000ffff010100009c7a0d0a4040630033574e2d31363031303035350220010911030a2e808000010911030a2e032aa1ac00ce0cdf0c050000007002060520017b0b2001320c20026f0c0d2001000f20016110200206010d00000000000000b79908008000ffff0101000074870d0a4040630033574e2d31363031303035350220010911030a2f808000010911030a2f032aa1ac00ce0cdf0c020000006e02060520017b0b2001320c20028a0c0d2001000f20016110200206010d00000000000000d69d08007f00ffff0101000042b40d0a"
       var result = ''
       
       var dateReceived = new Date()    
@@ -99,194 +98,154 @@ module.exports = function() {
         case messageType.COMPREHENSIVE_DATA: //3 Comprehensive data (0x2001/0x2002)
           console.log("<<Comprehensive data>> %s", message.dongleCode)
           
-          var rtcTime                     = utcTime.calcule(text.substring(36, 36 + (2 * 6)))
-          var dataSitch                   = text.substring(48, 48 + (2 * 3))
-          var gpsData                     = text.substring(54, 54 + (2 * 21))
+          var rtcTime                    = utcTime.calcule(text.substring(36, 36 + (2 * 6)))
 
-          var numPid                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
-          var odbData                     = text.substring(98, 98 + (numPid * 8) + 2) //cada pid tem 8 bytes
+          var dataSitch                  = text.substring(48, 48 + (2 * 3))
 
-          var ini = 0
-          var fim = 8
-          var count = 0
+          var gpsData                    = text.substring(54, 54 + (2 * 21))
+
+          var PidNo                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
+
+          console.log('PidNo: %s', PidNo)
+
+          //var odbData                    = text.substring(98, 98 + (PidNo * 8) + 2) //cada pid tem 8 bytes
+          var pidIni = 98
           var arrPids = []
-          var pidhex = ''
 
-          for (var i =0; i<numPid; i++) {
+          for(var i = 0; i < PidNo; i++) {
 
-            pidhex = odbData.substring(ini, fim)
-            console.log(pidhex)
+            var _pidNO = text.substring(pidIni, pidIni + (2 *2))
+            var _pidLen = text.substring(pidIni + 4, (pidIni + 4) + (2 *1))
+            var _pidValue = text.substring(pidIni + 6, (pidIni + 6) + (2 * convert.hex2dec(_pidLen)))
+            console.log("pidNO: %s", _pidNO)
+            console.log("pidLen: %s", _pidLen)
+            console.log("pidValue: %s", _pidValue)
 
-            var noId  = pidhex.substring(2, 4) + pidhex.substring(0, 2)
-            console.log(noId)
+            pidIni = pidIni + 6 +  (2 * convert.hex2dec(_pidLen))
 
-            var len = convert.hex2dec(pidhex.substring(4, 6))
-
-            if (len == 2) {
-              count = 2
-              pidhex = odbData.substring(ini, fim + count)
-              console.log(pidhex)
-            }else {
-              count = 0
+            if (i == 0) {
+              message.pid1.noId = _pidNO
+              message.pid1.len = _pidLen
+              message.pid1.dec = _pidValue
             }
-
-            var dec = convert.hex2dec(pidhex.substring(6, 6 + (2 * len)))
-
-            ini = fim + count
-            fim = fim + 8 + count
-
-            //TODO Arrrumar um melhor jeito, fazendo rapido
-            switch(i) {
-              case 0:
-                message.pid1.noId = noId
-                message.pid1.len = len
-                message.pid1.dec = dec
-
-              break
-
-              case 1: 
-                
-                  message.pid2.noId = noId
-                  message.pid2.len = len
-                  message.pid2.dec = dec
-                                
-              break
-
-              case 2: 
-
-                message.pid3.noId = noId
-                message.pid3.len = len
-                message.pid3.dec = dec
-                  
-              break
-
-              case 3:
-                message.pid4.noId = noId
-                message.pid4.len = len
-                message.pid4.dec = dec
-              break
-
-              case 4:
-                message.pid5.noId = noId
-                message.pid5.len = len
-                message.pid5.dec = dec
-              break
-
-              case 5:
-                  message.pid6.noId = noId
-                  message.pid6.len = len
-                  message.pid6.dec = dec
-              break
-                
-              case 6:
-                  message.pid7.noId = noId
-                  message.pid7.len = len
-                  message.pid7.dec = dec
-              break
-                
-              case 7:
-                  message.pid8.noId = noId
-                  message.pid8.len = len
-                  message.pid8.dec = dec
-              break
-                
-              case 8:
-                  message.pid9.noId = noId
-                  message.pid9.len = len
-                  message.pid9.dec = dec
-              break
-                
-              case 9:
-                  message.pid10.noId = noId
-                  message.pid10.len = len
-                  message.pid10.dec = dec
-              break
-              }
+            if (i == 1) {
+              message.pid2.noId = _pidNO
+              message.pid2.len = _pidLen
+              message.pid2.dec = _pidValue
+            }
+            if (i == 2) {
+              message.pid3.noId = _pidNO
+              message.pid3.len = _pidLen
+              message.pid3.dec = _pidValue
+            }
+            if (i == 3) {
+              message.pid4.noId = _pidNO
+              message.pid4.len = _pidLen
+              message.pid4.dec = _pidValue
+            }
+            if (i == 4) {
+              message.pid5.noId = _pidNO
+              message.pid5.len = _pidLen
+              message.pid5.dec = _pidValue
+            }
+            if (i == 5) {
+              message.pid6.noId = _pidNO
+              message.pid6.len = _pidLen
+              message.pid6.dec = _pidValue
+            }
+            if (i == 6) {
+              message.pid7.noId = _pidNO
+              message.pid7.len = _pidLen
+              message.pid7.dec = _pidValue
+            }
+            if (i == 7) {
+              message.pid8.noId = _pidNO
+              message.pid8.len = _pidLen
+              message.pid8.dec = _pidValue
+            }
+            if (i == 8) {
+              message.pid9.noId = _pidNO
+              message.pid9.len = _pidLen
+              message.pid9.dec = _pidValue
+            }
+            if (i == 9) {
+              message.pid10.noId = _pidNO
+              message.pid10.len = _pidLen
+              message.pid10.dec = _pidValue
+            }
           }
-          //fuel
-          var fuel0 =  98 + (numPid * 8) + 2
+          var pidIni
 
-          var fuel = text.substring(fuel0, fuel0 + (2 * 4))
+           //fuel
 
-          console.log("fuel %s", fuel)
+          var fuel = text.substring(pidIni, pidIni + (2 * 4))
+
+          console.log("current trip fuel: %s", fuel)
+
+          var fuel0 = pidIni + (2 * 4)
 
           var cTripFuelCons  = text.substring(fuel0, fuel0 + (4 * 2))
+
+          console.log("cTripFuelCons: %s", cTripFuelCons)
+
           cTripFuelCons = modulo4.inverter(cTripFuelCons) 
           cTripFuelCons = convert.hex2dec(cTripFuelCons) * 0.01
+
+          //console.log("cTripFuelCons: %s meter", cTripFuelCons)
 
           var trip =  fuel0 + (4 * 2)
 
           var cTripFuelMileage = text.substring(trip, trip + (4 * 2))
+
+          console.log("cTripFuelMileage: %s", cTripFuelMileage)
+
           cTripFuelMileage = modulo4.inverter(cTripFuelMileage)
           cTripFuelMileage = convert.hex2dec(cTripFuelMileage)
 
-          var duration = trip + (4 * 2)
+         // console.log("cTripFuelMileage: %s ms", cTripFuelMileage)
 
-          var cTripFuelDuration = text.substring(duration, duration + (4 * 2))
+          var senson0 = trip + (4 * 2)
+          var gSensor = text.substring(senson0, senson0 + (2 * 2))
 
-          cTripFuelDuration = modulo4.inverter(cTripFuelDuration)
-          cTripFuelDuration = convert.hex2dec(cTripFuelDuration)
+          console.log("gSensor %s", gSensor)
 
+          gSensor = modulo4.inverter(gSensor)
+          gSensor = convert.hex2dec(gSensor)
 
-          var glen = duration + (4 * 2)
+          console.log("gSensor %s", gSensor)
 
-          var GSEN_Data_Len             = text.substring(glen, glen + (2 * 2))
+          var sensorData0 = senson0 + (2 * 2)
+          var gSensorData = text.substring(sensorData0, sensorData0 + (2 * gSensor))
 
-          console.log("GSEN_Data_Len: %s", GSEN_Data_Len)
-          console.log("GSEN_Data_Len.substring(4,2) %s", GSEN_Data_Len.substring(4,2))
-          console.log("GSEN_Data_Len.substring(0, 2) %s", GSEN_Data_Len.substring(0, 2))
-          GSEN_Data_Len = GSEN_Data_Len.substring(4,2) + GSEN_Data_Len.substring(0, 2)
-          console.log("GSEN_Data_Len:  %s", GSEN_Data_Len)
-          GSEN_Data_Len                 = convert.hex2dec(GSEN_Data_Len)
-          console.log("GSEN_Data_Len %s", GSEN_Data_Len)                                      
-          var endIni                    = glen + (2 * 2)                                          
-          var resuldEnd                 = endIni + (GSEN_Data_Len * 2)
+          console.log("gSensorData: %s", gSensorData)
 
+          var group1 = gSensorData.substring(0, 6 * 2)
 
-          var GSENSOR_Data              = text.substring(endIni, resuldEnd)
+          console.log("group1: ", group1)
 
-          console.log("resuldEnd %s", resuldEnd)
-          console.log("GSENSOR_Data: %s", GSENSOR_Data)
-          //tratar num negativo
-          var group1 = GSENSOR_Data.substring(0, 6 * 2)
-           console.log("group1: ", group1)
-          // console.log("X: %s", group1.substring(2, 4) + group1.substring(0, 2))
-          // console.log("y: %s", group1.substring(6, 8) + group1.substring(4, 6))
-          // console.log("z: %s", group1.substring(10, 12) + group1.substring(8, 10))
+          var group2 = gSensorData.substring(12, 12 +(6 * 2))
+          
+          console.log("group2: ", group2)
 
-          var group2 = GSENSOR_Data.substring(12, 12 + (6 *2))
-           console.log("group2: ", group2)
-          // console.log("X: %s", group2.substring(2, 4) + group2.substring(0, 2))
-          // console.log("y: %s", group2.substring(6, 8) + group2.substring(4, 6))
-          // console.log("z: %s", group2.substring(10, 12) + group2.substring(8, 10))
+          var group3 = gSensorData.substring(24, 24 + (6 *2))
+                    
+          console.log("group3: ", group3)
 
-          var group3 = GSENSOR_Data.substring(24, 24 + (6 *2))
-           console.log("group3: ", group3)
-          // console.log("X: %s", group3.substring(2, 4) + group3.substring(0, 2))
-          // console.log("y: %s", group3.substring(6, 8) + group3.substring(4, 6))
-          // console.log("z: %s", group3.substring(10, 12) + group3.substring(8, 10))
+          var group4 = gSensorData.substring(36, 36 + (6 *2))
+          console.log("group4: ", group4)
 
-          var group4 = GSENSOR_Data.substring(36, 36 + (6 *2))
-           console.log("group4: ", group4)
-          // console.log("X: %s", group4.substring(2, 4) + group4.substring(0, 2))
-          // console.log("y: %s", group4.substring(6, 8) + group4.substring(4, 6))
-          // console.log("z: %s", group4.substring(10, 12) + group4.substring(8, 10))
+          var group5 = gSensorData.substring(48, 48 + (6 *2))
+          console.log("group5: ", group5)
 
-          var group5 = GSENSOR_Data.substring(48, 48 + (6 *2))
-           console.log("group5: ", group5)
-          // console.log("X: %s", group5.substring(2, 4) + group5.substring(0, 2))
-          // console.log("y: %s", group5.substring(6, 8) + group5.substring(4, 6))
-          // console.log("z: %s", group5.substring(10, 12) + group5.substring(8, 10))
-
-          var customField               = text.substring(resuldEnd, resuldEnd + (8 * 2))
+          var field0 = sensorData0 + (2 * gSensor)
+          var customField   = text.substring(field0, field0 + (2 * 8))
 
           console.log("customField: %s", customField)
 
-          //TODO
           var voltage = customField.substring(0, 4)
-          console.log("voltage %sV", voltage)
+          console.log("voltage: %s V", voltage)
           voltage = convert.hex2dec(voltage.substring(2, 4) + voltage.substring(0, 2)) * 0.1
-          console.log("voltage %sV", voltage)
+          console.log("voltage: %s V", voltage)
 
           var vehicle = customField.substring(4, 8)
           console.log("vehicle %s", vehicle)
@@ -307,12 +266,11 @@ module.exports = function() {
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
           message.gpsData                     = gpsData
-          message.odbData                     = odbData
           message.currentTripFuelConsumption  = cTripFuelCons
           message.currentTripMileage          = cTripFuelMileage
           message.currentTripDuration         = cTripFuelMileage
-          message.GSEN_Data_Len               = GSEN_Data_Len
-          message.GSENSOR_Data                = GSENSOR_Data
+          message.GSEN_Data_Len               = gSensor
+          message.GSENSOR_Data                = gSensorData
           message.customField                 = customField
 
           return message

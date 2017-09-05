@@ -49,7 +49,7 @@ exports.handler = function(socket, buffer) {
     
     var promise = message.save(function (err) {
         if (err) console.log(err)
-           else console.log('salvo no banco')
+        else console.log('salvo no banco')
     })
     
     console.log("reply? %s", reply[0])
