@@ -12,10 +12,10 @@ exports.send = function(eventCode, dongleCode) {
             console.log("|| READ VIN ||") 
             var pkgHeader = '4040'
             var pkgLen    = "1800"
-            var randomNo  = convertrandom.calcule()
+            var randomNo  = convert.dec2hex(parseInt(random.calcule())) + "00" 
         
             var msgSemCRC = pkgHeader + pkgLen + dongleCode + eventCode
-                + randomNo + utc
+                + randomNo
         
             var crc = crcCalc.calcule(msgSemCRC)
 
@@ -38,8 +38,8 @@ exports.send = function(eventCode, dongleCode) {
                 "0x" + dongleCode.substring(22,24),//16
                 "0x" + messageType.READ_VIN.substring(0,2), //eventcode
                 "0x" + messageType.READ_VIN.substring(2,4), //18
-                "0x" + convert.dec2hex(randomNo.substring(0, 2)),
-                "0x" + convert.dec2hex(randomNo.substring(2, 4)),
+                "0x" + randomNo.substring(0, 2),
+                "0x" + randomNo.substring(2, 4),
                 "0x" + crc.substr(0, 2),
                 "0x" + crc.substr(2, 4),
                 "0x0d",//tail
@@ -49,11 +49,5 @@ exports.send = function(eventCode, dongleCode) {
              return buffer
              break
         }
-
     }
-
-    
-
-
-
 }

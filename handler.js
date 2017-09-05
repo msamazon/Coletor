@@ -40,7 +40,6 @@ exports.handler = function(socket, buffer) {
     var reply = replyMessage(message)
 
     if (message.eventcode == messageType.LOGIN) {
-        
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
         console.log("Send Read Vin")

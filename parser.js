@@ -81,12 +81,6 @@ module.exports = function() {
           message.param            = param
           message.dongleDateHex    = dongleDateHex
           message.crcCode          = crcCode
-
-          var cronJob = cron.job('*/5 * * * * *' , function(){
-            // perform operation e.g. GET request http.get() etc.
-            console.info('cron job completed login');
-          }); 
-          cronJob.start();
           
           return message
         break;
@@ -105,13 +99,11 @@ module.exports = function() {
         case messageType.COMPREHENSIVE_DATA: //3 Comprehensive data (0x2001/0x2002)
           console.log("<<Comprehensive data>> %s", message.dongleCode)
           
-          var rtcTime                     = text.substring(36, 36 + (2 * 6))
+          var rtcTime                     = utcTime.calcule(text.substring(36, 36 + (2 * 6)))
           var dataSitch                   = text.substring(48, 48 + (2 * 3))
-
           var gpsData                     = text.substring(54, 54 + (2 * 21))
 
           var numPid                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
-
           var odbData                     = text.substring(98, 98 + (numPid * 8) + 2) //cada pid tem 8 bytes
 
           var ini = 0
@@ -123,13 +115,17 @@ module.exports = function() {
           for (var i =0; i<numPid; i++) {
 
             pidhex = odbData.substring(ini, fim)
+            console.log(pidhex)
 
             var noId  = pidhex.substring(2, 4) + pidhex.substring(0, 2)
+            console.log(noId)
+
             var len = convert.hex2dec(pidhex.substring(4, 6))
 
             if (len == 2) {
               count = 2
               pidhex = odbData.substring(ini, fim + count)
+              console.log(pidhex)
             }else {
               count = 0
             }
@@ -154,7 +150,7 @@ module.exports = function() {
                   message.pid2.len = len
                   message.pid2.dec = dec
                                 
-               break
+              break
 
               case 2: 
 
@@ -206,18 +202,19 @@ module.exports = function() {
                   message.pid10.dec = dec
               break
               }
-
-            
           }
-
           //fuel
-          var fuel = 98 + (numPid * 8) + 2
+          var fuel0 =  98 + (numPid * 8) + 2
 
-          var cTripFuelCons  = text.substring(fuel, fuel + (4 * 2))
+          var fuel = text.substring(fuel0, fuel0 + (2 * 4))
+
+          console.log("fuel %s", fuel)
+
+          var cTripFuelCons  = text.substring(fuel0, fuel0 + (4 * 2))
           cTripFuelCons = modulo4.inverter(cTripFuelCons) 
           cTripFuelCons = convert.hex2dec(cTripFuelCons) * 0.01
 
-          var trip =  fuel + (4 * 2)
+          var trip =  fuel0 + (4 * 2)
 
           var cTripFuelMileage = text.substring(trip, trip + (4 * 2))
           cTripFuelMileage = modulo4.inverter(cTripFuelMileage)
@@ -226,18 +223,20 @@ module.exports = function() {
           var duration = trip + (4 * 2)
 
           var cTripFuelDuration = text.substring(duration, duration + (4 * 2))
+
           cTripFuelDuration = modulo4.inverter(cTripFuelDuration)
           cTripFuelDuration = convert.hex2dec(cTripFuelDuration)
+
 
           var glen = duration + (4 * 2)
 
           var GSEN_Data_Len             = text.substring(glen, glen + (2 * 2))
 
-          console.log("GSEN_Data_Len%s", GSEN_Data_Len)
+          console.log("GSEN_Data_Len: %s", GSEN_Data_Len)
           console.log("GSEN_Data_Len.substring(4,2) %s", GSEN_Data_Len.substring(4,2))
           console.log("GSEN_Data_Len.substring(0, 2) %s", GSEN_Data_Len.substring(0, 2))
           GSEN_Data_Len = GSEN_Data_Len.substring(4,2) + GSEN_Data_Len.substring(0, 2)
-          console.log("GSEN_Data_Len%s", GSEN_Data_Len)
+          console.log("GSEN_Data_Len:  %s", GSEN_Data_Len)
           GSEN_Data_Len                 = convert.hex2dec(GSEN_Data_Len)
           console.log("GSEN_Data_Len %s", GSEN_Data_Len)                                      
           var endIni                    = glen + (2 * 2)                                          
