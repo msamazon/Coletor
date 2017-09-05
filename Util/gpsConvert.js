@@ -56,16 +56,21 @@ exports.calcule = function(gpshex) {
         bit01 = "fixed"
     }
 
+    
     if (bit2 ==  "1") { 
+        console.log("N %",bit2)
         bit2 = ""
     }else {
         bit2 = "-"
+        console.log("S %",bit2)
     }
-
+    
     if (bit3 ==  "1") { 
         bit3 = ""
+        console.log("L %",bit3)
     }else {
         bit3 = "-"
+        console.log("O %",bit3)
     }
 
         //lat e long
