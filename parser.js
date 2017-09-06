@@ -445,13 +445,13 @@ module.exports = function() {
         
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var dtcType         = text.substring(36, 36 + (2 * 1))
-          var dtcNumbers      = convert.hex2dec(xtext.substring(38, 38 + (2 * 1)))
+          var dtcNumbers      = convert.hex2dec(text.substring(38, 38 + (2 * 1)))
           var endArray        = 40 + (2 * dtcNumbers)
           var dtcArray        = text.substring(40, endArray)
           var time            = utcTime.calcule(text.substring(endArray, endArray + (2 * 6)))
 
           message.randomNo    = randomNo
-          message.dtcType     = dtcType
+          message.dtcType     = dtcTypec
           message.dtcArray    = dtcArray
           message.utcTime     = time
           
