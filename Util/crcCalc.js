@@ -34,20 +34,11 @@ exports.calcule = function(hexaLine) {
     ]
     var len = 0
 
-    if (hexaLine.length % 2) {
-        len = hexaLine.length
-    }else {
-        len = hexaLine.length +1
-    }
-
-    
-    console.log("len/2: %s", len/2)
-
-    len = len/2
+    len = Math.floor(len) 
 
     console.log("len: %s", len)
 
-    var hexaData = new Array(len)
+    var hexaData = Array(len)
     
     var i = 0
     
