@@ -41,7 +41,13 @@ exports.calcule = function(hexaLine) {
     }
 
     
-    var hexaData = Array(len/2)
+    console.log("len/2: %s", len/2)
+
+    len = len/2
+
+    console.log("len: %s", len)
+
+    var hexaData = new Array(len)
     
     var i = 0
     
