@@ -484,11 +484,12 @@ module.exports = function() {
 
           message.randomNo = randomNo
 
+          console.log("vincode %s", vinCode)
           
-          var ascii = convert.hex2ascii(vinCode)
+          //var ascii = convert.hex2ascii(vinCode)
 
           console.log("ascii %s", ascii)
-          
+
           vinCode = ascii
 
           message.vinCode  = vinCode
