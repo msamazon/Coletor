@@ -32,8 +32,16 @@ exports.calcule = function(hexaLine) {
         0xD007,0x4702,0xFE06,0x6903,0x8C05,0x1B00,0xA204,0x3501,0x6803,0xFF06,
         0x4602,0xD107,0x3401,0xA304,0x1A00,0x8D05
     ]
+    var len = 0
+
+    if (hexaLine.length % 2) {
+        len = hexaLine.length
+    }else {
+        len = hexaLine.length +1
+    }
+
     
-    var hexaData = Array(hexaLine.length/2)
+    var hexaData = Array(len/2)
     
     var i = 0
     
