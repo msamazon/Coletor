@@ -484,7 +484,9 @@ module.exports = function() {
 
           message.randomNo = randomNo
 
-          console.log("vinCode: %s", vinCode)
+          
+          var ascii = Buffer.from(vinCode, "hex")
+          vinCode = ascii.toString('ascii')
 
           message.vinCode  = vinCode
           message.rtcTime  = utcTime.calcule(time)
