@@ -484,7 +484,7 @@ module.exports = function() {
 
           message.randomNo = randomNo
 
-          Console.log("vinCode: %s", vinCode)
+          console.log("vinCode: %s", vinCode)
 
           message.vinCode  = vinCode
           message.rtcTime  = utcTime.calcule(time)
