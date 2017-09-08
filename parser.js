@@ -451,7 +451,7 @@ module.exports = function() {
           var time            = utcTime.calcule(text.substring(endArray, endArray + (2 * 6)))
 
           message.randomNo    = randomNo
-          message.dtcType     = dtcTypec
+          message.dtcType     = dtcType
           message.dtcArray    = dtcArray
           message.utcTime     = time
           
