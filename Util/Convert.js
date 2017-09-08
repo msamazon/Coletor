@@ -23,7 +23,7 @@ exports.hex2dec = function(s) {
     return parseInt(s, 16).toString(10)
 }
 
-exports.hex2ascii(s) {
+exports.hex2ascii = function(s) {
     var hex = s.toString();//force conversion
     var str = '';
     for (var i = 0; i < hex.length; i += 2)
