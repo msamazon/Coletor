@@ -484,7 +484,9 @@ module.exports = function() {
 
           message.randomNo = randomNo
 
-          const ascii = Buffer.from(vinCode, 'hex')
+
+
+          var ascii = new Buffer.from(vinCode, "hex")
           vinCode = ascii.toString('ascii')
 
           message.vinCode  = vinCode
