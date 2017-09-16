@@ -15,6 +15,7 @@ exports.send = function(eventCode, dongleCode) {
             var pkgLen    = "1800"
             var randomNo  = convert.dec2hex(parseInt(random.calcule())) + "00" 
         
+            console.log('dongleCode %s', dongleCode)
             var msgSemCRC = pkgHeader + pkgLen + dongleCode + eventCode
                 + randomNo
         
