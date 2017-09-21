@@ -45,8 +45,8 @@ exports.calcule = function(gpshex) {
     console.log("statusGps: %s", statusGps)
 
     var bit01 = statusGps.substring(6, 8)
-    var bit2 = statusGps.substring(5, 6)
-    var bit3 = statusGps.substring(4, 5)
+    var bit2  = statusGps.substring(5, 6)
+    var bit3  = statusGps.substring(4, 5)
 
     if (bit01 ==  "00") { 
         bit01 = "Not fixed"
@@ -93,14 +93,28 @@ exports.calcule = function(gpshex) {
 
     //TODO
     //speed
-    speed = convert.hex2dec(speed.substring(2, 4) +  speed.substring(0, 2)) * 0.1 //TODO 
+
+    console.log("Speed Antes %s", speed)
+
+    speed = convert.hex2dec(speed.substring(2, 4) +  speed.substring(0, 2)) * 0.1 //TODO
+
+    console.log("Speed %s", speed)
     //course
+
+    console.log("high Antes %s", high)
+
     high = convert.hex2dec(high.substring(2, 4) +  high.substring(0, 2)) * 0.1 //TODO
 
+    console.log("high %s", high)
+
+    console.log("course antes %s", course)
+
     course = convert.hex2dec(course.substring(2, 4) +  course.substring(0, 2)) * 0.1 //TODO
+
+    console.log("course %s", course)
 
     var result = bit2 + latDeci + ", " + bit3 + longDeci
 
     console.log("result : %s", result)
-    return result
+    return [result, speed, high, course]
 }

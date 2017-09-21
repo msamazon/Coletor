@@ -12,6 +12,9 @@ var MessageSchema = new Schema({
   dongleCode: String,
   eventcode: String,
   
+  speed: String,
+  high: String, 
+  course: String,
 
   gpsData: String,
   obdModule: String,
