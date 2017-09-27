@@ -1,8 +1,9 @@
 const net = require('net')
 var mongoose = require('mongoose')
 var Handler = require('./handler')
-
 var server = net.createServer()
+
+var port = process.env.PORT || 4884
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://dbuser:123mudar#@ds139428.mlab.com:39428/driveondb', { useMongoClient: true })
@@ -41,6 +42,6 @@ server.on("connection", function(socket) {
   })
 })
 
-server.listen(4884, function () {
+server.listen(port, function () {
   console.log('server listening to %j ', server.address())
 })
