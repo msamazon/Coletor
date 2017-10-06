@@ -20,8 +20,6 @@ mongoose.connection.on('error', error => {
   return console.log('Mongoose erro de conexão: ' + error)
 })
 
-var port = process.env.PORT || 8080
-
 server.on("connection", function(socket) {
 
   socket.setKeepAlive(true, 1000) 
