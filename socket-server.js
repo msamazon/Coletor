@@ -22,6 +22,7 @@ mongoose.connection.on('error', error => {
 })
 
 server.on("connection", function(socket) {
+  console.log('connection')
 
   socket.setKeepAlive(true, 1000) 
 
