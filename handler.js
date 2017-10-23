@@ -9,10 +9,10 @@ exports.handler = function(socket, buffer) {
     var remoteAddress = socket.remoteAddress
 
     console.log("=====================================")
-    console.log('>new client connection is made %s', remoteAddress)
+    console.log('handler::new client connection is made %s', remoteAddress)
   
-    console.log("socket.address() %s",socket.address())
-    console.log("remoteAddress %s", remoteAddress)
+    console.log("handler::socket.address() %s",socket.address())
+    console.log("handler::remoteAddress %s", remoteAddress)
 
     var buff = new Buffer(buffer, 'utf8')
 
@@ -42,13 +42,13 @@ exports.handler = function(socket, buffer) {
     //if (message.eventcode == messageType.LOGIN) {
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
-        console.log("Send Read Vin")
+        console.log("handler::Send Read Vin")
 
         socket.write(reMsg)
 
         var reMsg1 = requestDongle.send(messageType.READ_VEHICLE_DTCS, message.dongleCode)
 
-        console.log("Send READ_VEHICLE_DTCS")
+        console.log("handler::Send READ_VEHICLE_DTCS")
 
         socket.write(reMsg1)
    // }

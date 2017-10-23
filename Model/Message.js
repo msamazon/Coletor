@@ -136,6 +136,6 @@ var MessageSchema = new Schema({
 })
 
 //Register schema to Mongoose
-var Message = mongoose.model('Message', MessageSchema);
+var Message = mongoose.model('Message_temp', MessageSchema);
 
 module.exports = Message

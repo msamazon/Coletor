@@ -9,6 +9,7 @@ module.exports = function() {
       var gpsConvert = require('./Util/gpsConvert')
       
       var messageType = require("./Util/MessageType")
+      var alarmType = require("./Util/AlarmType")
       
       console.log("=========== parser ===========")
 
@@ -18,7 +19,7 @@ module.exports = function() {
       
       //text = "40404b003247512d313630313030313901101e0b100604190c02c83707f887ac0f000000002d130101030304020000010100000d426162636465666768696a6ba51e0b1006041965c30d0a" //login
       //string para text local
-      //text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
+      text = "4040390033574e2d313630313030353503200400010f00000045170811111b331708111101270092d6ab00b8c3e00c00000000000080e90d0a" //alarm
       //text = "4040160033574e2d3136303130303535031041920d0a" // manutencao - 4192
       //text = "4040310033574e2d3136303130303535042018081101361418081101361403787da60034b7e30c08000000ad024c3c0d0a" //sleep mode
       //text = "4040630033574e2d31363031303035350220010911030a2a808000010911030a2a0330a1ac00ce0cdf0c010000006e02060520017b0b2001330c2002840c0d2001000f2001611020020b010d000000000000005e8908008000ffff01010000ee4d0d0a4040630033574e2d31363031303035350220010911030a2b808000010911030a2b0330a1ac00ce0cdf0c010000006f02060520017b0b2001340c2002880c0d2001000f20016110200207010d00000000000000838d08007f00ffff0101000058e20d0a4040630033574e2d31363031303035350220010911030a2c808000010911030a2c0330a1ac00ce0cdf0c010000006f02060520017b0b2001330c2002880c0d2001000f20016110200207010d00000000000000a69108007f00ffff0101000082ed0d0a4040630033574e2d31363031303035350220010911030a2d808000010911030a2d0330a1ac00ce0cdf0c010000007002060520017b0b2001330c2002670c0d2001000f20016110200204010d00000000000000cc9508008000ffff010100009c7a0d0a4040630033574e2d31363031303035350220010911030a2e808000010911030a2e032aa1ac00ce0cdf0c050000007002060520017b0b2001320c20026f0c0d2001000f20016110200206010d00000000000000b79908008000ffff0101000074870d0a4040630033574e2d31363031303035350220010911030a2f808000010911030a2f032aa1ac00ce0cdf0c020000006e02060520017b0b2001320c20028a0c0d2001000f20016110200206010d00000000000000d69d08007f00ffff0101000042b40d0a"
@@ -35,6 +36,8 @@ module.exports = function() {
       var dongleCode   = text.substring(8, 32)
       var eventCode    = text.substring(32, 36)
 
+      dongleCode       = convert.hex2ascii(dongleCode)
+
       message.fullMessage   = text
       message.packageHead   = head
       message.packageLength = headLen
@@ -50,7 +53,7 @@ module.exports = function() {
         
         case messageType.LOGIN://1 Login Packet (1001/9001) 
 
-          console.log("<<login>> %s: ", message.dongleCode)
+          console.log("<<login>> ")
 
           var gps                = text.substring(36, 36 + (2 * 21))
           var obdModule          = text.substring(78, 78 + (2 * 4))
@@ -70,9 +73,9 @@ module.exports = function() {
           obdModule              = modulo4.calcule(obdModule)
           firmwareVersion        = modulo4.calcule(firmwareVersion)
           hardwareVersion        = modulo4.calcule(hardwareVersion)
+          //[gps, speed, high, course]
+          var gpsTemp            = gpsConvert.calcule(gps)
 
-          //[result, speed, high, course]
-          var gpsTemp = gpsConvert.calcule(gps)
           message.gpsData          = gpsTemp[0]
           message.speed            = gpsTemp[1]
           message.high             = gpsTemp[2]
@@ -84,15 +87,31 @@ module.exports = function() {
           message.param            = param
           message.dongleDateHex    = dongleDateHex
           message.crcCode          = crcCode
+
+          //log
+          console.log("login::odb %s", obdModule)
+          console.log("login::firmware %s", firmwareVersion)
+          console.log("login::hardware %s", hardwareVersion)
+          console.log("login::gps %s", gpsTemp[0])
+          console.log("login::speed %s", gpsTemp[1])
+          console.log("login::high %s", gpsTemp[2])
+          console.log("login::course %s", gpsTemp[3])
+          //Verificar
+          console.log("login::qtparam %s", qtparam)
+          console.log("login::param %s", param)
+          console.log("login::dongleDateHex %s", dongleDateHex)
+          console.log("login::crcCode %s", crcCode)
           
           return message
         break;
 
         case messageType.MAINTENANCE://2 Maintenance(1003/9003) 
 
-          console.log("<<Maintenance>> %s: ", message.dongleCode)
+          console.log("<<Maintenance>>")
 
-          message.data = text.substring(36, 48)
+          message.data = convert.hex2ascii(text.substring(36, 48))
+          
+          console.log("maintenance::data %s", message.data)
           
           return message
 
@@ -100,28 +119,42 @@ module.exports = function() {
 
         case messageType.COMPREHENSIVE_DATA_SUPPLEMENT:
         case messageType.COMPREHENSIVE_DATA: //3 Comprehensive data (0x2001/0x2002)
-          console.log("<<Comprehensive data>> %s", message.dongleCode)
+          console.log("<<Comprehensive data>>")
           
           var rtcTime                    = utcTime.calcule(text.substring(36, 36 + (2 * 6)))
-
           var dataSitch                  = text.substring(48, 48 + (2 * 3))
-
           var gpsData                    = text.substring(54, 54 + (2 * 21))
-
           var PidNo                      = convert.hex2dec(text.substring(96, 96 + (2 * 1))) //pid = 8 *2
+          
+          var gpsTemp                    = gpsConvert.calcule(gpsData)
 
-          console.log('PidNo: %s', PidNo)
+          message.gpsData                = gpsTemp[0]
+          message.speed                  = gpsTemp[1]
+          message.high                   = gpsTemp[2]
+          message.course                 = gpsTemp[3]
 
-          var pidIni = 98
+          //log
+          console.log('comprehensive::gps %s', gpsTemp[0])
+          console.log('comprehensive::speed %s', gpsTemp[1])
+          console.log('comprehensive::high %s', gpsTemp[2])
+          console.log('comprehensive::course %s', gpsTemp[3])
+
+          console.log('comprehensive::rtcTime %s', rtcTime)
+          console.log('comprehensive::dataSitch %s', dataSitch)
+          console.log('comprehensive::PidNo: %s', PidNo)
+
+          var pidIni = 98 //inicio do pid
 
           for(var i = 0; i < PidNo; i++) {
 
             var _pidNO = text.substring(pidIni, pidIni + (2 *2))
             var _pidLen = text.substring(pidIni + 4, (pidIni + 4) + (2 *1))
             var _pidValue = text.substring(pidIni + 6, (pidIni + 6) + (2 * convert.hex2dec(_pidLen)))
-            console.log("pidNO: %s", _pidNO)
-            console.log("pidLen: %s", _pidLen)
-            console.log("pidValue: %s", _pidValue)
+            
+            console.log("comprehensive::pidNO (%s) %s value: %s", i, _pidNO, _pidValue)
+
+            //console.log("pidLen: %s", _pidLen)
+            //sconsole.log("pidValue: %s", _pidValue)
 
             pidIni = pidIni + 6 +  (2 * convert.hex2dec(_pidLen))
 
@@ -182,102 +215,94 @@ module.exports = function() {
 
           var fuel = text.substring(pidIni, pidIni + (2 * 4))
 
-          console.log("current trip fuel: %s", fuel)
+          //console.log("current trip fuel: %s", fuel)
 
           fuel = modulo4.inverter(fuel)
           fuel = convert.hex2dec(fuel)
 
-          console.log("current trip fuel: %s", fuel)
+          console.log("comprehensive::currentTripFuel: %s l", fuel)
 
           var fuel0 = pidIni + (2 * 4)
 
           var cTripFuelCons  = text.substring(fuel0, fuel0 + (4 * 2))
 
-          console.log("cTripFuelCons: %s", cTripFuelCons)
+          //console.log("cTripFuelCons: %s", cTripFuelCons)
 
           cTripFuelCons = modulo4.inverter(cTripFuelCons) 
           cTripFuelCons = convert.hex2dec(cTripFuelCons) * 0.01
 
-          console.log("cTripFuelCons: %s meter", cTripFuelCons)
+          console.log("comprehensive::cTripFuelCons: %s meter", cTripFuelCons)
 
           var trip =  fuel0 + (4 * 2)
 
           var cTripFuelMileage = text.substring(trip, trip + (4 * 2))
 
-          console.log("cTripFuelMileage: %s", cTripFuelMileage)
+          //console.log("cTripFuelMileage: %s", cTripFuelMileage)
 
           cTripFuelMileage = modulo4.inverter(cTripFuelMileage)
           cTripFuelMileage = convert.hex2dec(cTripFuelMileage)
 
-          console.log("cTripFuelMileage: %s ms", cTripFuelMileage)
+          console.log("comprehensive::cTripFuelMileage: %s ms", cTripFuelMileage)
 
           var senson0 = trip + (4 * 2)
           var gSensor = text.substring(senson0, senson0 + (2 * 2))
 
-          console.log("gSensor %s", gSensor)
+          //console.log("gSensor %s", gSensor)
 
           gSensor = modulo4.inverter(gSensor)
           gSensor = convert.hex2dec(gSensor)
 
-          console.log("gSensor %s", gSensor)
+          console.log("comprehensive::gSensor %s", gSensor)
 
           var sensorData0 = senson0 + (2 * 2)
           var gSensorData = text.substring(sensorData0, sensorData0 + (2 * gSensor))
 
-          console.log("gSensorData: %s", gSensorData)
+          console.log("comprehensive::gSensorData: %s", gSensorData)
 
           var group1 = gSensorData.substring(0, 6 * 2)
 
-          console.log("group1: ", group1)
+          console.log("comprehensive::group1: %s", group1)
 
           var group2 = gSensorData.substring(12, 12 +(6 * 2))
           
-          console.log("group2: ", group2)
+          console.log("comprehensive::group2: %s", group2)
 
           var group3 = gSensorData.substring(24, 24 + (6 *2))
                     
-          console.log("group3: ", group3)
+          console.log("comprehensive::group3: %s", group3)
 
           var group4 = gSensorData.substring(36, 36 + (6 *2))
-          console.log("group4: ", group4)
+          console.log("comprehensive::group4: %s", group4)
 
           var group5 = gSensorData.substring(48, 48 + (6 *2))
-          console.log("group5: ", group5)
+          console.log("comprehensive::group5: %s", group5)
 
           var field0 = sensorData0 + (2 * gSensor)
           var customField   = text.substring(field0, field0 + (2 * 8))
 
-          console.log("customField: %s", customField)
+          console.log("comprehensive::customField: %s", customField)
 
           var voltage = customField.substring(0, 4)
-          console.log("voltage: %s V", voltage)
+          //console.log("voltage: %s V", voltage)
           voltage = convert.hex2dec(voltage.substring(2, 4) + voltage.substring(0, 2)) * 0.1
-          console.log("voltage: %s V", voltage)
+          console.log("comprehensive::voltage: %s V", voltage)
 
           var vehicle = customField.substring(4, 8)
-          console.log("vehicle %s", vehicle)
+          console.log("comprehensive::vehicle %s", vehicle)
 
           var accOn = customField.substring(8, 10)
-          console.log("accOn %s", accOn)
+          console.log("comprehensive::accOn %s", accOn)
 
           var mmxc = customField.substring(10, 12)
-          console.log("mmxc %s", mmxc)
+          console.log("comprehensive::mmxc %s", mmxc)
 
           var reserved = customField.substring(12, 16)
-          console.log("reserved %s", reserved)
+          console.log("comprehensive::reserved %s", reserved)
 
           rtcTime             = utcTime.calcule(rtcTime)
       
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
-
-
-          //[result, speed, high, course]
-          var gpsTemp = gpsConvert.calcule(gpsData)
-          message.gpsData          = gpsTemp[0]
-          message.speed            = gpsTemp[1]
-          message.high             = gpsTemp[2]
-          message.course           = gpsTemp[3]
 
           //message.gpsData                     = gpsConvert.calcule(gpsData)
           message.currentTripFuelConsumption  = fuel
@@ -304,36 +329,42 @@ module.exports = function() {
           var gpsData         = text.substring(64, 64 +(2 * 21))
 
           message.randomNo       = randomNo
-          message.alarmTag       = alarmTag
-          message.alarmNo        = alarmNo
+          message.alarmTag       = convert.hex2dec(alarmTag)
+          message.alarmNo        = alarmNo //verificar depois
           message.alarmThreshold = alarmThreshold
           message.alarmCurrent   = alarmCurrent
           message.rtcTime        = utcTime.calcule(rtcTime)
-
 
           //[result, speed, high, course]
           var gpsTemp = gpsConvert.calcule(gpsData)
           message.gpsData          = gpsTemp[0]
           message.speed            = gpsTemp[1]
           message.high             = gpsTemp[2]
-          message.course           = gpsTemp[3]
-          message.gpsData        = gpsConvert.calcule(gpsData)
-                
+          message.course           = gpsTemp[3]        
+          console.log("alarm::randomNo %s", randomNo)
+          console.log("alarm::alarmTag %s",convert.hex2dec(alarmTag))
+          console.log("alarm::alarmNo %s",alarmNo)
+          console.log("alarm::alarmThreshold %s",alarmThreshold)
+          console.log("alarm::alarmCurrent %s",alarmCurrent)
+
+          console.log("alarm::gps %s", gpsTemp[0])
+          console.log("alarm::speed %s", gpsTemp[1])
+          console.log("alarm::high %s", gpsTemp[2])
+          console.log("alarm::course %s", gpsTemp[3])
+          console.log("alarm::rtcTime %s", utcTime.calcule(rtcTime))
           return message
          
         break;
 
         case messageType.SLEEPMODE: //5 Sleep Mode Fixed Upload (2004) 
 
-          console.log("<<Sleep Mode Fixed Upload>> %s: ", message.dongleCode)
+          console.log("<<Sleep Mode Fixed Upload>>")
 
           var time      = text.substring(36, 36 + (2  *6))
           var timeEnd  = 36 + (2 *6)
           var gpsData  = text.substring(timeEnd, timeEnd + (21* 2))
 
           message.time = utcTime.calcule(time)
-
-
 
           //[result, speed, high, course]
           var gpsTemp = gpsConvert.calcule(gpsData)
@@ -343,6 +374,12 @@ module.exports = function() {
           message.course           = gpsTemp[3]
           message.gpsData        = gpsConvert.calcule(gpsData)
           // message.gpsData = gpsConvert.calcule(gpsData)
+
+          console.log("sleepmode::time %s", utcTime.calcule(time))
+          console.log("sleepmode::gps %s", gpsTemp[0])
+          console.log("sleepmode::speed %s", gpsTemp[1])
+          console.log("sleepmode::high %s", gpsTemp[2])
+          console.log("sleepmode::course %s", gpsTemp[3])
 
           return message
 

@@ -4,9 +4,9 @@ exports.calcule = function(gpshex) {
     var convert = require('./Convert')
     var modulo4 = require('./modulo4')
 
-    console.log("|||||||||||||||||||||||||||||||||||||||||||")
+    //console.log("----- gpsConvert -----")
 
-    console.log("GPS %s", gpshex)
+    //console.log("GPS %s", gpshex)
        
     var utcTimeGps    = gpshex.substring(0, 0 + (2 * 6))
     var statusGps     = gpshex.substring(12, 12 + (2 * 1))
@@ -18,9 +18,9 @@ exports.calcule = function(gpshex) {
 
     utcTimeGps = utcTime.calcule(utcTimeGps)
         
-    console.log("utcTimeGps %s", utcTimeGps)  
+    //console.log("utcTimeGps %s", utcTimeGps)  
         
-    console.log("statusGps: %s", statusGps)
+    //console.log("statusGps: %s", statusGps)
 
     statusGps = convert.hex2bin(statusGps)
 
@@ -42,7 +42,7 @@ exports.calcule = function(gpshex) {
             statusGps = statusGps
     }
 
-    console.log("statusGps: %s", statusGps)
+    //console.log("statusGps: %s", statusGps)
 
     var bit01 = statusGps.substring(6, 8)
     var bit2  = statusGps.substring(5, 6)
@@ -58,20 +58,20 @@ exports.calcule = function(gpshex) {
 
     
     if (bit2 ==  "1") { 
-        console.log("N %",bit2)
+        //console.log("N %",bit2)
         bit2 = "+"
     }else {
-        console.log("S %",bit2)
+        //console.log("S %",bit2)
         bit2 = "-"
         
     }
     
     if (bit3 ==  "1") {
-        console.log("L %",bit3)
+        //console.log("L %",bit3)
         bit3 = "+"
         
     }else {
-        console.log("O %",bit3)
+        //console.log("O %",bit3)
         bit3 = "-"
         
     }
@@ -94,27 +94,27 @@ exports.calcule = function(gpshex) {
     //TODO
     //speed
 
-    console.log("Speed Antes %s", speed)
+    //console.log("Speed Antes %s", speed)
 
     speed = convert.hex2dec(speed.substring(2, 4) +  speed.substring(0, 2)) * 0.1 //TODO
 
-    console.log("Speed %s", speed)
+    //console.log("Speed %s", speed)
     //course
 
-    console.log("high Antes %s", high)
+    //console.log("high Antes %s", high)
 
     high = convert.hex2dec(high.substring(2, 4) +  high.substring(0, 2)) * 0.1 //TODO
 
-    console.log("high %s", high)
+    //console.log("high %s", high)
 
-    console.log("course antes %s", course)
+    //console.log("course antes %s", course)
 
     course = convert.hex2dec(course.substring(2, 4) +  course.substring(0, 2)) * 0.1 //TODO
 
-    console.log("course %s", course)
+    //console.log("course %s", course)
 
-    var result = bit2 + latDeci + ", " + bit3 + longDeci
+    var resultGPS = bit2 + latDeci + "," + bit3 + longDeci
 
-    console.log("result : %s", result)
-    return [result, speed, high, course]
+    //console.log("----- fim gpsConvert -----")
+    return [resultGPS, speed, high, course]
 }
