@@ -55,15 +55,15 @@ exports.handler = function(socket, buffer) {
     
     var promise = message.save(function (err) {
         if (err) console.log(err)
-        else console.log('salvo no banco')
+        else console.log('handler::salvo no banco')
     })
     
-    console.log("reply? %s", reply[0])
+    console.log("handler::reply? %s", reply[0])
     
     if (reply[0] == 1) {
-        console.log("reply %s", reply[1])
+        console.log("handler::reply %s", reply[1])
           
-        console.log("Mensagem Enviada")
+        console.log("handler::Mensagem Enviada")
     
         socket.write(reply[1])
     }
