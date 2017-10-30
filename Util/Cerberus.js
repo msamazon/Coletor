@@ -7,32 +7,18 @@ exports.whitelist = function(code) {
     var mongoose        = require("mongoose")
     var Device           = require("../Model/Device")
     
-    var isOk = false
-
-    console.log("Cerberus::dongle %s", code)
+    var isValid = false
     
-    Device.find({dongleCode: code}).exec(function (err, query) {
-
-        console.log("Cerberus::code %s", code)
-
-        console.log("Cerberus::Deive %s", query)
-
-        console.log("Cerberus::dongleCode %s", query.dongleCode)
+    Device.findOne({dongleCode: code}).exec(function (err, query) {
 
         if (query.dongleCode == code) {
 
-            isOk = true
-            console.log("|||||||||||||||| %s", isOk)
+            isValid = true
             
         }else {
-            isOk = false
-            console.log("|||||||||||||||| %s", isOk)
+            isValid = false
         }
     })
 
-    console.log("Cerberus::result %s", isOk)
-
-    return isOk
-}    
-
- 
+    return isValid
+}

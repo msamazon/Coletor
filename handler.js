@@ -58,14 +58,14 @@ exports.handler = function(socket, buffer) {
 
        console.log("handler:: dongleCode esta na whitelist")
 
-    //    var promise = message.save(function (err) {
+       var promise = message.save(function (err) {
 
-    //        if (err) console.log(err)
+           if (err) console.log(err)
 
-    //        else console.log('handler::salvo no banco')
-    //     })
+           else console.log('handler::salvo no banco')
+        })
    }else {
-       console.log("handler:: dongleCode nao salvo")
+       console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
    }
     
     
