@@ -1,18 +1,17 @@
 exports.handler = function(socket, buffer) {
-    var mongoose = require('mongoose')
-    var Message = require('./Model/Message')
+    var mongoose        = require('mongoose')
+    var Message         = require('./Model/Message')
     var messageType = require("./Util/MessageType")
     require('./parser.js')();
     require('./replyMessage.js')();
-    var requestDongle = require('./requestDongle')
+    var requestDongle   = require('./requestDongle')
+    var cerberus        = require('./Util/Cerberus')
 
     var remoteAddress = socket.remoteAddress
 
     console.log("=====================================")
     console.log('handler::new client connection is made %s', remoteAddress)
-  
     console.log("handler::socket.address() %s",socket.address())
-    console.log("handler::remoteAddress %s", remoteAddress)
 
     var buff = new Buffer(buffer, 'utf8')
 
@@ -53,10 +52,22 @@ exports.handler = function(socket, buffer) {
         socket.write(reMsg1)
    // }
     
-    var promise = message.save(function (err) {
-        if (err) console.log(err)
-        else console.log('handler::salvo no banco')
-    })
+   //verifica se esta na White list
+
+   if (cerberus.whitelist(message.dongleCode)) {
+
+       console.log("handler:: dongleCode esta na whitelist")
+
+    //    var promise = message.save(function (err) {
+
+    //        if (err) console.log(err)
+
+    //        else console.log('handler::salvo no banco')
+    //     })
+   }else {
+       console.log("handler:: dongleCode nao salvo")
+   }
+    
     
     console.log("handler::reply? %s", reply[0])
     
