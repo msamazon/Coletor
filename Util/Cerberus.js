@@ -17,14 +17,15 @@ exports.whitelist = function(code) {
 
         console.log("Cerberus::dongleCode %s", device.dongleCode)
 
+	console.log("Cerberus::Deive %s", device)
         if (device.dongleCode == code) {
 
             result = true
-            console.log.apply("|||||||||||||||| %s", result)
+            console.log("|||||||||||||||| %s", result)
             
         }else {
             result = false
-            console.log.apply("|||||||||||||||| %s", result)
+            console.log("|||||||||||||||| %s", result)
         }
     })
 

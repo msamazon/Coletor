@@ -12,6 +12,6 @@ var DeviceSchema = new Schema({
 })
 
 //Register schema to Mongoose
-var Device = mongoose.model('Device', DeviceSchema);
+var Device = mongoose.model('devices', DeviceSchema);
 
 module.exports = Device
