@@ -154,7 +154,12 @@ module.exports = function() {
             //_pidLen = convert.hex2dec(_pidValue)
             var _h2d = convert.hex2dec(_pidValue)
 
-            _pidValue = _pidValue
+
+            if (_h2d == NaN) {
+              _h2d = "0"
+            }
+
+            _pidValue = _h2d
 
             console.log("comprehensive::pidNO (%s) %s value: %s [%s]", i, _pidNO, _pidValue, _h2d)
 
