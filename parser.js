@@ -151,9 +151,9 @@ module.exports = function() {
             var _pidLen = text.substring(pidIni + 4, (pidIni + 4) + (2 *1))
             var _pidValue = text.substring(pidIni + 6, (pidIni + 6) + (2 * convert.hex2dec(_pidLen)))
             
-            _pidLen = convert.hex2dec(_pidValue)
-            
-            console.log("comprehensive::pidNO (%s) %s value: %s", i, _pidNO, _pidValue)
+            //_pidLen = convert.hex2dec(_pidValue)
+
+            console.log("comprehensive::pidNO (%s) %s value: %s [%s]", i, _pidNO, _pidValue, convert.hex2dec(_pidValue))
 
             //console.log("pidLen: %s", _pidLen)
             //sconsole.log("pidValue: %s", _pidValue)
