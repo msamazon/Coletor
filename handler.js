@@ -13,7 +13,7 @@ exports.handler = function(socket, buffer) {
     console.log('handler::new client connection is made %s', remoteAddress)
     console.log("handler::socket.address() %s",socket.address())
 
-    var buff = new Buffer(buffer, 'utf8')
+    var buff = new Buffer(buffer, 'utf8')u
 
     var msg = ''
     var hex = buffer.toString ("hex")        
@@ -38,6 +38,9 @@ exports.handler = function(socket, buffer) {
     
     var reply = replyMessage(message)
 
+
+    //TODO como deixar o hw ativo 24h ???
+
     //if (message.eventcode == messageType.LOGIN) {
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
@@ -54,7 +57,7 @@ exports.handler = function(socket, buffer) {
     
    //verifica se esta na White list
 
-   if (cerberus.whitelist(message.dongleCode)) {
+   //if (cerberus.whitelist(message.dongleCode)) {
 
        console.log("handler:: dongleCode esta na whitelist")
 
@@ -64,9 +67,9 @@ exports.handler = function(socket, buffer) {
 
            else console.log('handler::salvo no banco')
         })
-   }else {
-       console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
-   }
+   //}else {
+     //  console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
+   //}
     
     
     console.log("handler::reply? %s", reply[0])
