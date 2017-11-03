@@ -13,7 +13,7 @@ exports.handler = function(socket, buffer) {
     console.log('handler::new client connection is made %s', remoteAddress)
     console.log("handler::socket.address() %s",socket.address())
 
-    var buff = new Buffer(buffer, 'utf8')u
+    var buff = new Buffer(buffer, 'utf8')
 
     var msg = ''
     var hex = buffer.toString ("hex")        
