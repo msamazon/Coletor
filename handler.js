@@ -9,8 +9,7 @@ exports.handler = function(socket, buffer) {
 
     var remoteAddress = socket.remoteAddress
 
-    console.log("=====================================")
-    console.log('handler::new client connection is made %s', remoteAddress)
+    console.log('handler::Start %s', remoteAddress)
     //console.log("handler::socket.address() %s",socket.address())
 
     var buff = new Buffer(buffer, 'utf8')

@@ -24,21 +24,22 @@ mongoose.connection.on('error', error => {
 })
 
 server.on("connection", function(socket) {
-  console.log('connection')
 
   socket.setKeepAlive(true, 60 * 1000) 
 
   var remoteAddress = socket.remoteAddress
 
+  console.log('>>> Dongle %s', remoteAddress)
+  
   socket.on("data", function(buffer) {
-    console.log('> Connection data from %s ', remoteAddress)
+    console.log(' | Connection data from %s ', remoteAddress)
   
     var handler = Handler.handler(socket, buffer)
 
   })
 
   socket.once("close", function() {
-    console.log("Connection from %s closed", remoteAddress)
+    console.log("<<< Stop Dongle %s", remoteAddress)
   })
 
   socket.on("error", function() {
