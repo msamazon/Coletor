@@ -48,5 +48,5 @@ server.on("connection", function(socket) {
 })
 
 server.listen(port, function () {
-  console.log('server listening to %j ', server.address())
+  console.log('server listening to %s ', server.address())
 })
