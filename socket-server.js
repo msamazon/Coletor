@@ -29,10 +29,10 @@ server.on("connection", function(socket) {
 
   var remoteAddress = socket.remoteAddress
 
-  console.log('>>> Dongle %s', remoteAddress)
+  console.log('>>> Start Dongle %s', remoteAddress)
   
   socket.on("data", function(buffer) {
-    console.log(' | Connection data from %s ', remoteAddress)
+    //console.log(' | New Message/ %s ', remoteAddress)
   
     var handler = Handler.handler(socket, buffer)
 
