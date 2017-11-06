@@ -6,7 +6,7 @@ module.exports = function() {
         var crcCalc = require("./Util/crcCalc")
         var UtcTime = require("./Util/utcTime")
         
-        console.log("----------- reply Message -----------")
+        //console.log("----------- reply Message -----------")
 
         switch(message.eventcode) {
 

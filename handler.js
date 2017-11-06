@@ -11,7 +11,7 @@ exports.handler = function(socket, buffer) {
 
     console.log("=====================================")
     console.log('handler::new client connection is made %s', remoteAddress)
-    console.log("handler::socket.address() %s",socket.address())
+    //console.log("handler::socket.address() %s",socket.address())
 
     var buff = new Buffer(buffer, 'utf8')
 
@@ -41,7 +41,8 @@ exports.handler = function(socket, buffer) {
 
     //TODO como deixar o hw ativo 24h ???
 
-    //if (message.eventcode == messageType.LOGIN) {
+    /*
+    if (message.eventcode == messageType.LOGIN) {
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
         console.log("handler::Send Read Vin")
@@ -53,7 +54,8 @@ exports.handler = function(socket, buffer) {
         console.log("handler::Send READ_VEHICLE_DTCS")
 
         socket.write(reMsg1)
-   // }
+    }
+    */
     
    //verifica se esta na White list
 
@@ -69,8 +71,7 @@ exports.handler = function(socket, buffer) {
         })
    //}else {
      //  console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
-   //}
-    
+   //}    
     
     console.log("handler::reply? %s", reply[0])
     
