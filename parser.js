@@ -89,6 +89,7 @@ module.exports = function() {
           message.crcCode          = crcCode
 
           //log
+          /*
           console.log("login::odb %s", obdModule)
           console.log("login::firmware %s", firmwareVersion)
           console.log("login::hardware %s", hardwareVersion)
@@ -101,7 +102,7 @@ module.exports = function() {
           console.log("login::param %s", param)
           console.log("login::dongleDateHex %s", dongleDateHex)
           console.log("login::crcCode %s", crcCode)
-          
+          */
           return message
         break;
 
@@ -134,6 +135,7 @@ module.exports = function() {
           message.course                 = gpsTemp[3]
 
           //log
+          /*
           console.log('comprehensive::gps %s', gpsTemp[0])
           console.log('comprehensive::speed %s', gpsTemp[1])
           console.log('comprehensive::high %s', gpsTemp[2])
@@ -142,7 +144,7 @@ module.exports = function() {
           console.log('comprehensive::rtcTime %s', rtcTime)
           console.log('comprehensive::dataSitch %s', dataSitch)
           console.log('comprehensive::PidNo: %s', PidNo)
-
+          */
           var pidIni = 98 //inicio do pid
 
           for(var i = 0; i < PidNo; i++) {
@@ -161,7 +163,7 @@ module.exports = function() {
 
             _pidValue = _h2d
 
-            console.log("comprehensive::pidNO (%s) %s value: %s [%s]", i, _pidNO, _pidValue, _h2d)
+            //console.log("comprehensive::pidNO (%s) %s value: %s [%s]", i, _pidNO, _pidValue, _h2d)
 
             //console.log("pidLen: %s", _pidLen)
             //sconsole.log("pidValue: %s", _pidValue)
@@ -230,7 +232,7 @@ module.exports = function() {
           fuel = modulo4.inverter(fuel)
           fuel = convert.hex2dec(fuel)
 
-          console.log("comprehensive::currentTripFuel: %s l", fuel)
+          //console.log("comprehensive::currentTripFuel: %s l", fuel)
 
           var fuel0 = pidIni + (2 * 4)
 
@@ -241,7 +243,7 @@ module.exports = function() {
           cTripFuelCons = modulo4.inverter(cTripFuelCons) 
           cTripFuelCons = convert.hex2dec(cTripFuelCons) * 0.01
 
-          console.log("comprehensive::cTripFuelCons: %s meter", cTripFuelCons)
+          //console.log("comprehensive::cTripFuelCons: %s meter", cTripFuelCons)
 
           var trip =  fuel0 + (4 * 2)
 
@@ -252,7 +254,7 @@ module.exports = function() {
           cTripFuelMileage = modulo4.inverter(cTripFuelMileage)
           cTripFuelMileage = convert.hex2dec(cTripFuelMileage)
 
-          console.log("comprehensive::cTripFuelMileage: %s ms", cTripFuelMileage)
+          //console.log("comprehensive::cTripFuelMileage: %s ms", cTripFuelMileage)
 
           var senson0 = trip + (4 * 2)
           var gSensor = text.substring(senson0, senson0 + (2 * 2))
@@ -262,52 +264,52 @@ module.exports = function() {
           gSensor = modulo4.inverter(gSensor)
           gSensor = convert.hex2dec(gSensor)
 
-          console.log("comprehensive::gSensor %s", gSensor)
+          //console.log("comprehensive::gSensor %s", gSensor)
 
           var sensorData0 = senson0 + (2 * 2)
           var gSensorData = text.substring(sensorData0, sensorData0 + (2 * gSensor))
 
-          console.log("comprehensive::gSensorData: %s", gSensorData)
+          //console.log("comprehensive::gSensorData: %s", gSensorData)
 
           var group1 = gSensorData.substring(0, 6 * 2)
 
-          console.log("comprehensive::group1: %s", group1)
+          //console.log("comprehensive::group1: %s", group1)
 
           var group2 = gSensorData.substring(12, 12 +(6 * 2))
           
-          console.log("comprehensive::group2: %s", group2)
+          //console.log("comprehensive::group2: %s", group2)
 
           var group3 = gSensorData.substring(24, 24 + (6 *2))
                     
-          console.log("comprehensive::group3: %s", group3)
+          //console.log("comprehensive::group3: %s", group3)
 
           var group4 = gSensorData.substring(36, 36 + (6 *2))
-          console.log("comprehensive::group4: %s", group4)
+          //console.log("comprehensive::group4: %s", group4)
 
           var group5 = gSensorData.substring(48, 48 + (6 *2))
-          console.log("comprehensive::group5: %s", group5)
+          //console.log("comprehensive::group5: %s", group5)
 
           var field0 = sensorData0 + (2 * gSensor)
           var customField   = text.substring(field0, field0 + (2 * 8))
 
-          console.log("comprehensive::customField: %s", customField)
+          //console.log("comprehensive::customField: %s", customField)
 
           var voltage = customField.substring(0, 4)
           //console.log("voltage: %s V", voltage)
           voltage = convert.hex2dec(voltage.substring(2, 4) + voltage.substring(0, 2)) * 0.1
-          console.log("comprehensive::voltage: %s V", voltage)
+          //console.log("comprehensive::voltage: %s V", voltage)
 
           var vehicle = customField.substring(4, 8)
-          console.log("comprehensive::vehicle %s", vehicle)
+          //console.log("comprehensive::vehicle %s", vehicle)
 
           var accOn = customField.substring(8, 10)
-          console.log("comprehensive::accOn %s", accOn)
+          //console.log("comprehensive::accOn %s", accOn)
 
           var mmxc = customField.substring(10, 12)
-          console.log("comprehensive::mmxc %s", mmxc)
+          //console.log("comprehensive::mmxc %s", mmxc)
 
           var reserved = customField.substring(12, 16)
-          console.log("comprehensive::reserved %s", reserved)
+          //console.log("comprehensive::reserved %s", reserved)
 
           rtcTime             = utcTime.calcule(rtcTime)
       
@@ -350,7 +352,8 @@ module.exports = function() {
           message.gpsData          = gpsTemp[0]
           message.speed            = gpsTemp[1]
           message.high             = gpsTemp[2]
-          message.course           = gpsTemp[3]        
+          message.course           = gpsTemp[3]       
+          /* 
           console.log("alarm::randomNo %s", randomNo)
           console.log("alarm::alarmTag %s",convert.hex2dec(alarmTag))
           console.log("alarm::alarmNo %s",alarmNo)
@@ -362,6 +365,8 @@ module.exports = function() {
           console.log("alarm::high %s", gpsTemp[2])
           console.log("alarm::course %s", gpsTemp[3])
           console.log("alarm::rtcTime %s", utcTime.calcule(rtcTime))
+          */
+
           return message
          
         break;
@@ -385,12 +390,13 @@ module.exports = function() {
           message.gpsData        = gpsConvert.calcule(gpsData)
           // message.gpsData = gpsConvert.calcule(gpsData)
 
+          /*
           console.log("sleepmode::time %s", utcTime.calcule(time))
           console.log("sleepmode::gps %s", gpsTemp[0])
           console.log("sleepmode::speed %s", gpsTemp[1])
           console.log("sleepmode::high %s", gpsTemp[2])
           console.log("sleepmode::course %s", gpsTemp[3])
-
+          */
           return message
 
         break;
