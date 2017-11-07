@@ -311,6 +311,8 @@ module.exports = function() {
           var reserved = customField.substring(12, 16)
           //console.log("comprehensive::reserved %s", reserved)
 
+          console.log("rtcTime ----> %s", rtcTime)
+          
           rtcTime             = utcTime.calcule(rtcTime)
       
           message.time                        = rtcTime

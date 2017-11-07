@@ -11,6 +11,7 @@ exports.calcule = function(timehex) {
 
     result  =  day + "/" + month + "/"  + (20 + year) + " " + hour + ":"+ minute + ":" + second
 
+    console.log("result ----> %s", result)
     return result
 }
 
