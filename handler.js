@@ -60,7 +60,7 @@ exports.handler = function(socket, buffer) {
 
    //if (cerberus.whitelist(message.dongleCode)) {
 
-       console.log("handler:: dongleCode esta na whitelist")
+       //console.log("handler:: dongleCode esta na whitelist")
 
        var promise = message.save(function (err) {
 
@@ -72,7 +72,7 @@ exports.handler = function(socket, buffer) {
      //  console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
    //}    
     
-    console.log("handler::reply? %s", reply[0])
+    //console.log("handler::reply? %s", reply[0])
     
     if (reply[0] == 1) {
         console.log("handler::reply %s", reply[1])

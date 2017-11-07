@@ -10,9 +10,7 @@ module.exports = function() {
       
       var messageType = require("./Util/MessageType")
       var alarmType = require("./Util/AlarmType")
-      
-      console.log("=========== parser ===========")
-
+    
       var Message = require('./Model/Message')
       
       var message = new Message()
