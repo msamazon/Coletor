@@ -29,8 +29,6 @@ module.exports = function() {
       //text = '404082003247512d313630313030313901201e0b1006041e8080801e0b1006041f0f42c737071088ac0f1d0000006e1306052001740b2001200c2002d30b0d2001000f20014a112001170100000000000000caa800001e006aff120044ff65ff15003dff6aff130042ff65ff140042ff5fff14003dff8c00ffff0100000073eb0d0a'
       var result = ''
       
-      var dateReceived = new Date()    
-
       var head         = text.substring(0, 4)
       var headLen      = text.substring(4, 8)
       var dongleCode   = text.substring(8, 32)
@@ -43,7 +41,9 @@ module.exports = function() {
       message.packageLength = headLen
       message.dongleCode    = dongleCode
       message.eventcode     = eventCode
-      message.dateReceived  = new Date()
+      message.dateReceived  = new Date().toISOString().
+                                replace(/T/, ' ').      // replace T with a space
+                                replace(/\..+/, '')     // delete the dot and everything after
 
       console.log("dongleCode: %s",dongleCode)
 
