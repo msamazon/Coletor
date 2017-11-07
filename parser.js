@@ -36,7 +36,7 @@ module.exports = function() {
 
       dongleCode       = convert.hex2ascii(dongleCode)
 
-      message.fullMessage   = text
+      //message.fullMessage   = text
       message.packageHead   = head
       message.packageLength = headLen
       message.dongleCode    = dongleCode
@@ -70,11 +70,11 @@ module.exports = function() {
           var crcEnd             = dongleEnd + (5)
           var crcCode            = text.substring(dongleEnd, crcEnd)
 
-          obdModule              = modulo4.calcule(obdModule)
-          firmwareVersion        = modulo4.calcule(firmwareVersion)
-          hardwareVersion        = modulo4.calcule(hardwareVersion)
+          obdModule                = modulo4.calcule(obdModule)
+          firmwareVersion          = modulo4.calcule(firmwareVersion)
+          hardwareVersion          = modulo4.calcule(hardwareVersion)
           //[gps, speed, high, course]
-          var gpsTemp            = gpsConvert.calcule(gps)
+          var gpsTemp              = gpsConvert.calcule(gps)
 
           message.gpsData          = gpsTemp[0]
           message.speed            = gpsTemp[1]
@@ -311,7 +311,7 @@ module.exports = function() {
           var reserved = customField.substring(12, 16)
           //console.log("comprehensive::reserved %s", reserved)
 
-          console.log("rtcTime ----> %s", rtcTime)
+          //console.log("rtcTime ----> %s", rtcTime)
 
           //rtcTime             = utcTime.calcule(rtcTime)
       
