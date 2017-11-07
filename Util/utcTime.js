@@ -2,6 +2,8 @@
 exports.calcule = function(timehex) {
     var convert = require('./Convert')
 
+    console.log("----- %s", timehex)
+
     var day           = convert.hex2dec(timehex.substring(0, 2))
     var month         = convert.hex2dec(timehex.substring(2, 4))
     var year          = convert.hex2dec(timehex.substring(4, 6))
