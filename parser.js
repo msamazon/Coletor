@@ -312,8 +312,8 @@ module.exports = function() {
           //console.log("comprehensive::reserved %s", reserved)
 
           console.log("rtcTime ----> %s", rtcTime)
-          
-          rtcTime             = utcTime.calcule(rtcTime)
+
+          //rtcTime             = utcTime.calcule(rtcTime)
       
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
