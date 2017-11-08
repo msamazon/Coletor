@@ -1,17 +1,16 @@
 module.exports = function() {
     this.parser = function(text) {
       
-      var convert = require('./Util/Convert')
-      var utcTime = require('./Util/utcTime')
-      var modulo4 = require('./Util/modulo4')
-      var cron    = require('cron')
-      var requstDongle = require('./requestDongle')
-      var gpsConvert = require('./Util/gpsConvert')
-      
-      var messageType = require("./Util/MessageType")
-      var alarmType = require("./Util/AlarmType")
-    
-      var Message = require('./Model/Message')
+      var convert       = require('./Util/Convert')
+      var utcTime       = require('./Util/utcTime')
+      var modulo4       = require('./Util/modulo4')
+      var gsensonUtil   = require('./Util/gsensor')
+      var cron          = require('cron')
+      var requstDongle  = require('./requestDongle')
+      var gpsConvert    = require('./Util/gpsConvert')
+      var messageType   = require("./Util/MessageType")
+      var alarmType     = require("./Util/AlarmType")
+      var Message       = require('./Model/Message')
       
       var message = new Message()
       
@@ -267,25 +266,46 @@ module.exports = function() {
           var sensorData0 = senson0 + (2 * 2)
           var gSensorData = text.substring(sensorData0, sensorData0 + (2 * gSensor))
 
-          //console.log("comprehensive::gSensorData: %s", gSensorData)
-
+          //calcule
           var group1 = gSensorData.substring(0, 6 * 2)
+          
+          var [g1x, g1y, g1z] = gsensonUtil.calcule(group1)
 
-          //console.log("comprehensive::group1: %s", group1)
+          message.gsensor_g1.x = g1x
+          message.gsensor_g1.y = g1y
+          message.gsensor_g1.z = g1z
 
           var group2 = gSensorData.substring(12, 12 +(6 * 2))
           
-          //console.log("comprehensive::group2: %s", group2)
+          var [g2x, g2y, g2z] = gsensonUtil.calcule(group2)
+
+          message.gsensor_g2.x = g2x
+          message.gsensor_g2.y = g2y
+          message.gsensor_g2.z = g2z
 
           var group3 = gSensorData.substring(24, 24 + (6 *2))
                     
-          //console.log("comprehensive::group3: %s", group3)
+          var [g3x, g3y, g3z] = gsensonUtil.calcule(group3)
+        
+          message.gsensor_g3.x = g3x
+          message.gsensor_g3.y = g3y
+          message.gsensor_g3.z = g3z
 
           var group4 = gSensorData.substring(36, 36 + (6 *2))
-          //console.log("comprehensive::group4: %s", group4)
+
+          var [g4x, g4y, g4z] = gsensonUtil.calcule(group4)
+          
+          message.gsensor_g4.x = g4x
+          message.gsensor_g4.y = g4y
+          message.gsensor_g4.z = g4z
 
           var group5 = gSensorData.substring(48, 48 + (6 *2))
-          //console.log("comprehensive::group5: %s", group5)
+
+          var [g5x, g5y, g5z] = gsensonUtil.calcule(group5)
+
+          message.gsensor_g5.x = g5x
+          message.gsensor_g5.y = g5y
+          message.gsensor_g5.z = g5z
 
           var field0 = sensorData0 + (2 * gSensor)
           var customField   = text.substring(field0, field0 + (2 * 8))
@@ -321,7 +341,7 @@ module.exports = function() {
           message.currentTripMileage          = cTripFuelMileage
           message.currentTripDuration         = cTripFuelCons
           message.GSEN_Data_Len               = gSensor
-          message.GSENSOR_Data                = gSensorData
+          //message.GSENSOR_Data                = gSensorData
           message.customField                 = customField
 
           return message

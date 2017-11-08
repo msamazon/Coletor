@@ -7,9 +7,9 @@ var port = process.env.PORT || 4883
 
 mongoose.Promise = global.Promise;
 
-// mongoose.connect('mongodb://dbuser:123mudar#@ds139428.mlab.com:39428/driveondb', { useMongoClient: true })
+mongoose.connect('mongodb://dbuser:123mudar#@ds139428.mlab.com:39428/driveondb', { useMongoClient: true })
 
-mongoose.connect('mongodb://127.0.0.1:27017/driveondb', { useMongoClient: true })
+//mongoose.connect('mongodb://127.0.0.1:27017/driveondb', { useMongoClient: true })
 
 mongoose.connection.on('connected', () => {
   return console.log('Mongoose conectado')

@@ -84,9 +84,34 @@ var MessageSchema = new Schema({
   
   currentTripFuelConsumption: String,
   currentTripMileage: String, 
-  currentTripDuration: String ,
+  currentTripDuration: String,
   
-  GSENSOR_Data: String, 
+  gsensor_g1: {
+    x: String,
+    y: String,
+    z: String
+  },
+  gsensor_g2: {
+    x: String,
+    y: String,
+    z: String
+  },
+  gsensor_g3: {
+    x: String,
+    y: String,
+    z: String
+  },
+  gsensor_g4: {
+    x: String,
+    y: String,
+    z: String
+  },
+  gsensor_g5: {
+    x: String,
+    y: String,
+    z: String
+  },
+  //GSENSOR_Data: String, 
   customField: String,
 
   //alarm
@@ -134,6 +159,7 @@ var MessageSchema = new Schema({
   //read vin 
   vinCode: String
 })
+
 
 //Register schema to Mongoose
 var Message = mongoose.model('Message', MessageSchema);
