@@ -87,7 +87,7 @@ var MessageSchema = new Schema({
   currentTripDuration: String,
   
   //GSENSOR_Data
-  
+
   gsensor_g1: {
     x: String,
     y: String,
@@ -122,7 +122,6 @@ var MessageSchema = new Schema({
   reserved: String,
 
   //alarm
-
   randomNo: String,
   alarmTag: String,
   alarmNo: String,

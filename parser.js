@@ -345,7 +345,6 @@ module.exports = function() {
           message.mmxc                        = mmxc
           message.reserved                    = reserved
 
-          console.log(message)
           return message
 
         break;
