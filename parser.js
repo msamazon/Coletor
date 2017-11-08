@@ -256,7 +256,8 @@ module.exports = function() {
 
           //console.log("gSensor %s", gSensor)
 
-          gSensor = modulo4.inverter(gSensor)
+          
+	gSensor = modulo4.inverter(gSensor)
           gSensor = convert.hex2dec(gSensor)
 
           //console.log("comprehensive::gSensor %s", gSensor)
@@ -266,44 +267,47 @@ module.exports = function() {
 
           //calcule
           var group1 = gSensorData.substring(0, 6 * 2)
+          var g1x, g2x, g3x, g4x, g5x
+	  var g1y, g2y, g3y, g4y, g5y
+	  var g1z, g2z, g3z, g4z, g5z
           
-          var [g1x, g1y, g1z] = gsensonUtil.calcule(group1)
+	 var group1S = gsensonUtil.calcule(group1)
 
-          message.gsensor_g1.x = g1x
-          message.gsensor_g1.y = g1y
-          message.gsensor_g1.z = g1z
+          message.gsensor_g1.x = group1S[0]
+          message.gsensor_g1.y = group1S[1]
+          message.gsensor_g1.z = group1S[2]
 
           var group2 = gSensorData.substring(12, 12 +(6 * 2))
           
-          var [g2x, g2y, g2z] = gsensonUtil.calcule(group2)
+          var group2S = gsensonUtil.calcule(group2)
 
-          message.gsensor_g2.x = g2x
-          message.gsensor_g2.y = g2y
-          message.gsensor_g2.z = g2z
+          message.gsensor_g2.x = group2S[0]
+          message.gsensor_g2.y = group2S[1]
+          message.gsensor_g2.z = group2S[2]
 
           var group3 = gSensorData.substring(24, 24 + (6 *2))
                     
-          var [g3x, g3y, g3z] = gsensonUtil.calcule(group3)
+          var group3S = gsensonUtil.calcule(group3)
         
-          message.gsensor_g3.x = g3x
-          message.gsensor_g3.y = g3y
-          message.gsensor_g3.z = g3z
+          message.gsensor_g3.x = group3S[0]
+          message.gsensor_g3.y = group3S[1]
+          message.gsensor_g3.z = group3S[2]
 
           var group4 = gSensorData.substring(36, 36 + (6 *2))
 
-          var [g4x, g4y, g4z] = gsensonUtil.calcule(group4)
+          var group4S = gsensonUtil.calcule(group4)
           
-          message.gsensor_g4.x = g4x
-          message.gsensor_g4.y = g4y
-          message.gsensor_g4.z = g4z
+          message.gsensor_g4.x = group4S[0]
+          message.gsensor_g4.y = group4S[1]
+          message.gsensor_g4.z = group4S[2]
 
           var group5 = gSensorData.substring(48, 48 + (6 *2))
 
-          var [g5x, g5y, g5z] = gsensonUtil.calcule(group5)
+          var group5S = gsensonUtil.calcule(group5)
 
-          message.gsensor_g5.x = g5x
-          message.gsensor_g5.y = g5y
-          message.gsensor_g5.z = g5z
+          message.gsensor_g5.x = group5S[0]
+          message.gsensor_g5.y = group5S[1]
+          message.gsensor_g5.z = group5S[2]
 
           var field0 = sensorData0 + (2 * gSensor)
           var customField   = text.substring(field0, field0 + (2 * 8))
