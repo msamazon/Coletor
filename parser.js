@@ -153,7 +153,6 @@ module.exports = function() {
             //_pidLen = convert.hex2dec(_pidValue)
             var _h2d = convert.hex2dec(_pidValue)
 
-
             if (_h2d == NaN) {
               _h2d = "0"
             }
@@ -221,7 +220,6 @@ module.exports = function() {
           //var pidIni
 
           //fuel
-
           var fuel = text.substring(pidIni, pidIni + (2 * 4))
 
           //console.log("current trip fuel: %s", fuel)
@@ -314,6 +312,7 @@ module.exports = function() {
 
           var voltage = customField.substring(0, 4)
           //console.log("voltage: %s V", voltage)
+
           voltage = convert.hex2dec(voltage.substring(2, 4) + voltage.substring(0, 2)) * 0.1
           //console.log("comprehensive::voltage: %s V", voltage)
 
@@ -340,10 +339,13 @@ module.exports = function() {
           message.currentTripFuelConsumption  = fuel
           message.currentTripMileage          = cTripFuelMileage
           message.currentTripDuration         = cTripFuelCons
-          message.GSEN_Data_Len               = gSensor
-          //message.GSENSOR_Data                = gSensorData
-          message.customField                 = customField
+          message.voltage                     = voltage
+          message.vehicle                     = vehicle
+          message.accOn                       = accOn
+          message.mmxc                        = mmxc
+          message.reserved                    = reserved
 
+          console.log(message)
           return message
 
         break;

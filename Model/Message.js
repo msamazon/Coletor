@@ -86,6 +86,8 @@ var MessageSchema = new Schema({
   currentTripMileage: String, 
   currentTripDuration: String,
   
+  //GSENSOR_Data
+  
   gsensor_g1: {
     x: String,
     y: String,
@@ -111,8 +113,13 @@ var MessageSchema = new Schema({
     y: String,
     z: String
   },
-  //GSENSOR_Data: String, 
-  customField: String,
+  
+  //customField
+  voltage: String,
+  vehicle: String,
+  accOn: String,
+  mmxc: String,
+  reserved: String,
 
   //alarm
 
