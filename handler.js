@@ -40,8 +40,8 @@ exports.handler = function(socket, buffer) {
 
     //TODO como deixar o hw ativo 24h ???
 
-    /*
-    if (message.eventcode == messageType.LOGIN) {
+    
+    //if (message.eventcode == messageType.LOGIN) {
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
         console.log("handler::Send Read Vin")
@@ -53,8 +53,8 @@ exports.handler = function(socket, buffer) {
         console.log("handler::Send READ_VEHICLE_DTCS")
 
         socket.write(reMsg1)
-    }
-    */
+    //}
+    
     
    //verifica se esta na White list
 
