@@ -16,3 +16,10 @@ exports.inverter = function(text) {
            text.substring(2, 4) +
            text.substring(0, 2)
 }
+
+exports.inverter2 = function(text) {
+    var convert = require('./Convert')
+
+    return text.substring(2, 4) +
+           text.substring(0, 2)
+}

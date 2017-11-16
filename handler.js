@@ -1,21 +1,22 @@
 exports.handler = function(socket, buffer) {
     var mongoose        = require('mongoose')
     var Message         = require('./Model/Message')
-    var messageType = require("./Util/MessageType")
-    require('./parser.js')();
-    require('./replyMessage.js')();
+    var Message_dump    = require('./Model/Message_dump')
+    var messageType     = require("./Util/MessageType")
     var requestDongle   = require('./requestDongle')
     var cerberus        = require('./Util/Cerberus')
+    var version         = require('./package.json')
+    require('./parser.js')();
+    require('./replyMessage.js')();
 
     var remoteAddress = socket.remoteAddress
 
     console.log('handler::Start %s', remoteAddress)
-    //console.log("handler::socket.address() %s",socket.address())
 
     var buff = new Buffer(buffer, 'utf8')
 
-    var msg = ''
-    var hex = buffer.toString ("hex")        
+    var msg  = ''
+    var hex  = buffer.toString ("hex")        
     var data = buffer.toString()
     
     if (data.indexOf('\r\n') > -1) {
@@ -29,18 +30,19 @@ exports.handler = function(socket, buffer) {
     }
         
     var message = new Message()
-
-    var result = parser(hex)
+    var result  = parser(hex)
     
     message = result
     message.ip = remoteAddress
+    message.v = version.version
+
+    //solicitacao marcelo
+    Message_dump = message
     
     var reply = replyMessage(message)
 
-
     //TODO como deixar o hw ativo 24h ???
 
-    
     //if (message.eventcode == messageType.LOGIN) {
         var reMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
@@ -70,7 +72,8 @@ exports.handler = function(socket, buffer) {
         })
    //}else {
      //  console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
-   //}    
+   //}
+   Message_dump.save()
     
     //console.log("handler::reply? %s", reply[0])
     

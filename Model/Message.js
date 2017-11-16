@@ -2,7 +2,7 @@ var mongoose  = require("mongoose")
 var Schema    = mongoose.Schema
 
 var MessageSchema = new Schema({
-
+  v: String,
   fullMessage: String,
   ip: String,
   dateReceived: String,

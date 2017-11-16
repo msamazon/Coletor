@@ -1,7 +1,8 @@
-const net = require('net')
-var mongoose = require('mongoose')
-var Handler = require('./handler')
-var server = net.createServer()
+const net     = require('net')
+var mongoose  = require('mongoose')
+var Handler   = require('./handler')
+var server    = net.createServer()
+var version   = require('./package.json')
 
 var port = process.env.PORT || 4883
 
@@ -48,5 +49,5 @@ server.on("connection", function(socket) {
 })
 
 server.listen(port, function () {
-  console.log('server listening to %s ', server.address())
+  console.log('server listening to %s - version: %s', server.address().port, version.version)
 })

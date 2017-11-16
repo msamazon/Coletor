@@ -1,27 +1,58 @@
-// 'use strict';
+exports.alarm = function(s) {
 
-//0x01 MIL on 
-//0x02 Idle Engine   
-//0x03 Fatigue Driving   
-//0x04 Low voltage 
-//0x05 High temperature 
-//0x06 Towing 
-//0x07 Speeding 
-//0x08 High RPM 
-
-module.exports = Object.freeze({
-    MIL_ON:                                          '01',//1
-    IDLE_ENGINE:                                     '02',
-    FATIGUE_DRIVING:                                 '03',
-    LOW_VOLTAGE:                                     '04',
-    HIGH_TEMPERATURE:                                '05',
-    TOWING:                                          '06',
-    SPEEDING:                                        '07',
-    HIGH_RPM:                                        '08',
-    HARD_ACCELERATION:                               '09',
-    HARD_BRAKING:                                    '0a',
-    QUICK_TURN:                                      '0b',
-    POWER_ON:                                        '0c',
-    POWER_OFF:                                       '0d',
-    ACC_STATUS:                                      '0f',
-})
+    s = parseInt(s, 10)
+    
+    switch (s) {
+        case 1:
+            return "MIL on"
+          break
+        case 2:
+            return "Idle Engine"
+        case 3:
+            return "Fatigue Driving"
+        case 4:
+            return "Low voltage"
+        case 5:
+            return "High temperature"
+        case 6:
+            return "Towing"
+        case 7:
+            return "Speeding"
+        case 8:
+            return "High RPM"
+        case 9:
+            return "Hard acceleration"
+        case 10:
+            return "Hard braking"
+        case 11:
+            return "Quick turn"
+        case 12:
+            return "Power on"
+        case 13:
+            return "Power off"
+        case 14:
+            return "SOS"
+        case 15:
+            return "ACC Status"
+        default:
+            return "not registered"
+      }
+}
+ 
+// module.exports = Object.freeze({
+//     MIL_ON:                                          '1',//1
+//     IDLE_ENGINE:                                     '2',
+//     FATIGUE_DRIVING:                                 '3',
+//     LOW_VOLTAGE:                                     '4',
+//     HIGH_TEMPERATURE:                                '5',
+//     TOWING:                                          '6',
+//     SPEEDING:                                        '7',
+//     HIGH_RPM:                                        '8',
+//     HARD_ACCELERATION:                               '9',
+//     HARD_BRAKING:                                    '10',
+//     QUICK_TURN:                                      '11',
+//     POWER_ON:                                        '12',
+//     POWER_OFF:                                       '13',
+//     SOS:                                             '14',
+//     ACC_STATUS:                                      '15',
+// })

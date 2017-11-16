@@ -12,6 +12,7 @@ module.exports = function() {
       var alarmType     = require("./Util/AlarmType")
       var Message       = require('./Model/Message')
       
+      
       var message = new Message()
       
       //text = "40404b003247512d313630313030313901101e0b100604190c02c83707f887ac0f000000002d130101030304020000010100000d426162636465666768696a6ba51e0b1006041965c30d0a" //login
@@ -257,7 +258,7 @@ module.exports = function() {
           //console.log("gSensor %s", gSensor)
 
           
-	gSensor = modulo4.inverter(gSensor)
+	        gSensor = modulo4.inverter(gSensor)
           gSensor = convert.hex2dec(gSensor)
 
           //console.log("comprehensive::gSensor %s", gSensor)
@@ -268,10 +269,10 @@ module.exports = function() {
           //calcule
           var group1 = gSensorData.substring(0, 6 * 2)
           var g1x, g2x, g3x, g4x, g5x
-	  var g1y, g2y, g3y, g4y, g5y
-	  var g1z, g2z, g3z, g4z, g5z
+	        var g1y, g2y, g3y, g4y, g5y
+	        var g1z, g2z, g3z, g4z, g5z
           
-	 var group1S = gsensonUtil.calcule(group1)
+	        var group1S = gsensonUtil.calcule(group1)
 
           message.gsensor_g1.x = group1S[0]
           message.gsensor_g1.y = group1S[1]
@@ -335,7 +336,6 @@ module.exports = function() {
           //console.log("rtcTime ----> %s", rtcTime)
 
           //rtcTime             = utcTime.calcule(rtcTime)
-      
           message.time                        = rtcTime
           message.dataSitch                   = dataSitch
 
@@ -365,15 +365,20 @@ module.exports = function() {
           var rtcTime         = text.substring(52, 52 + (2 * 6))
           var gpsData         = text.substring(64, 64 +(2 * 21))
 
+          alarmNo             = convert.hex2dec(alarmNo)
+          alarmCurrent        = modulo4.inverter2(alarmCurrent)
+
           message.randomNo       = randomNo
           message.alarmTag       = convert.hex2dec(alarmTag)
-          message.alarmNo        = alarmNo //verificar depois
-          message.alarmThreshold = alarmThreshold
-          message.alarmCurrent   = alarmCurrent
+          message.alarmNo        = alarmType.alarm(alarmNo)
           message.rtcTime        = utcTime.calcule(rtcTime)
 
+          message.alarmThreshold = alarmThreshold
+          message.alarmCurrent   = alarmCurrent
+          
+
           //[result, speed, high, course]
-          var gpsTemp = gpsConvert.calcule(gpsData)
+          var gpsTemp              = gpsConvert.calcule(gpsData)
           message.gpsData          = gpsTemp[0]
           message.speed            = gpsTemp[1]
           message.high             = gpsTemp[2]
@@ -391,6 +396,8 @@ module.exports = function() {
           console.log("alarm::course %s", gpsTemp[3])
           console.log("alarm::rtcTime %s", utcTime.calcule(rtcTime))
           */
+
+          console.log("||||| %s", message)
 
           return message
          
