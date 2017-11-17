@@ -67,7 +67,7 @@ exports.handler = function(socket, buffer) {
 
            if (err) console.log(err)
 
-           else console.log('handler::salvo no banco')
+           //else console.log('handler::salvo no banco')
         })
    //}else {
      //  console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
