@@ -616,6 +616,7 @@ module.exports = function() {
           message.rtcTime  = utcTime.calcule(time)
 
           message.eventname   = "read vim"
+          
           return message
 
         break
