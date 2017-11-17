@@ -1,7 +1,7 @@
 var mongoose  = require("mongoose")
 var Schema    = mongoose.Schema
 
-var MessageSchema = new Schema({
+var MessageDumpSchema = new Schema({
   v: String,
   fullMessage: String,
   ip: String,
@@ -168,6 +168,6 @@ var MessageSchema = new Schema({
 
 
 //Register schema to Mongoose
-var Message = mongoose.model('Message_dump', MessageSchema);
+var MessageDump = mongoose.model('Message_dump', MessageDumpSchema);
 
-module.exports = Message
+module.exports = MessageDump
