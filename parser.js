@@ -43,9 +43,9 @@ module.exports = function() {
                                 replace(/T/, ' ').      // replace T with a space
                                 replace(/\..+/, '')     // delete the dot and everything after
 
-      console.log("dongleCode: %s",dongleCode)
+      console.log("parser::dongleCode: %s",dongleCode)
 
-      console.log("Evento %s ", eventCode)
+      console.log("parser::Evento %s ", eventCode)
 
       switch(eventCode) {
         
@@ -565,7 +565,9 @@ module.exports = function() {
 
         case messageType.READ_VEHICLE_DTCS:
         case messageType.READ_VEHICLE_DTCS_REPLY: //15 Read Vehicle DTCs(4009/C009) - ok
-          console.log("<<Read Specified PID Data Value>>")
+          console.log("<<Read Vehicle DTC>>")
+
+          console.log("text %s", text)
         
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var dtcType         = text.substring(36, 36 + (2 * 1))

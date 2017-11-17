@@ -39,7 +39,7 @@ module.exports = Object.freeze({
     READ_VEHICLE_DTCS:                              '0940',
     READ_VEHICLE_DTCS_REPLY:                        '09c0',
     CLEAR_DTC:                                      '0a40',
-    CLEAR_DTC_REPLY:                                '0Ac0',
+    CLEAR_DTC_REPLY:                                '0ac0',
     READ_VIN:                                       '0b40',
     READ_VIN_REPLY:                                 '0bc0',
     READ_FREEZE_FRAME:                              '0c40',

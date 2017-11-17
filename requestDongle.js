@@ -7,17 +7,14 @@ exports.send = function(eventCode, dongleCode) {
     var convert = require('./Util/Convert')
 
     switch(eventCode) {
+        
         case messageType.READ_VIN: {
-
-            console.log("|| READ VIN ||") 
 
             var pkgHeader = '4040'
             var pkgLen    = "1800"
             var randomNo  = convert.dec2hex(parseInt(random.calcule())) + "00" 
         
-            console.log('dongleCode %s', dongleCode)
-            var msgSemCRC = pkgHeader + pkgLen + dongleCode + eventCode
-                + randomNo
+            var msgSemCRC = pkgHeader + pkgLen + dongleCode + eventCode.substring(2, 4) + eventCode.substring(0, 2) + randomNo
         
             var crc = crcCalc.calcule(msgSemCRC)
 
@@ -38,8 +35,8 @@ exports.send = function(eventCode, dongleCode) {
                 "0x" + dongleCode.substring(18,20),
                 "0x" + dongleCode.substring(20,22),
                 "0x" + dongleCode.substring(22,24),//16
-                "0x" + messageType.READ_VIN.substring(0,2), //eventcode
-                "0x" + messageType.READ_VIN.substring(2,4), //18
+                "0x" + messageType.READ_VIN.substring(2,4), //eventcode
+                "0x" + messageType.READ_VIN.substring(0,2), //18
                 "0x" + randomNo.substring(0, 2),
                 "0x" + randomNo.substring(2, 4),
                 "0x" + crc.substr(0, 2),
@@ -48,19 +45,18 @@ exports.send = function(eventCode, dongleCode) {
                 "0x0a" //tail
              ]);
              
-        return buffer
+            return buffer
         break
         }
+
         case messageType.READ_VEHICLE_DTCS: {
-            console.log("|| READ_VEHICLE_DTCS ||") 
             
             var pkgHeader = '4040'
             var pkgLen    = "1900"
             var randomNo  = convert.dec2hex(parseInt(random.calcule())) + "00"
-            var dtc       = "00"
+            var dtc       = "01"
 
-            var msgSemCRC = pkgHeader + pkgLen + dongleCode + eventCode
-            + randomNo + dtc
+            var msgSemCRC = pkgHeader + pkgLen + dongleCode + eventCode.substring(2,4) + eventCode.substring(0,2)  + randomNo + dtc
     
             var crc = crcCalc.calcule(msgSemCRC)
 
@@ -81,8 +77,8 @@ exports.send = function(eventCode, dongleCode) {
                 "0x" + dongleCode.substring(18,20),
                 "0x" + dongleCode.substring(20,22),
                 "0x" + dongleCode.substring(22,24),//16
-                "0x" + messageType.READ_VEHICLE_DTCS.substring(0,2), //eventcode
-                "0x" + messageType.READ_VEHICLE_DTCS.substring(2,4), //18
+                "0x" + messageType.READ_VEHICLE_DTCS.substring(2,4), //eventcode
+                "0x" + messageType.READ_VEHICLE_DTCS.substring(0,2), //18
                 "0x" + randomNo.substring(0, 2),
                 "0x" + randomNo.substring(2, 4),
                 "0x" + dtc,
@@ -92,7 +88,7 @@ exports.send = function(eventCode, dongleCode) {
                 "0x0a" //tail
              ]);
              
-        return buffer
+            return buffer
         break
         }
     }

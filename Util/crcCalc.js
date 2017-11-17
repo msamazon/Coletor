@@ -34,9 +34,7 @@ exports.calcule = function(hexaLine) {
     ]
     var len = 0
 
-    len = Math.floor(len) 
-
-    console.log("len: %s", len)
+    len = Math.floor(len)
 
     var hexaData = Array(len)
     

@@ -1,8 +1,8 @@
 const net     = require('net')
 var mongoose  = require('mongoose')
 var Handler   = require('./handler')
-var server    = net.createServer()
 var version   = require('./package.json')
+var server    = net.createServer()
 
 var port = process.env.PORT || 4883
 
