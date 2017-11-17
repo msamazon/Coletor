@@ -6,7 +6,7 @@ module.exports = function() {
         var crcCalc = require("./Util/crcCalc")
         var UtcTime = require("./Util/utcTime")
         
-        //console.log("----------- reply Message -----------")
+        console.log("replyMessage::")
 
         switch(message.eventcode) {
 
@@ -125,6 +125,7 @@ module.exports = function() {
             
             case messageType.COMPREHENSIVE_DATA_SUPPLEMENT:
             case messageType.COMPREHENSIVE_DATA: // 3
+                console.log("replyMessage::replyMessage")
                 return [0 , new Buffer([0x00, 0x00])]
             break
 
