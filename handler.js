@@ -30,7 +30,7 @@ exports.handler = function(socket, buffer) {
     }
         
     var message = new Message()
-    var message_dump = new message_dump()
+    var message_dump = new Message_dump()
     var result  = parser(hex)
     
     message = result
