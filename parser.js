@@ -85,7 +85,7 @@ module.exports = function() {
           message.param            = param
           message.dongleDateHex    = dongleDateHex
           message.crcCode          = crcCode
-
+          message.eventname        = "login"
           //log
           /*
           console.log("login::odb %s", obdModule)
@@ -108,7 +108,8 @@ module.exports = function() {
 
           console.log("  <<Maintenance>>")
 
-          message.data = convert.hex2ascii(text.substring(36, 48))
+          message.data             = convert.hex2ascii(text.substring(36, 48))
+          message.eventname        = "maintenance"
           
           console.log("maintenance::data %s", message.data)
           
@@ -132,17 +133,6 @@ module.exports = function() {
           message.high                   = gpsTemp[2]
           message.course                 = gpsTemp[3]
 
-          //log
-          /*
-          console.log('comprehensive::gps %s', gpsTemp[0])
-          console.log('comprehensive::speed %s', gpsTemp[1])
-          console.log('comprehensive::high %s', gpsTemp[2])
-          console.log('comprehensive::course %s', gpsTemp[3])
-
-          console.log('comprehensive::rtcTime %s', rtcTime)
-          console.log('comprehensive::dataSitch %s', dataSitch)
-          console.log('comprehensive::PidNo: %s', PidNo)
-          */
           var pidIni = 98 //inicio do pid
 
           for(var i = 0; i < PidNo; i++) {
@@ -348,6 +338,7 @@ module.exports = function() {
           message.accOn                       = accOn
           message.mmxc                        = mmxc
           message.reserved                    = reserved
+          message.eventname                   = "comprehensive"
 
           return message
 
@@ -382,7 +373,8 @@ module.exports = function() {
           message.gpsData          = gpsTemp[0]
           message.speed            = gpsTemp[1]
           message.high             = gpsTemp[2]
-          message.course           = gpsTemp[3]       
+          message.course           = gpsTemp[3]
+          message.eventname        = "alarm"     
           /* 
           console.log("alarm::randomNo %s", randomNo)
           console.log("alarm::alarmTag %s",convert.hex2dec(alarmTag))
@@ -396,8 +388,6 @@ module.exports = function() {
           console.log("alarm::course %s", gpsTemp[3])
           console.log("alarm::rtcTime %s", utcTime.calcule(rtcTime))
           */
-
-          console.log("||||| %s", message)
 
           return message
          
@@ -419,7 +409,8 @@ module.exports = function() {
           message.speed            = gpsTemp[1]
           message.high             = gpsTemp[2]
           message.course           = gpsTemp[3]
-          message.gpsData        = gpsConvert.calcule(gpsData)
+          message.gpsData          = gpsConvert.calcule(gpsData)
+          message.eventname        = "sleep mode" 
           // message.gpsData = gpsConvert.calcule(gpsData)
 
           /*
@@ -558,6 +549,7 @@ module.exports = function() {
           message.randomNo    = randomNo
           message.pidNumbers  = pidNumbers
           message.pidList     = pidList
+          message.eventname   = "read specified pid" 
 
           return message
 
@@ -580,6 +572,7 @@ module.exports = function() {
           message.dtcType     = dtcType
           message.dtcArray    = dtcArray
           message.utcTime     = time
+          message.eventname   = "read vehicle dtc" 
           
           return message
 
@@ -595,7 +588,7 @@ module.exports = function() {
           message.randomNo = randomNo
           message.result   = result
           message.utcTime  = utcTime.calcule(time)
-
+          message.eventname   = "clear dtc"
           return message
 
         break
@@ -622,6 +615,7 @@ module.exports = function() {
 
           message.rtcTime  = utcTime.calcule(time)
 
+          message.eventname   = "read vim"
           return message
 
         break

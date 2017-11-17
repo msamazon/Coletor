@@ -11,7 +11,7 @@ var MessageSchema = new Schema({
   packageLength: String,
   dongleCode: String,
   eventcode: String,
-  
+  eventname: String,
   speed: String,
   high: String, 
   course: String,
