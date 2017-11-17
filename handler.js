@@ -38,7 +38,7 @@ exports.handler = function(socket, buffer) {
     message.v = version.version
 
     //solicitacao marcelo
-    message_dump = message
+    //message_dump = message
     
     var reply = replyMessage(message)
 
@@ -74,7 +74,7 @@ exports.handler = function(socket, buffer) {
    //}else {
      //  console.log("handler:: dongleCode %s não esta na whitelist", message.dongleCode)
    //}
-   message_dump.save()
+   //message_dump.save()
     
     //console.log("handler::reply? %s", reply[0])
     
