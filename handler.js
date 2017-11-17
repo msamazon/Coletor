@@ -79,7 +79,7 @@ exports.handler = function(socket, buffer) {
     if (reply[0] == 1) {
         console.log("handler::reply %s", reply[1])
           
-        console.log("handler::Mensagem Enviada com sucesso")
+        console.log("handler::Mensagem Enviada com sucesso ")
     
         socket.write(reply[1])
     }
