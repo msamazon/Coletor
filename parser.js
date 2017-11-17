@@ -141,19 +141,16 @@ module.exports = function() {
             var _pidLen = text.substring(pidIni + 4, (pidIni + 4) + (2 *1))
             var _pidValue = text.substring(pidIni + 6, (pidIni + 6) + (2 * convert.hex2dec(_pidLen)))
             
+            _pidNO = convert.hex2dec(_pidNO)
+
             //_pidLen = convert.hex2dec(_pidValue)
             var _h2d = convert.hex2dec(_pidValue)
 
-            if (_h2d == NaN) {
+            if (_h2d == NaN) {  
               _h2d = "0"
             }
 
             _pidValue = _h2d
-
-            //console.log("comprehensive::pidNO (%s) %s value: %s [%s]", i, _pidNO, _pidValue, _h2d)
-
-            //console.log("pidLen: %s", _pidLen)
-            //sconsole.log("pidValue: %s", _pidValue)
 
             pidIni = pidIni + 6 +  (2 * convert.hex2dec(_pidLen))
 
@@ -616,7 +613,7 @@ module.exports = function() {
           message.rtcTime  = utcTime.calcule(time)
 
           message.eventname   = "read vim"
-          
+
           return message
 
         break
