@@ -6,7 +6,7 @@ module.exports = function() {
         var crcCalc = require("./Util/crcCalc")
         var UtcTime = require("./Util/utcTime")
         
-        console.log("replyMessage::")
+        console.log("replyMessage::Init")
 
         switch(message.eventcode) {
 
@@ -122,12 +122,6 @@ module.exports = function() {
                 ]);
                 return [1 , buffer]
             break
-            
-            case messageType.COMPREHENSIVE_DATA_SUPPLEMENT:
-            case messageType.COMPREHENSIVE_DATA: // 3
-                console.log("replyMessage::replyMessage")
-                return [0 , new Buffer([0x00, 0x00])]
-            break
 
             case messageType.ALARM: //4
 
@@ -171,11 +165,6 @@ module.exports = function() {
                 ]);
 
                 return [1 , buffer]
-            break
-
-            case messageType.SLEEPMODE: //5
-                //nao precisa de reply
-                return [0, new Buffer([0x0, 0x0])]
             break
 
             case messageType.SETTING: //6

@@ -45,15 +45,15 @@ exports.handler = function(socket, buffer) {
     //if (message.eventcode == messageType.LOGIN) {
         var readVinMsg = requestDongle.send(messageType.READ_VIN, message.dongleCode)
 
-        console.log("handler::Send <<READ_VIN>>")
+        //console.log("handler::Send <<READ_VIN>>")
 
         socket.write(readVinMsg)
 
-        // var dtcMsg = requestDongle.send(messageType.READ_VEHICLE_DTCS, message.dongleCode)
+        var dtcMsg = requestDongle.send(messageType.READ_VEHICLE_DTCS, message.dongleCode)
 
         // console.log("handler::Send READ_VEHICLE_DTCS")
 
-        // socket.write(dtcMsg)
+        socket.write(dtcMsg)
     //}
 
     

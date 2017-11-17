@@ -51,7 +51,7 @@ module.exports = function() {
         
         case messageType.LOGIN://1 Login Packet (1001/9001) 
 
-          console.log("<<login>> ")
+          console.log("  <<login>> ")
 
           var gps                = text.substring(36, 36 + (2 * 21))
           var obdModule          = text.substring(78, 78 + (2 * 4))
@@ -106,7 +106,7 @@ module.exports = function() {
 
         case messageType.MAINTENANCE://2 Maintenance(1003/9003) 
 
-          console.log("<<Maintenance>>")
+          console.log("  <<Maintenance>>")
 
           message.data = convert.hex2ascii(text.substring(36, 48))
           
@@ -118,7 +118,7 @@ module.exports = function() {
 
         case messageType.COMPREHENSIVE_DATA_SUPPLEMENT:
         case messageType.COMPREHENSIVE_DATA: //3 Comprehensive data (0x2001/0x2002)
-          console.log("<<Comprehensive data>>")
+          console.log("  <<Comprehensive data>>")
           
           var rtcTime                    = utcTime.calcule(text.substring(36, 36 + (2 * 6)))
           var dataSitch                  = text.substring(48, 48 + (2 * 3))
@@ -355,7 +355,7 @@ module.exports = function() {
 
         case messageType.ALARM: //4 Alarm (2003/A003) 
         
-          console.log("<<Alarm>>")
+          console.log("  <<Alarm>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var alarmTag        = text.substring(40, 40 + (2 * 1))
@@ -405,7 +405,7 @@ module.exports = function() {
 
         case messageType.SLEEPMODE: //5 Sleep Mode Fixed Upload (2004) 
 
-          console.log("<<Sleep Mode Fixed Upload>>")
+          console.log("  <<Sleep Mode Fixed Upload>>")
 
           var time      = text.substring(36, 36 + (2  *6))
           var timeEnd  = 36 + (2 *6)
@@ -434,7 +434,7 @@ module.exports = function() {
         break;
 
         case messageType.SETTING: //6 Setting (3001/B001) 
-          console.log("<<Setting>>")
+          console.log("  <<Setting>>")
         
           var randomNo          = text.substring(36, 36 + (2 * 2))
           var paramNumbers      = text.substring(40, 36 + (2 * 1))
@@ -454,7 +454,7 @@ module.exports = function() {
         break;
 
         case messageType.INQUIRY: //7 Inquiry (3002/B002) 
-          console.log("<<Inquiry>>")
+          console.log("  <<Inquiry>>")
           
           var randomNo          = text.substring(36, 36 + (2 * 2))
           var paramNumbers      = text.substring(40, 36 + (2 * 1))
@@ -474,7 +474,7 @@ module.exports = function() {
         break;
 
         case messageType.GETLOG: //8  Get LOG (4001/C001) 
-           console.log("<<Get LOG>>")
+           console.log("  <<Get LOG>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
            var logType         = text.substring(40, 40 + (2 * 1))
@@ -487,7 +487,7 @@ module.exports = function() {
         break;
 
         case messageType.UNIT_SELF_TEST: //9 UNIT Self-test(4002/C002) 
-           console.log("<<UNIT Self-test>>")
+           console.log("  <<UNIT Self-test>>")
 
            var randomNo        = text.substring(36, 36 + (2 * 2))
 
@@ -520,7 +520,7 @@ module.exports = function() {
         break;
 
         case messageType.CLEAR_COMPREHENSIVE_DATA: //12 Clear Comprehensive Data Storage Area(4005/C005) 
-          console.log("<<Clear Comprehensive Data Storage Area>>")
+          console.log("  <<Clear Comprehensive Data Storage Area>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
                     
@@ -531,7 +531,7 @@ module.exports = function() {
         break;
 
         case messageType.READ_DEVICE_SUPORTED_PID: //13 Read vehicle supported PID number (4007/C007)
-          console.log("<<Read vehicle supported PID number>> %", message.dongleCode)
+          console.log("  <<Read vehicle supported PID number>> %", message.dongleCode)
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           
@@ -543,7 +543,7 @@ module.exports = function() {
         break;
 
         case messageType.READ_SPECIFIED_PID_DATA_VALUE: //14 Read Specified PID Data Value (4008/C008) 
-          console.log("<<Read Specified PID Data Value>>")
+          console.log("  <<Read Specified PID Data Value>>")
 
           var randomNo        = text.substring(36, 36 + (2 * 2))
           var pidNumbers      = text.substring(36, 36 + (2 * 1))
@@ -565,7 +565,7 @@ module.exports = function() {
 
         case messageType.READ_VEHICLE_DTCS:
         case messageType.READ_VEHICLE_DTCS_REPLY: //15 Read Vehicle DTCs(4009/C009) - ok
-          console.log("<<Read Vehicle DTC>>")
+          console.log("  <<Read Vehicle DTC>>")
 
           console.log("text %s", text)
         
@@ -586,7 +586,7 @@ module.exports = function() {
         break
 
         case messageType.CLEAR_DTC_REPLY: //16 Clear DTC (400A/C00A) -ok
-          console.log("<<CLEAR_DTC_REPLY>>")
+          console.log("  <<CLEAR_DTC_REPLY>>")
         
           var randomNo     = text.substring(36, 36 + (2 * 2))
           var result       = text.substring(40, 40 + (2 * 1))
@@ -602,7 +602,7 @@ module.exports = function() {
         
         case messageType.READ:
         case messageType.READ_VIN_REPLY: //17 Read VIN (400B/C00B) -ok
-          console.log("<<READ_VIN_REPLY>>")
+          console.log("  <<READ_VIN_REPLY>>")
 
           var randomNo     = text.substring(36, 36 + (2 * 2))
           var vinCode      = text.substring(40, 40 + (2 * 17))
@@ -627,7 +627,7 @@ module.exports = function() {
         break
 
         case messageType.READ_FREEZE_FRAME_REPLY: //18 Reading Freeze Frame (400C/C00C) 
-          console.log("<<Reading Freeze Frame>>")
+          console.log("  <<Reading Freeze Frame>>")
 
           var randomNo     = text.substring(36, 36 + (2 * 2))
 
@@ -640,7 +640,7 @@ module.exports = function() {
         break
 
         case messageType.SEND_UPGRADING: //19 Send Upgrading/Reply (5001/D001) 
-          console.log("<<Send Upgrading/Reply>>")
+          console.log("  <<Send Upgrading/Reply>>")
 
           var mUpgrade              = text.substring(36, 36 + (1 * 2))
           var upgradeID             = text.substring(38, 38 + (4 * 2))
@@ -660,7 +660,7 @@ module.exports = function() {
         break
 
         case messageType.ISSUE_UPGRADE_PACKAGE: //20 Issue Upgrade Package /Reply (5002/D002) 
-          console.log("<<Issue Upgrade Package /Reply>>")
+          console.log("  <<Issue Upgrade Package /Reply>>")
 
           var upgradeID             = text.substring(36, 36 + (2 * 4))
           var packetSign            = text.substring(44, 44 + (2 * 1))
