@@ -242,17 +242,18 @@ module.exports = function() {
           var senson0 = trip + (4 * 2)
           var gSensor = text.substring(senson0, senson0 + (2 * 2))
 
-          //console.log("gSensor %s", gSensor)
+          console.log("gSensor %s", gSensor)
 
           
 	        gSensor = modulo4.inverter(gSensor)
           gSensor = convert.hex2dec(gSensor)
 
-          //console.log("comprehensive::gSensor %s", gSensor)
+          console.log("comprehensive::gSensor %s", gSensor)
 
           var sensorData0 = senson0 + (2 * 2)
           var gSensorData = text.substring(sensorData0, sensorData0 + (2 * gSensor))
 
+          console.log("comprehensive:gSensorData %s", gSensorData)
           //calcule
           var group1 = gSensorData.substring(0, 6 * 2)
           var g1x, g2x, g3x, g4x, g5x
