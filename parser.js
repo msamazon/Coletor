@@ -34,7 +34,7 @@ module.exports = function() {
 
       dongleCode       = convert.hex2ascii(dongleCode)
 
-      //message.fullMessage   = text
+      message.fullMessage   = text
       message.packageHead   = head
       message.packageLength = headLen
       message.dongleCode    = dongleCode
